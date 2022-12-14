@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TinderButForBartering.MyMatchesPage"
+             Title="My matches"
+             BackgroundColor="White">
+    <StackLayout>
+        <Label 
+            Text="List of matched users with pictures of matched goods"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" />
+
+        <Button
+            Text="Example match 1"
+            BackgroundColor="Blue"
+            Clicked="OnMatch_Clicked" />
+
+        <Button
+            Text="Example match 2"
+            BackgroundColor="Blue"
+            Clicked="OnMatch_Clicked" />
+
+        <Button
+            Text="Example match 3"
+            BackgroundColor="Blue"
+            Clicked="OnMatch_Clicked" />
+    </StackLayout>
+</ContentPage>
