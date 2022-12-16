@@ -12,11 +12,17 @@ public partial class UserProductDetailsPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        await Update(ProductDetailsLabel);
+        await Update();
     }
 
-    static async Task Update(Label label)
+    async Task Update()
     {
-        label.Text = await GetProducts();
+        ProductDetailsLabel.Text = await GetProducts();
+    }
+
+    async void OnAddProduct_Clicked(object sender, EventArgs e)
+    {
+        Product product = new (Titel.Text, Description.Text, Switch.IsToggled);
+        await PostProduct(product);
     }
 }

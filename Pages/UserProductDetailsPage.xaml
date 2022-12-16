@@ -2,18 +2,50 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TinderButForBartering.UserProductDetailsPage"
-             Title="My product's details">
+             Title="Min vare">
     
-    <VerticalStackLayout>
+    <VerticalStackLayout 
+        Padding="20">
+        
         <Label 
             Text="The details of one of the user's own products."
             VerticalOptions="Center" 
             HorizontalOptions="Center"
             x:Name="ProductDetailsLabel"/>
 
-        <!--<Button
-            Text="Get product"
+        <Entry
+            HorizontalOptions="Start"
+            Placeholder="Overskrift" 
+            SemanticProperties.Hint="Varens overskrift"
+            WidthRequest="100"
+            Margin="20"
+            x:Name="Titel"/>
+
+        <Editor
+            HorizontalOptions="Center"
+            Placeholder="Beskrivelse" 
+            SemanticProperties.Hint="Beskrivelse af varen"
+            WidthRequest="300"
+            MinimumHeightRequest="150"
+            AutoSize="TextChanges"
+            Margin="20"
+            x:Name="Description"/>
+
+        <Label 
+            Text="Byt eller pyt"
+            VerticalOptions="Center"
+            Margin="20"/>
+
+        <Switch 
+            HorizontalOptions="Start"
+            Margin="20,0,0,0"
+            OnColor="Gray"
+            ThumbColor="Green" 
+            x:Name="Switch"/>
+
+        <Button
+            Text="Tilføj"
             BackgroundColor="Blue"
-            Clicked="OnGetProduct_Clicked" />-->
+            Clicked="OnAddProduct_Clicked"/>
     </VerticalStackLayout>
 </ContentPage>
