@@ -26,5 +26,11 @@
 	</array>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/appicon.appiconset</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Appen har brug for kameraadgang, så du kan tage billeder af dine varer.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Appen har brug for adgang til dit fotogalleri, så du kan udvælge billeder af dine varer.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Appen har brug for adgang til dit fotogalleri, så du kan udvælge billeder af dine varer.</string>
 </dict>
 </plist>

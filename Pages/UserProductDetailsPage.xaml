@@ -47,5 +47,19 @@
             Text="Tilføj"
             BackgroundColor="Blue"
             Clicked="OnAddProduct_Clicked"/>
+
+        <Button
+            Text="Tag billede"
+            BackgroundColor="Blue"
+            Clicked="OnTakePicture_Clicked"/>
+
+        <Button
+            Text="Vælg billede fra galleri"
+            BackgroundColor="Blue"
+            Clicked="OnSelectPicture_Clicked"/>
+        
+        <Image 
+            Source="dotnet_bot.svg"
+            x:Name="PrimaryPicture"/>
     </VerticalStackLayout>
 </ContentPage>
