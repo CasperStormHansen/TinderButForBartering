@@ -23,17 +23,33 @@ public partial class UserProductDetailsPage : ContentPage
 
     async void OnAddProduct_Clicked(object sender, EventArgs e)
     {
-        Product product = new (Titel.Text, Description.Text, Switch.IsToggled);
+        Product product = new (Titel.Text, Description.Text, Switch.IsToggled, PrimaryPictureData);
         await PostProduct(product);
     }
 
+    byte[] PrimaryPictureData { get; set; }
+
     async void OnTakePicture_Clicked(object sender, EventArgs e)
     {
-        await TakePhoto(PrimaryPicture);
+#nullable enable
+        MemoryStream? imageStream = await GetPhoto(true); // where does imageStream.Dispose() go? At the close of the page?
+#nullable disable
+        if (imageStream != null) 
+        {
+            PrimaryPicture.Source = ImageSource.FromStream(() => imageStream);
+            PrimaryPictureData = imageStream.ToArray();
+        }
     }
 
     async void OnSelectPicture_Clicked(object sender, EventArgs e)
     {
-        await SelectPhoto(PrimaryPicture);
+#nullable enable
+        MemoryStream? imageStream = await GetPhoto(false); // where does imageStream.Dispose() go? At the close of the page?
+#nullable disable
+        if (imageStream != null)
+        {
+            PrimaryPicture.Source = ImageSource.FromStream(() => imageStream);
+            PrimaryPictureData = imageStream.ToArray();
+        }
     }
 }

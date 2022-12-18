@@ -1,43 +1,41 @@
 ﻿using System.Net.Http.Json;
 
-namespace TinderButForBartering
+namespace TinderButForBartering;
+
+public class BackendConnection
 {
-    public class BackendConnection
-    {
 #if ANDROID
-        static readonly string BaseUrl = "http://10.0.2.2:5045/";
+    static readonly string BaseUrl = "http://10.0.2.2:5045/";
 #else
-        static readonly string BaseUrl = "https://localhost:7239/";
+    static readonly string BaseUrl = "https://localhost:7239/";
 #endif
 
-        static readonly string ProductsUrl = BaseUrl + "products/";
+    static readonly string ProductsUrl = BaseUrl + "products/";
 
-        public static readonly HttpClient client = new();
+    public static readonly HttpClient client = new();
 
-        public static async Task<string> GetProducts()
+    public static async Task<string> GetProducts()
+    {
+        try
         {
-            try
-            {
-                return await client.GetStringAsync(ProductsUrl);
-            }
-            catch (Exception ex)
-            {
-                return ex.Message;
-            }
+            return await client.GetStringAsync(ProductsUrl);
         }
-        
-        public static async Task<string> PostProduct(Product product) // what to do with return value?
+        catch (Exception ex)
         {
-            try
-            {
-                HttpResponseMessage mes = await client.PostAsJsonAsync<Product>(ProductsUrl, product);
-                return "mes";
-            }
-            catch (Exception ex)
-            {
-                return ex.Message; // how to handle?
-            }
+            return ex.Message;
         }
-
+    }
+    
+    public static async Task<string> PostProduct(Product product) // what to do with return value?
+    {
+        try
+        {
+            HttpResponseMessage mes = await client.PostAsJsonAsync<Product>(ProductsUrl, product);
+            return "mes";
+        }
+        catch (Exception ex)
+        {
+            return ex.Message; // how to handle?
+        }
     }
 }
