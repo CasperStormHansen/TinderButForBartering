@@ -4,25 +4,34 @@
              x:Class="TinderButForBartering.MyGoodsPage"
              Title="My goods"
              BackgroundColor="White">
-    <StackLayout>
-        <Label 
+
+    <ScrollView>
+        <StackLayout>
+            <Label 
+            Text="Downloading data ..."
+            VerticalOptions="Center" 
+            HorizontalOptions="Center"
+            x:Name="Data"/>
+            
+            <Label 
             Text="The list of the users own goods and the option to add more"
             VerticalOptions="Center" 
             HorizontalOptions="Center" />
 
-        <Button
+            <Button
             Text="Example product 1"
             BackgroundColor="Blue"
             Clicked="OnUserProductDetails_Clicked" />
 
-        <Button
+            <Button
             Text="Example product 2"
             BackgroundColor="Blue"
             Clicked="OnUserProductDetails_Clicked" />
 
-        <Button
+            <Button
             Text="Example product 3"
             BackgroundColor="Blue"
             Clicked="OnUserProductDetails_Clicked" />
-    </StackLayout>
+        </StackLayout>
+    </ScrollView>
 </ContentPage>

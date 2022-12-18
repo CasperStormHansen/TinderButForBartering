@@ -3,17 +3,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TinderButForBartering.UserProductDetailsPage"
              Title="Min vare">
-    
-    <VerticalStackLayout 
+
+    <ScrollView>
+        <VerticalStackLayout 
         Padding="20">
-        
-        <Label 
+
+            <Label 
             Text="The details of one of the user's own products."
             VerticalOptions="Center" 
             HorizontalOptions="Center"
             x:Name="ProductDetailsLabel"/>
 
-        <Entry
+            <Entry
             HorizontalOptions="Start"
             Placeholder="Overskrift" 
             SemanticProperties.Hint="Varens overskrift"
@@ -21,7 +22,7 @@
             Margin="20"
             x:Name="Titel"/>
 
-        <Editor
+            <Editor
             HorizontalOptions="Center"
             Placeholder="Beskrivelse" 
             SemanticProperties.Hint="Beskrivelse af varen"
@@ -31,35 +32,36 @@
             Margin="20"
             x:Name="Description"/>
 
-        <Label 
+            <Label 
             Text="Byt eller pyt"
             VerticalOptions="Center"
             Margin="20"/>
 
-        <Switch 
+            <Switch 
             HorizontalOptions="Start"
             Margin="20,0,0,0"
             OnColor="Gray"
             ThumbColor="Green" 
             x:Name="Switch"/>
 
-        <Button
+            <Button
             Text="Tilføj"
             BackgroundColor="Blue"
             Clicked="OnAddProduct_Clicked"/>
 
-        <Button
+            <Button
             Text="Tag billede"
             BackgroundColor="Blue"
             Clicked="OnTakePicture_Clicked"/>
 
-        <Button
+            <Button
             Text="Vælg billede fra galleri"
             BackgroundColor="Blue"
             Clicked="OnSelectPicture_Clicked"/>
-        
-        <Image 
+
+            <Image 
             Source="dotnet_bot.svg"
             x:Name="PrimaryPicture"/>
-    </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

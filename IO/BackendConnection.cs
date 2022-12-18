@@ -10,7 +10,7 @@ public class BackendConnection
     static readonly string BaseUrl = "https://localhost:7239/";
 #endif
 
-    static readonly string ProductsUrl = BaseUrl + "products/";
+    static readonly string ProductsUrl = BaseUrl + "products/1/";
 
     public static readonly HttpClient client = new();
 
