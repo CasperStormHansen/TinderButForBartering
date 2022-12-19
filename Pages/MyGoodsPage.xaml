@@ -32,6 +32,18 @@
             Text="Example product 3"
             BackgroundColor="Blue"
             Clicked="OnUserProductDetails_Clicked" />
+
+            <CollectionView
+                x:Name="MyProductsView">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Button
+                            Text="{Binding ProductTitle}"
+                            BackgroundColor="Blue"
+                            Clicked="OnUserProductDetails_Clicked"/>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
         </StackLayout>
     </ScrollView>
 </ContentPage>
