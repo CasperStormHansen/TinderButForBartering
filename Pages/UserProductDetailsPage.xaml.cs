@@ -25,6 +25,12 @@ public partial class UserProductDetailsPage : ContentPage
     {
         Product product = new(Titel.Text, Description.Text, Switch.IsToggled, PrimaryPictureData);
         await PostProduct(product);
+        Navigation.PopAsync();
+    }
+
+    async void OnCancel_Clicked(object sender, EventArgs e)
+    {
+        Navigation.PopAsync();
     }
 
     byte[] PrimaryPictureData { get; set; }

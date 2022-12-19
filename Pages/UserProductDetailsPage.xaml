@@ -50,6 +50,11 @@
             Clicked="OnAddProduct_Clicked"/>
 
             <Button
+            Text="Fortryd"
+            BackgroundColor="Blue"
+            Clicked="OnCancel_Clicked"/>
+
+            <Button
             Text="Tag billede"
             BackgroundColor="Blue"
             Clicked="OnTakePicture_Clicked"/>

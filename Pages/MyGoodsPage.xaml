@@ -8,12 +8,6 @@
     <ScrollView>
         <StackLayout>
             <Label 
-            Text="Downloading data ..."
-            VerticalOptions="Center" 
-            HorizontalOptions="Center"
-            x:Name="Data"/>
-            
-            <Label 
             Text="The list of the users own goods and the option to add more"
             VerticalOptions="Center" 
             HorizontalOptions="Center" />
