@@ -10,15 +10,15 @@ public partial class UserProductDetailsPage : ContentPage
         InitializeComponent();
     }
 
-    protected override async void OnAppearing()
+    public UserProductDetailsPage(Product product)
     {
-        base.OnAppearing();
-        await Update();
-    }
-
-    async Task Update()
-    {
-        ProductDetailsLabel.Text = await GetProducts();
+        InitializeComponent();
+        Titel.Text = product.ProductTitle;
+        Description.Text = product.Description;
+        Switch.IsToggled = product.RequiresSomethingInReturn;
+        PrimaryPictureData = product.PrimaryPictureData;
+        MemoryStream stream = new MemoryStream(PrimaryPictureData); // dispose somewhere
+        PrimaryPicture.Source = ImageSource.FromStream(() => stream); // rename "stream"
     }
 
     async void OnAddProduct_Clicked(object sender, EventArgs e)

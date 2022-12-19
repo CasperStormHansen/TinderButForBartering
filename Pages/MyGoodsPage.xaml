@@ -19,19 +19,9 @@
             HorizontalOptions="Center" />
 
             <Button
-            Text="Example product 1"
+            Text="+"
             BackgroundColor="Blue"
-            Clicked="OnUserProductDetails_Clicked" />
-
-            <Button
-            Text="Example product 2"
-            BackgroundColor="Blue"
-            Clicked="OnUserProductDetails_Clicked" />
-
-            <Button
-            Text="Example product 3"
-            BackgroundColor="Blue"
-            Clicked="OnUserProductDetails_Clicked" />
+            Clicked="OnNewProduct_Clicked" />
 
             <CollectionView
                 x:Name="MyProductsView">
