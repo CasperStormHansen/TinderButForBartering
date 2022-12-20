@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using System.Collections.ObjectModel;
 using static TinderButForBartering.BackendConnection;
 
@@ -7,7 +6,7 @@ namespace TinderButForBartering;
 
 class Data
 {
-    public static ObservableCollection<Product> Products { get; set; } = new(); // make set private
+    public static ObservableCollection<Product> OwnProducts { get; private set; } = new();
 
     public static async Task GetOwnProducts()
     {
@@ -15,7 +14,7 @@ class Data
         List<Product> productsList = JsonConvert.DeserializeObject<List<Product>>(productsString);
         foreach (Product product in productsList)
         {
-            Products.Add(product);
+            OwnProducts.Add(product);
         }
     }
 
@@ -24,6 +23,22 @@ class Data
         string productString = await PostProduct(productWithoutId);
 
         Product product = JsonConvert.DeserializeObject<Product>(productString);
-        Products.Add(product);
+        OwnProducts.Add(product);
+    }
+
+    public static async void ChangeOwnProduct(Product product)
+    {
+        await ChangeProduct(product); // only proceed if successful
+
+        int index = OwnProducts.IndexOf(OwnProducts.FirstOrDefault(p => p.Id == product.Id));
+        OwnProducts.RemoveAt(index);
+        OwnProducts.Insert(index, product);
+    }
+
+    public static async void DeleteOwnProduct(Product product)
+    {
+        await DeleteProduct(product);
+
+        OwnProducts.Remove(product);
     }
 }

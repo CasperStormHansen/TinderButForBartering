@@ -46,14 +46,27 @@
 
             <Button
             Text="Tilføj"
-            BackgroundColor="Blue"
-            Clicked="OnAddProduct_Clicked"/>
+            BackgroundColor="Green"
+            Clicked="OnAddProduct_Clicked"
+            x:Name="AddNewProductButton"/>
+
+            <Button
+            Text="Godkend ændringer"
+            BackgroundColor="Green"
+            Clicked="OnChangeProduct_Clicked"
+            x:Name="ChangeProductButton"/>
 
             <Button
             Text="Fortryd"
-            BackgroundColor="Blue"
+            BackgroundColor="Orange"
             Clicked="OnCancel_Clicked"/>
 
+            <Button
+            Text="Slet"
+            BackgroundColor="Red"
+            Clicked="OnDeleteProduct_Clicked"
+            x:Name="DeleteProductButton"/>
+            
             <Button
             Text="Tag billede"
             BackgroundColor="Blue"

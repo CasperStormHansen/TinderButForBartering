@@ -7,7 +7,7 @@ public partial class MyGoodsPage : ContentPage
     public MyGoodsPage()
     {
         InitializeComponent();
-        MyProductsView.ItemsSource = Products;
+        MyProductsView.ItemsSource = OwnProducts;
         //_ = GetOwnProducts();
     }
 
