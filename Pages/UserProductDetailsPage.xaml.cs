@@ -1,5 +1,6 @@
 using static TinderButForBartering.BackendConnection;
 using static TinderButForBartering.Pictures;
+using static TinderButForBartering.Data;
 
 namespace TinderButForBartering;
 
@@ -24,7 +25,8 @@ public partial class UserProductDetailsPage : ContentPage
     async void OnAddProduct_Clicked(object sender, EventArgs e)
     {
         ProductWithoutId product = new (Titel.Text, Description.Text, Switch.IsToggled, PrimaryPictureData);
-        await PostProduct(product);
+        string productString = await PostProduct(product);
+        AddNewOwnProduct(productString);
         await Navigation.PopAsync();
     }
 

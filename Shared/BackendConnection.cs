@@ -27,12 +27,13 @@ public class BackendConnection
         }
     }
     
-    public static async Task<string> PostProduct(ProductWithoutId product) // what to do with return value?
+    public static async Task<string> PostProduct(ProductWithoutId product)
     {
         try
         {
-            HttpResponseMessage mes = await client.PostAsJsonAsync(ProductsUrl, product);
-            return "mes";
+            HttpResponseMessage response = await client.PostAsJsonAsync(ProductsUrl, product);
+            string jsonString = await response.Content.ReadAsStringAsync();
+            return jsonString; // success assumed response.IsSuccessStatusCode
         }
         catch (Exception ex)
         {
