@@ -22,7 +22,7 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Button
-                            Text="{Binding ProductTitle}"
+                            Text="{Binding Title}"
                             BackgroundColor="Blue"
                             Clicked="OnUserProductDetails_Clicked"/>
                     </DataTemplate>

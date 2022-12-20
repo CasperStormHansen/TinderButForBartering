@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace TinderButForBartering;
 
@@ -26,11 +27,11 @@ public class BackendConnection
         }
     }
     
-    public static async Task<string> PostProduct(Product product) // what to do with return value?
+    public static async Task<string> PostProduct(ProductWithoutId product) // what to do with return value?
     {
         try
         {
-            HttpResponseMessage mes = await client.PostAsJsonAsync<Product>(ProductsUrl, product);
+            HttpResponseMessage mes = await client.PostAsJsonAsync(ProductsUrl, product);
             return "mes";
         }
         catch (Exception ex)

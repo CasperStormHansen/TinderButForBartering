@@ -2,47 +2,29 @@
 
 namespace TinderButForBartering
 {
-    public class Product
+    public class ProductWithoutId
     {
-        public string ProductTitle { get; set; }
+        public string Title { get; set; }
         public string Description { get; set; }
         public bool RequiresSomethingInReturn { get; set; }
         public byte[] PrimaryPictureData { get; set; }
 
-        public Product(string title, string description, bool requiresSomethingInReturn, byte[] primaryPictureData)
+        public ProductWithoutId(string title, string description, bool requiresSomethingInReturn, byte[] primaryPictureData)
         {
-            ProductTitle = title;
+            Title = title;
             Description = description;
             RequiresSomethingInReturn = requiresSomethingInReturn;
             PrimaryPictureData = primaryPictureData;
         }
     }
 
-    //public class ProductWithId
-    //{
-    //    [JsonPropertyName("id")]
-    //    public int Id { get; set; }
+    public class Product : ProductWithoutId
+    {
+        public int Id { get; set; }
 
-    //    [JsonPropertyName("productTitle")]
-    //    public string ProductTitle { get; set; }
-
-    //    [JsonPropertyName("description")]
-    //    public string Description { get; set; }
-
-    //    [JsonPropertyName("requiresSomethingInReturn")]
-    //    public bool RequiresSomethingInReturn { get; set; }
-
-    //    //[JsonPropertyName("primaryPictureData")]
-    //    //public byte[] PrimaryPictureData { get; set; }
-
-    //    [JsonConstructor]
-    //    public ProductWithId(int id, string title, string description, bool requiresSomethingInReturn)//, byte[] primaryPictureData)
-    //    {
-    //        Id = id;
-    //        ProductTitle = title;
-    //        Description = description;
-    //        RequiresSomethingInReturn = requiresSomethingInReturn;
-    //        //PrimaryPictureData = primaryPictureData;
-    //    }
-    //}
+        public Product(string title, string description, bool requiresSomethingInReturn, byte[] primaryPictureData, int id) : base(title, description, requiresSomethingInReturn, primaryPictureData)
+        {
+            Id = id;
+        }
+    }
 }

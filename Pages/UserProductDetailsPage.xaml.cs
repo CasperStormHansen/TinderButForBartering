@@ -13,7 +13,7 @@ public partial class UserProductDetailsPage : ContentPage
     public UserProductDetailsPage(Product product)
     {
         InitializeComponent();
-        Titel.Text = product.ProductTitle;
+        Titel.Text = product.Title;
         Description.Text = product.Description;
         Switch.IsToggled = product.RequiresSomethingInReturn;
         PrimaryPictureData = product.PrimaryPictureData;
@@ -23,14 +23,14 @@ public partial class UserProductDetailsPage : ContentPage
 
     async void OnAddProduct_Clicked(object sender, EventArgs e)
     {
-        Product product = new(Titel.Text, Description.Text, Switch.IsToggled, PrimaryPictureData);
+        ProductWithoutId product = new (Titel.Text, Description.Text, Switch.IsToggled, PrimaryPictureData);
         await PostProduct(product);
-        Navigation.PopAsync();
+        await Navigation.PopAsync();
     }
 
     async void OnCancel_Clicked(object sender, EventArgs e)
     {
-        Navigation.PopAsync();
+        await Navigation.PopAsync();
     }
 
     byte[] PrimaryPictureData { get; set; }
