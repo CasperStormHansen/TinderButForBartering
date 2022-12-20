@@ -8,7 +8,7 @@ public partial class MyGoodsPage : ContentPage
     {
         InitializeComponent();
         MyProductsView.ItemsSource = Products;
-        _ = GetOwnProducts();
+        //_ = GetOwnProducts();
     }
 
     //protected override async void OnAppearing()

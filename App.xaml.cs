@@ -1,4 +1,6 @@
-﻿namespace TinderButForBartering;
+﻿using static TinderButForBartering.Data;
+
+namespace TinderButForBartering;
 
 public partial class App : Application
 {
@@ -7,5 +9,7 @@ public partial class App : Application
 		InitializeComponent();
 
 		MainPage = new NavigationPage(new MainPage());
-	}
+
+        _ = GetOwnProducts();
+    }
 }
