@@ -6,7 +6,7 @@ namespace TinderButForBartering;
 
 class Data
 {
-    public static ObservableCollection<Product> Products { get; set; } = new();
+    public static ObservableCollection<Product> Products { get; set; } = new(); // make set private
 
     public static async Task GetOwnProducts()
     {
@@ -16,5 +16,12 @@ class Data
         {
             Products.Add(product);
         }
+    }
+
+    public static void AddNewOwnProduct(string productString)
+    {
+        System.Diagnostics.Debug.WriteLine(productString);
+        Product product = JsonConvert.DeserializeObject<Product>(productString);
+        Products.Add(product);
     }
 }

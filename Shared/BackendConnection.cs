@@ -31,8 +31,9 @@ public class BackendConnection
     {
         try
         {
-            HttpResponseMessage mes = await client.PostAsJsonAsync(ProductsUrl, product);
-            return "mes";
+            HttpResponseMessage response = await client.PostAsJsonAsync(ProductsUrl, product);
+            string jsonString = await response.Content.ReadAsStringAsync();
+            return jsonString; // success assumed response.IsSuccessStatusCode
         }
         catch (Exception ex)
         {
