@@ -2,7 +2,7 @@
 
 namespace TinderButForBartering;
 
-public class BackendConnection
+public class Backend
 {
     #if ANDROID
         static readonly string BaseUrl = "http://10.0.2.2:5045/";

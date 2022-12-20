@@ -8,19 +8,13 @@
         <VerticalStackLayout 
         Padding="20">
 
-            <Label 
-            Text="The details of one of the user's own products."
-            VerticalOptions="Center" 
-            HorizontalOptions="Center"
-            x:Name="ProductDetailsLabel"/>
-
             <Entry
             HorizontalOptions="Start"
             Placeholder="Overskrift" 
             SemanticProperties.Hint="Varens overskrift"
             WidthRequest="100"
             Margin="20"
-            x:Name="Titel"/>
+            x:Name="Title"/>
 
             <Editor
             HorizontalOptions="Center"
@@ -55,6 +49,7 @@
             BackgroundColor="Green"
             Clicked="OnChangeProduct_Clicked"
             x:Name="ChangeProductButton"/>
+            <!--IsEnabled="false"-->
 
             <Button
             Text="Fortryd"
@@ -66,7 +61,7 @@
             BackgroundColor="Red"
             Clicked="OnDeleteProduct_Clicked"
             x:Name="DeleteProductButton"/>
-            
+
             <Button
             Text="Tag billede"
             BackgroundColor="Blue"
@@ -80,6 +75,7 @@
             x:Name="GalleryButton"/>
 
             <Image 
+            WidthRequest="300"
             Source="dotnet_bot.svg"
             x:Name="PrimaryPicture"/>
         </VerticalStackLayout>

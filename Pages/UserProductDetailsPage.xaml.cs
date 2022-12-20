@@ -9,6 +9,8 @@ public partial class UserProductDetailsPage : ContentPage
     Product? Product { get; set; }
     #nullable disable
 
+    byte[] PrimaryPictureData { get; set; }
+
     public UserProductDetailsPage()
     {
         InitializeComponent();
@@ -25,7 +27,7 @@ public partial class UserProductDetailsPage : ContentPage
 
         Product = product;
 
-        Titel.Text = Product.Title;
+        Title.Text = Product.Title;
         Description.Text = Product.Description;
         Switch.IsToggled = Product.RequiresSomethingInReturn;
         PrimaryPictureData = Product.PrimaryPictureData;
@@ -35,30 +37,39 @@ public partial class UserProductDetailsPage : ContentPage
 
     async void OnAddProduct_Clicked(object sender, EventArgs e)
     {
-        ProductWithoutId productWithoutId = new (Titel.Text, Description.Text, Switch.IsToggled, PrimaryPictureData);
+        if (String.IsNullOrWhiteSpace(Title.Text) || PrimaryPictureData == null)
+        {
+            await Application.Current.MainPage.DisplayAlert("Det er nødvendigt med en titel og mindst et billede", "", "OK");
+            return;
+        }
+
+        ProductWithoutId productWithoutId = new(Title.Text, Description.Text, Switch.IsToggled, PrimaryPictureData);
         AddNewOwnProduct(productWithoutId); // successindicator should come back and be acted on
         await Navigation.PopAsync();
     }
 
     async void OnChangeProduct_Clicked(object sender, EventArgs e)
     {
-        Product changedProduct = new(Titel.Text, Description.Text, Switch.IsToggled, PrimaryPictureData, Product.Id);
+        Product changedProduct = new(Title.Text, Description.Text, Switch.IsToggled, PrimaryPictureData, Product.Id);
         ChangeOwnProduct(changedProduct);
         await Navigation.PopAsync();
     }
 
     async void OnCancel_Clicked(object sender, EventArgs e)
     {
+        // perhaps a warning dialog here
         await Navigation.PopAsync();
     }
 
     async void OnDeleteProduct_Clicked(object sender, EventArgs e)
     {
-        DeleteOwnProduct(Product);
-        await Navigation.PopAsync();
+        string userDecision = await Application.Current.MainPage.DisplayActionSheet("Slet vare?", "Fortryd", "OK");
+        if (userDecision == "OK")
+        {
+            DeleteOwnProduct(Product);
+            await Navigation.PopAsync();
+        }
     }
-
-    byte[] PrimaryPictureData { get; set; }
 
     async void OnGetPicture_Clicked(object sender, EventArgs e)
     {
