@@ -35,24 +35,16 @@ public partial class UserProductDetailsPage : ContentPage
 
     byte[] PrimaryPictureData { get; set; }
 
-    async void OnTakePicture_Clicked(object sender, EventArgs e)
+    async void OnGetPicture_Clicked(object sender, EventArgs e)
     {
-#nullable enable
-        MemoryStream? imageStream = await GetPhoto(true); // where does imageStream.Dispose() go? At the close of the page?
-#nullable disable
-        if (imageStream != null) 
-        {
-            PrimaryPicture.Source = ImageSource.FromStream(() => imageStream);
-            PrimaryPictureData = imageStream.ToArray();
-        }
-    }
+        Button button = sender as Button;
+        bool useCamera = (button == CameraButton);
 
-    async void OnSelectPicture_Clicked(object sender, EventArgs e)
-    {
 #nullable enable
-        MemoryStream? imageStream = await GetPhoto(false); // where does imageStream.Dispose() go? At the close of the page?
+        MemoryStream? imageStream = await GetPhoto(useCamera); // where does imageStream.Dispose() go? At the close of the page?
 #nullable disable
-        if (imageStream != null)
+
+        if (imageStream != null) 
         {
             PrimaryPicture.Source = ImageSource.FromStream(() => imageStream);
             PrimaryPictureData = imageStream.ToArray();

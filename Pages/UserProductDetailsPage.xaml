@@ -57,12 +57,14 @@
             <Button
             Text="Tag billede"
             BackgroundColor="Blue"
-            Clicked="OnTakePicture_Clicked"/>
+            Clicked="OnGetPicture_Clicked"
+            x:Name="CameraButton"/>
 
             <Button
             Text="Vælg billede fra galleri"
             BackgroundColor="Blue"
-            Clicked="OnSelectPicture_Clicked"/>
+            Clicked="OnGetPicture_Clicked"
+            x:Name="GalleryButton"/>
 
             <Image 
             Source="dotnet_bot.svg"
