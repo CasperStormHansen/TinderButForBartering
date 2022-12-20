@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System.Collections.ObjectModel;
 using static TinderButForBartering.BackendConnection;
 
@@ -18,8 +19,10 @@ class Data
         }
     }
 
-    public static void AddNewOwnProduct(string productString)
+    public static async void AddNewOwnProduct(ProductWithoutId productWithoutId)
     {
+        string productString = await PostProduct(productWithoutId);
+
         Product product = JsonConvert.DeserializeObject<Product>(productString);
         Products.Add(product);
     }

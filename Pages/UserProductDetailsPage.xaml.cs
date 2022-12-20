@@ -1,4 +1,3 @@
-using static TinderButForBartering.BackendConnection;
 using static TinderButForBartering.Pictures;
 using static TinderButForBartering.Data;
 
@@ -18,15 +17,14 @@ public partial class UserProductDetailsPage : ContentPage
         Description.Text = product.Description;
         Switch.IsToggled = product.RequiresSomethingInReturn;
         PrimaryPictureData = product.PrimaryPictureData;
-        MemoryStream stream = new MemoryStream(PrimaryPictureData); // dispose somewhere
+        MemoryStream stream = new (PrimaryPictureData); // dispose somewhere
         PrimaryPicture.Source = ImageSource.FromStream(() => stream); // rename "stream"
     }
 
     async void OnAddProduct_Clicked(object sender, EventArgs e)
     {
         ProductWithoutId product = new (Titel.Text, Description.Text, Switch.IsToggled, PrimaryPictureData);
-        string productString = await PostProduct(product);
-        AddNewOwnProduct(productString);
+        AddNewOwnProduct(product); // successindicator should come back and be acted on
         await Navigation.PopAsync();
     }
 
