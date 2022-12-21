@@ -5,10 +5,11 @@ namespace TinderButForBartering;
 
 public partial class UserProductDetailsPage : ContentPage
 {
-    #nullable enable
+#nullable enable
     Product? Product { get; set; }
-    #nullable disable
+#nullable disable
 
+    MemoryStream PrimaryPictureStream { get; set; }
     byte[] PrimaryPictureData { get; set; }
 
     public UserProductDetailsPage()
@@ -31,8 +32,8 @@ public partial class UserProductDetailsPage : ContentPage
         Description.Text = Product.Description;
         Switch.IsToggled = Product.RequiresSomethingInReturn;
         PrimaryPictureData = Product.PrimaryPictureData;
-        MemoryStream stream = new (PrimaryPictureData); // dispose somewhere
-        PrimaryPicture.Source = ImageSource.FromStream(() => stream); // rename "stream"
+        PrimaryPictureStream = new(PrimaryPictureData);
+        PrimaryPicture.Source = ImageSource.FromStream(() => PrimaryPictureStream);
     }
 
     async void OnAddProduct_Clicked(object sender, EventArgs e)
@@ -43,14 +44,14 @@ public partial class UserProductDetailsPage : ContentPage
             return;
         }
 
-        ProductWithoutId productWithoutId = new(Title.Text, Description.Text, Switch.IsToggled, PrimaryPictureData);
+        ProductWithoutId productWithoutId = new(Title.Text, Description.Text?? "", Switch.IsToggled, PrimaryPictureData);
         AddNewOwnProduct(productWithoutId); // successindicator should come back and be acted on
         await Navigation.PopAsync();
     }
 
     async void OnChangeProduct_Clicked(object sender, EventArgs e)
     {
-        Product changedProduct = new(Title.Text, Description.Text, Switch.IsToggled, PrimaryPictureData, Product.Id);
+        Product changedProduct = new(Title.Text, Description.Text?? "", Switch.IsToggled, PrimaryPictureData, Product.Id);
         ChangeOwnProduct(changedProduct);
         await Navigation.PopAsync();
     }
@@ -76,14 +77,21 @@ public partial class UserProductDetailsPage : ContentPage
         Button button = sender as Button;
         bool useCamera = (button == CameraButton);
 
-        #nullable enable
-        MemoryStream? imageStream = await GetPhoto(useCamera); // where does imageStream.Dispose() go? At the close of the page?
-        #nullable disable
+        PrimaryPictureStream = await GetPhoto(useCamera);
 
-        if (imageStream != null) 
+        if (PrimaryPictureStream != null)
         {
-            PrimaryPicture.Source = ImageSource.FromStream(() => imageStream);
-            PrimaryPictureData = imageStream.ToArray();
+            PrimaryPicture.Source = ImageSource.FromStream(() => PrimaryPictureStream);
+            PrimaryPictureData = PrimaryPictureStream.ToArray();
+        }
+    }
+
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+        if (PrimaryPictureStream != null)
+        {
+            PrimaryPictureStream.Dispose();
         }
     }
 }
