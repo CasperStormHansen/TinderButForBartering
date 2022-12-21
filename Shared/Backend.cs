@@ -14,61 +14,77 @@ public class Backend
 
     public static readonly HttpClient client = new ();
 
-    public static async Task<string> GetProducts()
+    public static async Task<(bool, string)> GetProducts()
     {
         try
         {
-            return await client.GetStringAsync(ProductsUrl);
+            HttpResponseMessage response = await client.GetAsync(ProductsUrl);
+            if (response.IsSuccessStatusCode)
+            {
+                string jsonString = await response.Content.ReadAsStringAsync();
+                return (true, jsonString);
+            }
+            return (false, response.StatusCode.ToString()); // is this string useful?
         }
         catch (Exception ex)
         {
-            return ex.Message;
+            return (false, ex.Message); // should it be more than the message?
         }
     }
     
-    public static async Task<string> PostProduct(ProductWithoutId productWithoutId)
+    public static async Task<(bool, string)> PostProduct(ProductWithoutId productWithoutId)
     {
         try
         {
             HttpResponseMessage response = await client.PostAsJsonAsync(ProductsUrl, productWithoutId);
-            string jsonString = await response.Content.ReadAsStringAsync();
-            return jsonString; // success assumed response.IsSuccessStatusCode
+            if (response.IsSuccessStatusCode)
+            {
+                string jsonString = await response.Content.ReadAsStringAsync();
+                return (true, jsonString);
+            }
+            return (false, response.StatusCode.ToString()); // is this string useful?
         }
         catch (Exception ex)
         {
-            return ex.Message; // how to handle?
+            return (false, ex.Message); // should it be more than the message?
         }
     }
 
-    public static async Task<string> ChangeProduct(Product product)
+    public static async Task<(bool, string)> ChangeProduct(Product product)
     {
         try
         {
             string url = ProductsUrl + product.Id + "/";
             HttpResponseMessage response = await client.PutAsJsonAsync(url, product);
-            //string jsonString = await response.Content.ReadAsStringAsync();
-            //return jsonString; // success assumed response.IsSuccessStatusCode
-            return "";
+            if (response.IsSuccessStatusCode)
+            {
+                string jsonString = await response.Content.ReadAsStringAsync();
+                return (true, jsonString);
+            }
+            return (false, response.StatusCode.ToString()); // is this string useful?
         }
         catch (Exception ex)
         {
-            return ex.Message; // how to handle?
+            return (false, ex.Message); // should it be more than the message?
         }
     }
 
-    public static async Task<string> DeleteProduct(Product product)
+    public static async Task<(bool, string)> DeleteProduct(Product product)
     {
         try
         {
             string url = ProductsUrl + product.Id + "/";
             HttpResponseMessage response = await client.DeleteAsync(url);
-            //string jsonString = await response.Content.ReadAsStringAsync();
-            //return jsonString; // success assumed response.IsSuccessStatusCode
-            return "";
+            if (response.IsSuccessStatusCode)
+            {
+                string jsonString = await response.Content.ReadAsStringAsync();
+                return (true, jsonString);
+            }
+            return (false, response.StatusCode.ToString()); // is this string useful?
         }
         catch (Exception ex)
         {
-            return ex.Message; // how to handle?
+            return (false, ex.Message); // should it be more than the message?
         }
     }
 }

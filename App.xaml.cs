@@ -10,6 +10,6 @@ public partial class App : Application
 
 		MainPage = new NavigationPage(new MainPage());
 
-        _ = GetOwnProducts();
+        _ = GetOwnProducts(); // what should be done if this operation fails?
     }
 }

@@ -7,39 +7,60 @@ class Data
 {
     public static ObservableCollection<Product> OwnProducts { get; private set; } = new();
 
-    public static async Task GetOwnProducts()
+    public static async Task<(bool, string)> GetOwnProducts()
     {
-        string productsString = await Backend.GetProducts();
+        (bool wasSuccessful, string productsStringOrErrorInfo) = await Backend.GetProducts();
 
-        List<Product> productsList = JsonConvert.DeserializeObject<List<Product>>(productsString);
-        foreach (Product product in productsList)
+        if (wasSuccessful)
         {
-            OwnProducts.Add(product);
+            List<Product> productsList = JsonConvert.DeserializeObject<List<Product>>(productsStringOrErrorInfo);
+            foreach (Product product in productsList)
+            {
+                OwnProducts.Add(product);
+            }
+            return (true, "");
         }
+        return (false, productsStringOrErrorInfo);
     }
 
-    public static async void AddNewOwnProduct(ProductWithoutId productWithoutId)
+    public static async Task<(bool, string)> AddNewOwnProduct(ProductWithoutId productWithoutId)
     {
-        string productString = await Backend.PostProduct(productWithoutId);
+        (bool wasSuccessful, string productStringOrErrorInfo) = await Backend.PostProduct(productWithoutId);
 
-        Product product = JsonConvert.DeserializeObject<Product>(productString);
-        OwnProducts.Add(product);
+        if (wasSuccessful)
+        {
+            Product product = JsonConvert.DeserializeObject<Product>(productStringOrErrorInfo);
+            OwnProducts.Add(product);
+            return (true, "");
+        }
+        return (false, productStringOrErrorInfo);
+
     }
 
-    public static async void ChangeOwnProduct(Product product)
+    public static async Task<(bool, string)> ChangeOwnProduct(Product product)
     {
-        await Backend.ChangeProduct(product); // only proceed if successful
+        (bool wasSuccessful, string errorInfo) = await Backend.ChangeProduct(product);
 
-        Product productToBeReplaced = OwnProducts.FirstOrDefault(p => p.Id == product.Id);
-        int index = OwnProducts.IndexOf(productToBeReplaced);
-        OwnProducts.RemoveAt(index);
-        OwnProducts.Insert(index, product);
+        if (wasSuccessful)
+        {
+            Product productToBeReplaced = OwnProducts.FirstOrDefault(p => p.Id == product.Id);
+            int index = OwnProducts.IndexOf(productToBeReplaced);
+            OwnProducts.RemoveAt(index);
+            OwnProducts.Insert(index, product);
+            return (true, "");
+        }
+        return (false, errorInfo);
     }
 
-    public static async void DeleteOwnProduct(Product product)
+    public static async Task<(bool, string)> DeleteOwnProduct(Product product)
     {
-        await Backend.DeleteProduct(product);
+        (bool wasSuccessful, string errorInfo) = await Backend.DeleteProduct(product);
 
-        OwnProducts.Remove(product);
+        if (wasSuccessful) 
+        {
+            OwnProducts.Remove(product);
+            return (true, "");
+        }
+        return (false, errorInfo);
     }
 }

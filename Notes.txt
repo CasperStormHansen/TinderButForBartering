@@ -1,0 +1,13 @@
+﻿Images are in two formats:
+- Stream when comming from camera/gallery and when assigned to UI element
+- byte[] in app-wide memory and at backend
+
+The byte[] image is placed directly in the database.
+
+Should probably be changed. Guess as to best solution: 
+- database contains references to images that are stored elsewhere in the backend and get individual URLs
+- these URLs are used as image sources for UI elements (I think default caching  will be useful)
+
+This would mean that conversion from stream to byte[] is still needed at frontend, but not vice versa
+
+An image may be deleted from the backend in between reference to it being sent to client and its use. Error handling needed.

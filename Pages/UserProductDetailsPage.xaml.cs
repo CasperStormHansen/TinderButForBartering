@@ -38,38 +38,61 @@ public partial class UserProductDetailsPage : ContentPage
 
     async void OnAddProduct_Clicked(object sender, EventArgs e)
     {
-        if (String.IsNullOrWhiteSpace(Title.Text) || PrimaryPictureData == null)
+        if (string.IsNullOrWhiteSpace(Title.Text) || PrimaryPictureData == null)
         {
             await Application.Current.MainPage.DisplayAlert("Det er nødvendigt med en titel og mindst et billede", "", "OK");
             return;
         }
 
-        ProductWithoutId productWithoutId = new(Title.Text, Description.Text?? "", Switch.IsToggled, PrimaryPictureData);
-        AddNewOwnProduct(productWithoutId); // successindicator should come back and be acted on
-        await Navigation.PopAsync();
+        ProductWithoutId productWithoutId = new (Title.Text, Description.Text?? "", Switch.IsToggled, PrimaryPictureData);
+        (bool wasSuccessful, string errorInfo) = await AddNewOwnProduct(productWithoutId);
+
+        if (wasSuccessful)
+        {
+            await Navigation.PopAsync();
+            return;
+        }
+
+        await Application.Current.MainPage.DisplayAlert("Noget gik galt, så din vare er ikke blevet tilføjet", errorInfo, "OK");
     }
 
     async void OnChangeProduct_Clicked(object sender, EventArgs e)
     {
         Product changedProduct = new(Title.Text, Description.Text?? "", Switch.IsToggled, PrimaryPictureData, Product.Id);
-        ChangeOwnProduct(changedProduct);
-        await Navigation.PopAsync();
+        (bool wasSuccessful, string errorInfo) = await ChangeOwnProduct(changedProduct);
+
+        if (wasSuccessful)
+        {
+            await Navigation.PopAsync();
+            return;
+        }
+
+        await Application.Current.MainPage.DisplayAlert("Noget gik galt, så din vare er ikke blevet opdateret", errorInfo, "OK");
     }
 
     async void OnCancel_Clicked(object sender, EventArgs e)
     {
-        // perhaps a warning dialog here
+        // perhaps a warning dialog here, which should also appear on back button click
         await Navigation.PopAsync();
     }
 
     async void OnDeleteProduct_Clicked(object sender, EventArgs e)
     {
         string userDecision = await Application.Current.MainPage.DisplayActionSheet("Slet vare?", "Fortryd", "OK");
-        if (userDecision == "OK")
+        if (userDecision == "Fortryd")
         {
-            DeleteOwnProduct(Product);
-            await Navigation.PopAsync();
+            return;
         }
+
+        (bool wasSuccessful, string errorInfo) = await DeleteOwnProduct(Product);
+
+        if (wasSuccessful)
+        {
+            await Navigation.PopAsync();
+            return;
+        }
+
+        await Application.Current.MainPage.DisplayAlert("Noget gik galt, så din vare er ikke blevet slettet", errorInfo, "OK");
     }
 
     async void OnGetPicture_Clicked(object sender, EventArgs e)
@@ -83,15 +106,6 @@ public partial class UserProductDetailsPage : ContentPage
         {
             PrimaryPicture.Source = ImageSource.FromStream(() => PrimaryPictureStream);
             PrimaryPictureData = PrimaryPictureStream.ToArray();
-        }
-    }
-
-    protected override void OnDisappearing()
-    {
-        base.OnDisappearing();
-        if (PrimaryPictureStream != null)
-        {
-            PrimaryPictureStream.Dispose();
         }
     }
 }
