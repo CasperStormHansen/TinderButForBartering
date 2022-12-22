@@ -1,5 +1,6 @@
 using static TinderButForBartering.Pictures;
 using static TinderButForBartering.Data;
+using CommunityToolkit.Maui.Views;
 
 namespace TinderButForBartering;
 
@@ -44,8 +45,10 @@ public partial class UserProductDetailsPage : ContentPage
             return;
         }
 
-        ProductWithoutId productWithoutId = new (Title.Text, Description.Text?? "", Switch.IsToggled, PrimaryPictureData);
-        (bool wasSuccessful, string errorInfo) = await AddNewOwnProduct(productWithoutId);
+        SpinnerPopup busyIndicator = new(); this.ShowPopup(busyIndicator);
+            ProductWithoutId productWithoutId = new (Title.Text, Description.Text?? "", Switch.IsToggled, PrimaryPictureData);
+            (bool wasSuccessful, string errorInfo) = await AddNewOwnProduct(productWithoutId);
+        busyIndicator.Close();
 
         if (wasSuccessful)
         {
@@ -58,8 +61,10 @@ public partial class UserProductDetailsPage : ContentPage
 
     async void OnChangeProduct_Clicked(object sender, EventArgs e)
     {
-        Product changedProduct = new(Title.Text, Description.Text?? "", Switch.IsToggled, PrimaryPictureData, Product.Id);
-        (bool wasSuccessful, string errorInfo) = await ChangeOwnProduct(changedProduct);
+        SpinnerPopup busyIndicator = new(); this.ShowPopup(busyIndicator);
+            Product changedProduct = new(Title.Text, Description.Text?? "", Switch.IsToggled, PrimaryPictureData, Product.Id);
+            (bool wasSuccessful, string errorInfo) = await ChangeOwnProduct(changedProduct);
+        busyIndicator.Close();
 
         if (wasSuccessful)
         {
@@ -84,7 +89,9 @@ public partial class UserProductDetailsPage : ContentPage
             return;
         }
 
-        (bool wasSuccessful, string errorInfo) = await DeleteOwnProduct(Product);
+        SpinnerPopup busyIndicator = new(); this.ShowPopup(busyIndicator);
+            (bool wasSuccessful, string errorInfo) = await DeleteOwnProduct(Product);
+        busyIndicator.Close();
 
         if (wasSuccessful)
         {
