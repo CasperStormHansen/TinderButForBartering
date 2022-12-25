@@ -76,7 +76,7 @@
 
             <Image 
             WidthRequest="300"
-            Source="dotnet_bot.svg"
+            Source="https://localhost:7239/products/images/revolt-164_6wVEHfI-unsplash.jpg"
             x:Name="PrimaryPicture"/>
         </VerticalStackLayout>
     </ScrollView>

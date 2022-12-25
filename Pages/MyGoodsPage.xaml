@@ -10,16 +10,35 @@
             <Button
             Text="+"
             BackgroundColor="Blue"
-            Clicked="OnNewProduct_Clicked" />
+            Clicked="OnNewProduct_Clicked" 
+            Margin="10"/>
 
             <CollectionView
                 x:Name="MyProductsView">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Button
-                            Text="{Binding Title}"
-                            BackgroundColor="Blue"
-                            Clicked="OnUserProductDetails_Clicked"/>
+                        <Grid>
+                            <Image 
+                                WidthRequest="200" 
+                                HeightRequest="200" 
+                                Margin="10" 
+                                Aspect="AspectFit" 
+                                Source="{Binding Id, StringFormat=$'{ProductsUrl}images/{0}.jpg'}" />
+                            <ImageButton 
+                                WidthRequest="200" 
+                                HeightRequest="200" 
+                                Margin="10" 
+                                BackgroundColor="Transparent" 
+                                Clicked="OnUserProductDetails_Clicked" />
+                        </Grid>
+                        <!-- The Grid and its content replace this code, which doesn't work as intended
+                        <ImageButton
+                            WidthRequest="200"
+                            HeightRequest="200"
+                            Margin="10"
+                            Aspect="AspectFit"
+                            Source="{Binding Id, StringFormat='https://localhost:7239/products/images/{0}.jpg'}"
+                            Clicked="OnUserProductDetails_Clicked"/>-->
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>

@@ -1,4 +1,5 @@
 using static TinderButForBartering.Data;
+using static TinderButForBartering.Backend;
 
 namespace TinderButForBartering;
 
@@ -18,7 +19,7 @@ public partial class MyGoodsPage : ContentPage
 
     private async void OnUserProductDetails_Clicked(object sender, EventArgs e)
     {
-        Button button = sender as Button;
+        ImageButton button = sender as ImageButton;
         Product product = button.BindingContext as Product;
         await Navigation.PushAsync(new UserProductDetailsPage(product));
     }
