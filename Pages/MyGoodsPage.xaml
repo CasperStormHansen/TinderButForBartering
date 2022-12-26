@@ -23,7 +23,7 @@
                                 HeightRequest="200" 
                                 Margin="10" 
                                 Aspect="AspectFit" 
-                                Source="{Binding Id, StringFormat=$'{ProductsUrl}images/{0}.jpg'}" />
+                                Source="{Binding Url}" />
                             <ImageButton 
                                 WidthRequest="200" 
                                 HeightRequest="200" 

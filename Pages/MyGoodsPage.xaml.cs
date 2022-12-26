@@ -1,5 +1,4 @@
 using static TinderButForBartering.Data;
-using static TinderButForBartering.Backend;
 
 namespace TinderButForBartering;
 

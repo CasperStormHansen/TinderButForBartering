@@ -14,6 +14,11 @@ public class Backend
 
     public static readonly HttpClient client = new ();
 
+    public static string GetIdUrl(int Id)
+    {
+        return $"{ProductsUrl}images/{Id}.jpg";
+    }
+
     public static async Task<(bool, string)> GetProducts()
     {
         try
