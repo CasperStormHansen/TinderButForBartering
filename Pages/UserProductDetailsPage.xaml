@@ -49,7 +49,6 @@
             BackgroundColor="Green"
             Clicked="OnChangeProduct_Clicked"
             x:Name="ChangeProductButton"/>
-            <!--IsEnabled="false"-->
 
             <Button
             Text="Fortryd"

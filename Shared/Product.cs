@@ -23,7 +23,7 @@ namespace TinderButForBartering
         public int Id { get; set; }
 
         [JsonIgnore]
-        public string Url => Backend.GetIdUrl(Id);
+        public string Url => Backend.GetIdUrl(Id); // name this better!
 
         public Product(string title, string description, bool requiresSomethingInReturn, byte[] primaryPictureData, int id) : base(title, description, requiresSomethingInReturn, primaryPictureData)
         {

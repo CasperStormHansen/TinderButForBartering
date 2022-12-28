@@ -13,6 +13,7 @@ public partial class UserProductDetailsPage : ContentPage
     MemoryStream PrimaryPictureStream { get; set; }
     byte[] PrimaryPictureData { get; set; }
 
+    // When loaded as "add new product page"
     public UserProductDetailsPage()
     {
         InitializeComponent();
@@ -21,6 +22,7 @@ public partial class UserProductDetailsPage : ContentPage
         DeleteProductButton.IsVisible = false;
     }
 
+    // When loaded as "modify product page"
     public UserProductDetailsPage(Product product)
     {
         InitializeComponent();
@@ -32,9 +34,10 @@ public partial class UserProductDetailsPage : ContentPage
         Title.Text = Product.Title;
         Description.Text = Product.Description;
         Switch.IsToggled = Product.RequiresSomethingInReturn;
-        PrimaryPictureData = Product.PrimaryPictureData;
-        PrimaryPictureStream = new(PrimaryPictureData);
-        PrimaryPicture.Source = ImageSource.FromStream(() => PrimaryPictureStream);
+        PrimaryPicture.Source = Product.Url;
+        //PrimaryPictureData = Product.PrimaryPictureData;
+        //PrimaryPictureStream = new(PrimaryPictureData);
+        //PrimaryPicture.Source = ImageSource.FromStream(() => PrimaryPictureStream);
     }
 
     async void OnAddProduct_Clicked(object sender, EventArgs e)
