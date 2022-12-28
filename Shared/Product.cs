@@ -7,7 +7,9 @@ namespace TinderButForBartering
         public string Title { get; set; }
         public string Description { get; set; }
         public bool RequiresSomethingInReturn { get; set; }
-        public byte[] PrimaryPictureData { get; set; }
+        #nullable enable
+        public byte[]? PrimaryPictureData { get; set; }
+        #nullable disable
 
         public ProductWithoutId(string title, string description, bool requiresSomethingInReturn, byte[] primaryPictureData)
         {

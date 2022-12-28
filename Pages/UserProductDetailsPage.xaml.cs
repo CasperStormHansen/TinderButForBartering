@@ -1,6 +1,5 @@
 using static TinderButForBartering.Pictures;
 using static TinderButForBartering.Data;
-using CommunityToolkit.Maui.Views;
 
 namespace TinderButForBartering;
 
@@ -8,10 +7,9 @@ public partial class UserProductDetailsPage : ContentPage
 {
 #nullable enable
     Product? Product { get; set; }
+    MemoryStream? PrimaryPictureStream { get; set; }
+    byte[]? PrimaryPictureData { get; set; }
 #nullable disable
-
-    MemoryStream PrimaryPictureStream { get; set; }
-    byte[] PrimaryPictureData { get; set; }
 
     // When loaded as "add new product page"
     public UserProductDetailsPage()
@@ -48,10 +46,10 @@ public partial class UserProductDetailsPage : ContentPage
             return;
         }
 
-        SpinnerPopup busyIndicator = new(); this.ShowPopup(busyIndicator);
-            ProductWithoutId productWithoutId = new (Title.Text, Description.Text?? "", Switch.IsToggled, PrimaryPictureData);
-            (bool wasSuccessful, string errorInfo) = await AddNewOwnProduct(productWithoutId);
-        busyIndicator.Close();
+        BusyIndicator.On();
+        ProductWithoutId productWithoutId = new (Title.Text, Description.Text?? "", Switch.IsToggled, PrimaryPictureData);
+        (bool wasSuccessful, string errorInfo) = await AddNewOwnProduct(productWithoutId);
+        BusyIndicator.Off();
 
         if (wasSuccessful)
         {
@@ -64,10 +62,10 @@ public partial class UserProductDetailsPage : ContentPage
 
     async void OnChangeProduct_Clicked(object sender, EventArgs e)
     {
-        SpinnerPopup busyIndicator = new(); this.ShowPopup(busyIndicator);
-            Product changedProduct = new(Title.Text, Description.Text?? "", Switch.IsToggled, PrimaryPictureData, Product.Id);
-            (bool wasSuccessful, string errorInfo) = await ChangeOwnProduct(changedProduct);
-        busyIndicator.Close();
+        BusyIndicator.On();
+        Product changedProduct = new(Title.Text, Description.Text?? "", Switch.IsToggled, PrimaryPictureData, Product.Id);
+        (bool wasSuccessful, string errorInfo) = await ChangeOwnProduct(changedProduct);
+        BusyIndicator.Off();
 
         if (wasSuccessful)
         {
@@ -80,7 +78,23 @@ public partial class UserProductDetailsPage : ContentPage
 
     async void OnCancel_Clicked(object sender, EventArgs e)
     {
-        // perhaps a warning dialog here, which should also appear on back button click
+        bool changeHasBeenMade = 
+            (Product == null 
+                && (!string.IsNullOrWhiteSpace(Title.Text) || !string.IsNullOrWhiteSpace(Description.Text) || PrimaryPictureData != null)
+            )
+            || 
+            (Product != null
+                && (Title.Text != Product.Title || Description.Text != Product.Description || Switch.IsToggled != Product.RequiresSomethingInReturn || PrimaryPictureData != null)
+            );
+        if (changeHasBeenMade)
+        {
+            string userDecision = await Application.Current.MainPage.DisplayActionSheet("Fortryd ændringer?", "Nej", "Ja");
+            if (userDecision == "Nej")
+            {
+                return;
+            }
+        }
+
         await Navigation.PopAsync();
     }
 
@@ -92,9 +106,9 @@ public partial class UserProductDetailsPage : ContentPage
             return;
         }
 
-        SpinnerPopup busyIndicator = new(); this.ShowPopup(busyIndicator);
-            (bool wasSuccessful, string errorInfo) = await DeleteOwnProduct(Product);
-        busyIndicator.Close();
+        BusyIndicator.On();
+        (bool wasSuccessful, string errorInfo) = await DeleteOwnProduct(Product);
+        BusyIndicator.Off();
 
         if (wasSuccessful)
         {

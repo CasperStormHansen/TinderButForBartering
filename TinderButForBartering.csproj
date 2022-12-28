@@ -65,6 +65,9 @@
 	  <Compile Update="Pages\MyMatchesPage.xaml.cs">
 	    <DependentUpon>MyMatchesPage.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="Pages\BusyIndicator.xaml.cs">
+	    <DependentUpon>BusyIndicator.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Pages\UserProductDetailsPage.xaml.cs">
 	    <DependentUpon>UserProductDetailsPage.xaml</DependentUpon>
 	  </Compile>
@@ -83,7 +86,7 @@
 	  <MauiXaml Update="Pages\MyMatchesPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\SpinnerPopup.xaml">
+	  <MauiXaml Update="Pages\BusyIndicator.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Pages\UserProductDetailsPage.xaml">
