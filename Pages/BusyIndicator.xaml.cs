@@ -13,6 +13,9 @@ public partial class BusyIndicator : Popup
 		InitializeComponent();
 	}
 
+	/// <summary>
+	/// Turns on a busy indicator that prevents user interaction.
+	/// </summary>
 	public static void On()
 	{
         Page currentPage = Application.Current.MainPage;
@@ -20,6 +23,9 @@ public partial class BusyIndicator : Popup
         currentPage.ShowPopup(currentSpinnerPopup);
     }
 
+    /// <summary>
+    /// Turns off a busy indicator that prevents user interaction.
+    /// </summary>
     public static void Off()
     {
         currentSpinnerPopup.Close();

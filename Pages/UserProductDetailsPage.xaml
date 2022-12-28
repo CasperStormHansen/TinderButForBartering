@@ -9,10 +9,10 @@
         Padding="20">
 
             <Entry
-            HorizontalOptions="Start"
+            HorizontalOptions="Center"
             Placeholder="Overskrift" 
             SemanticProperties.Hint="Varens overskrift"
-            WidthRequest="100"
+            WidthRequest="300"
             Margin="20"
             x:Name="Title"/>
 
@@ -26,57 +26,71 @@
             Margin="20"
             x:Name="Description"/>
 
-            <Label 
+            <Label
+            HorizontalOptions="Center"
             Text="Byt eller pyt"
             VerticalOptions="Center"
             Margin="20"/>
 
-            <Switch 
-            HorizontalOptions="Start"
+            <Switch
+            HorizontalOptions="Center"
             Margin="20,0,0,0"
             OnColor="Gray"
             ThumbColor="Green" 
             x:Name="Switch"/>
 
+            <Image 
+            WidthRequest="300"
+            Source="https://localhost:7239/products/images/revolt-164_6wVEHfI-unsplash.jpg"
+            x:Name="PrimaryPicture"
+            Margin="20"/>
+
             <Button
+            HorizontalOptions="Center"
+            WidthRequest="300" 
             Text="Tilføj"
             BackgroundColor="Green"
             Clicked="OnAddProduct_Clicked"
             x:Name="AddNewProductButton"/>
 
             <Button
+            HorizontalOptions="Center"
+            WidthRequest="300"
             Text="Godkend ændringer"
             BackgroundColor="Green"
             Clicked="OnChangeProduct_Clicked"
             x:Name="ChangeProductButton"/>
 
             <Button
+            HorizontalOptions="Center"
+            WidthRequest="300"
             Text="Fortryd"
             BackgroundColor="Orange"
             Clicked="OnCancel_Clicked"/>
 
             <Button
+            HorizontalOptions="Center"
+            WidthRequest="300"
             Text="Slet"
             BackgroundColor="Red"
             Clicked="OnDeleteProduct_Clicked"
             x:Name="DeleteProductButton"/>
 
             <Button
+            HorizontalOptions="Center"
+            WidthRequest="300"
             Text="Tag billede"
             BackgroundColor="Blue"
             Clicked="OnGetPicture_Clicked"
             x:Name="CameraButton"/>
 
             <Button
+            HorizontalOptions="Center"
+            WidthRequest="300"
             Text="Vælg billede fra galleri"
             BackgroundColor="Blue"
             Clicked="OnGetPicture_Clicked"
             x:Name="GalleryButton"/>
-
-            <Image 
-            WidthRequest="300"
-            Source="https://localhost:7239/products/images/revolt-164_6wVEHfI-unsplash.jpg"
-            x:Name="PrimaryPicture"/>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

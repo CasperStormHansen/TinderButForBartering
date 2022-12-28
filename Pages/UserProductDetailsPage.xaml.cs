@@ -1,6 +1,3 @@
-using static TinderButForBartering.Pictures;
-using static TinderButForBartering.Data;
-
 namespace TinderButForBartering;
 
 public partial class UserProductDetailsPage : ContentPage
@@ -48,7 +45,7 @@ public partial class UserProductDetailsPage : ContentPage
 
         BusyIndicator.On();
         ProductWithoutId productWithoutId = new (Title.Text, Description.Text?? "", Switch.IsToggled, PrimaryPictureData);
-        (bool wasSuccessful, string errorInfo) = await AddNewOwnProduct(productWithoutId);
+        (bool wasSuccessful, string errorInfo) = await Data.AddNewOwnProduct(productWithoutId);
         BusyIndicator.Off();
 
         if (wasSuccessful)
@@ -64,7 +61,7 @@ public partial class UserProductDetailsPage : ContentPage
     {
         BusyIndicator.On();
         Product changedProduct = new(Title.Text, Description.Text?? "", Switch.IsToggled, PrimaryPictureData, Product.Id);
-        (bool wasSuccessful, string errorInfo) = await ChangeOwnProduct(changedProduct);
+        (bool wasSuccessful, string errorInfo) = await Data.ChangeOwnProduct(changedProduct);
         BusyIndicator.Off();
 
         if (wasSuccessful)
@@ -107,7 +104,7 @@ public partial class UserProductDetailsPage : ContentPage
         }
 
         BusyIndicator.On();
-        (bool wasSuccessful, string errorInfo) = await DeleteOwnProduct(Product);
+        (bool wasSuccessful, string errorInfo) = await Data.DeleteOwnProduct(Product);
         BusyIndicator.Off();
 
         if (wasSuccessful)
@@ -124,7 +121,7 @@ public partial class UserProductDetailsPage : ContentPage
         Button button = sender as Button;
         bool useCamera = (button == CameraButton);
 
-        PrimaryPictureStream = await GetPhoto(useCamera);
+        PrimaryPictureStream = await Pictures.GetPhoto(useCamera);
 
         if (PrimaryPictureStream != null)
         {

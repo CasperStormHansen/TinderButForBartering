@@ -1,5 +1,3 @@
-using static TinderButForBartering.Data;
-
 namespace TinderButForBartering;
 
 public partial class MyGoodsPage : ContentPage
@@ -7,7 +5,7 @@ public partial class MyGoodsPage : ContentPage
     public MyGoodsPage()
     {
         InitializeComponent();
-        MyProductsView.ItemsSource = OwnProducts;
+        MyProductsView.ItemsSource = Data.OwnProducts;
         //_ = GetOwnProducts();
     }
 

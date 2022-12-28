@@ -2,6 +2,13 @@
 
 public class Pictures
 {
+    /// <summary>
+    /// Gets an image, either from the camera (if the paremeter is true) or from the gallery.
+    /// </summary>
+    /// 
+    /// <returns>
+    /// The image as a MemoryStream.
+    /// </returns>
     public static async Task<MemoryStream> GetPhoto(bool withCamera)
     {
         // handle denial of request and errors!
