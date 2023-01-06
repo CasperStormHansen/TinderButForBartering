@@ -27,6 +27,11 @@
             Text="Main view where the swiping takes place"
             VerticalOptions="Center" 
             HorizontalOptions="Center" />
+
+        <!--<Button
+            Text="Login"
+            BackgroundColor="Blue"
+            Clicked="OnLoginButton_Clicked" />-->
     </StackLayout>
 
 </ContentPage>

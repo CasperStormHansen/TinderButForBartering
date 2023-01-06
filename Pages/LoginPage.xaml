@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TinderButForBartering.LoginPage"
+             Title="Login Page">
+
+    <Grid>
+        <FlexLayout JustifyContent="SpaceAround"
+                    Direction="Column"
+                    AlignItems="Center"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center">
+
+            <Button Text="Login"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    Clicked="LoginButton_Clicked"
+                    x:Name="LoginButton"/>
+        </FlexLayout>
+        <!--Explore the activity indicator below-->
+        <ActivityIndicator x:Name="LoggingIn"
+                           IsRunning="True"
+                           IsVisible="false"/>
+    </Grid>
+
+</ContentPage>
