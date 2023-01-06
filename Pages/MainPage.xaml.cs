@@ -20,5 +20,10 @@ public partial class MainPage : ContentPage
     {
         await Navigation.PushAsync(new MyMatchesPage());
     }
+
+    //private async void OnLoginButton_Clicked(object sender, EventArgs e)
+    //{
+    //    await Navigation.PushAsync(new LoginPage());
+    //}
 }
 
