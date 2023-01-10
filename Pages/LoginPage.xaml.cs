@@ -10,40 +10,121 @@ public partial class LoginPage : ContentPage
         InitializeComponent();
     }
 
-    private async void LoginButton_Clicked(object sender, EventArgs e)
+    private async void LoginEmailButton_Clicked(object sender, EventArgs e)
     {
-        LoginButton.IsEnabled = false;
-        // busy
+        LoginEmailButton.IsEnabled = false;
+        BusyIndicator.IsVisible = true;
 
-        await SignInWithEmailAndPasswordAsync();
+        bool succes = await SignInWithEmailAndPasswordAsync();
 
-        // not busy
+        BusyIndicator.IsVisible = false;
 
-        if (false)
-        {
-            await App.Current.MainPage.DisplayAlert("Error", "Something went wrong logging you in. Please try again.", "OK");
-            LoginButton.IsEnabled = true;
-            // not busy
-        }
-        else
+        if (succes)
         {
             await Navigation.PopModalAsync();
         }
+        else
+        {
+            await App.Current.MainPage.DisplayAlert("Error", "Something went wrong logging you in. Please try again.", "OK");
+            LoginEmailButton.IsEnabled = true;
+            BusyIndicator.IsVisible = false;
+        }
     }
 
-    private async Task SignInWithEmailAndPasswordAsync()
+    private async void LoginFacebookButton_Clicked(object sender, EventArgs e)
+    {
+        LoginFacebookButton.IsEnabled = false;
+        BusyIndicator.IsVisible = true;
+
+        bool succes = await SignInWithFacebookAsync();
+
+        BusyIndicator.IsVisible = false;
+
+        if (succes)
+        {
+            await Navigation.PopModalAsync();
+        }
+        else
+        {
+            await App.Current.MainPage.DisplayAlert("Error", "Something went wrong logging you in. Please try again.", "OK");
+            LoginFacebookButton.IsEnabled = true;
+            BusyIndicator.IsVisible = false;
+        }
+    }
+
+    private async void LoginGoogleButton_Clicked(object sender, EventArgs e)
+    {
+        LoginGoogleButton.IsEnabled = false;
+        BusyIndicator.IsVisible = true;
+
+        bool succes = await SignInWithGoogleAsync();
+
+        BusyIndicator.IsVisible = false;
+
+        if (succes)
+        {
+            await Navigation.PopModalAsync();
+        }
+        else
+        {
+            await App.Current.MainPage.DisplayAlert("Error", "Something went wrong logging you in. Please try again.", "OK");
+            LoginGoogleButton.IsEnabled = true;
+            BusyIndicator.IsVisible = false;
+        }
+    }
+
+    private static async Task<bool> SignInWithEmailAndPasswordAsync()
     {
         try
         {
-            var auth = CrossFirebaseAuth.Current;
-            var email = "casperstormhansen2@gmail.com";
-            var password = "Aa12345_";
-            var user = await auth.SignInWithEmailAndPasswordAsync(email, password);
-            Console.WriteLine($"User signed in: {user.Email}");
+            string email = "casperstormhansen2@gmail.com";
+            string password = "Aa12345_";
+            IFirebaseUser user = await CrossFirebaseAuth.Current.SignInWithEmailAndPasswordAsync(email, password);
+            await App.Current.MainPage.DisplayAlert("User signed in", $"{user.DisplayName}, {user.Uid}, {user.Email}, {user.ToString()}, {user.IsEmailVerified}", "OK");
+            return true;
         }
         catch (FirebaseAuthException ex)
         {
-            Console.WriteLine($"Error signing in: {ex.Message}");
+            await App.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
+            return false;
+        }
+    }
+
+    private static async Task<bool> SignInWithGoogleAsync()
+    {
+        try
+        {
+            IFirebaseUser user = await CrossFirebaseAuth.Current.SignInWithGoogleAsync();
+            await App.Current.MainPage.DisplayAlert("User signed in", $"{user.DisplayName}, {user.Uid}, {user.Email}, {user.ToString()}, {user.IsEmailVerified}", "OK");
+            return true;
+        }
+        catch (FirebaseAuthException ex)
+        {
+            await App.Current.MainPage.DisplayAlert("Error", ex.ToString() + ex.Reason, "OK");
+            if (ex.InnerException != null)
+            {
+                await App.Current.MainPage.DisplayAlert("Error", "inner exception is not null", "OK");
+            }
+            else
+            {
+                await App.Current.MainPage.DisplayAlert("Error", "inner exception is null", "OK");
+            }
+            return false;
+        }
+    }
+
+    private static async Task<bool> SignInWithFacebookAsync()
+    {
+        try
+        {
+            IFirebaseUser user = await CrossFirebaseAuth.Current.SignInWithFacebookAsync();
+            await App.Current.MainPage.DisplayAlert("User signed in", $"{user.DisplayName}, {user.Uid}, {user.Email}, {user.ToString()}, {user.IsEmailVerified}", "OK");
+            return true;
+        }
+        catch (FirebaseAuthException ex)
+        {
+            await App.Current.MainPage.DisplayAlert("Error", ex.ToString() + ex.Reason, "OK");
+            return false;
         }
     }
 }

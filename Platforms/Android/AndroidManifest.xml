@@ -3,7 +3,18 @@
 	<!--android:usesCleartextTraffic="true" should be deleted when backend has been equiped with a certificate-->
 	<!--everything from read_external is experimental-->
 	<!--https://github.com/dotnet/maui/issues/11275-->
-	<application android:allowBackup="true" android:icon="@mipmap/appicon" android:roundIcon="@mipmap/appicon_round" android:supportsRtl="true" android:usesCleartextTraffic="true"></application>
+	<application android:allowBackup="true" android:icon="@mipmap/appicon" android:roundIcon="@mipmap/appicon_round" android:supportsRtl="true" android:usesCleartextTraffic="true">
+		<meta-data android:name="com.facebook.sdk.ApplicationId" android:value="524648662974660" />
+		<activity android:name="com.facebook.FacebookActivity" android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation" android:label="BarterApp" />
+		<activity android:name="com.facebook.CustomTabActivity" android:exported="true">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+				<data android:scheme="com.companyname.barterapp" />
+			</intent-filter>
+		</activity>
+	</application>
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />

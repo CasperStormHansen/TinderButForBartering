@@ -362,3 +362,8 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /GoogleService-Info.plist
+/BarterApp.jks
+/TinderButForBartering.csproj
+/TinderButForBartering.csproj
+/google-services.json
+/GoogleService-Info.plist

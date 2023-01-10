@@ -11,14 +11,26 @@
                     HorizontalOptions="Center"
                     VerticalOptions="Center">
 
-            <Button Text="Login"
+            <Button Text="Login with email"
                     HorizontalOptions="Center"
                     VerticalOptions="Center"
-                    Clicked="LoginButton_Clicked"
-                    x:Name="LoginButton"/>
+                    Clicked="LoginEmailButton_Clicked"
+                    x:Name="LoginEmailButton"/>
+
+            <Button Text="Login with Facebook"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    Clicked="LoginFacebookButton_Clicked"
+                    x:Name="LoginFacebookButton"/>
+
+            <Button Text="Login with Google"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    Clicked="LoginGoogleButton_Clicked"
+                    x:Name="LoginGoogleButton"/>
         </FlexLayout>
         <!--Explore the activity indicator below-->
-        <ActivityIndicator x:Name="LoggingIn"
+        <ActivityIndicator x:Name="BusyIndicator"
                            IsRunning="True"
                            IsVisible="false"/>
     </Grid>

@@ -54,6 +54,11 @@ public static class MauiProgram
 
     private static CrossFirebaseSettings CreateCrossFirebaseSettings()
     {
-        return new CrossFirebaseSettings(isAuthEnabled: true);
+        return new CrossFirebaseSettings(
+            isAuthEnabled: true,
+            facebookId: "524648662974660",
+            facebookAppName: "BarterApp",
+            googleRequestIdToken: "257597635890-evs65o3rrclu0oc5fqmgikv6gvcjlnj9.apps.googleusercontent.com"
+        );
     }
 }
