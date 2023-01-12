@@ -28,10 +28,21 @@
             VerticalOptions="Center" 
             HorizontalOptions="Center" />
 
-        <!--<Button
-            Text="Login"
+        <Button
+            Text="Logout"
             BackgroundColor="Blue"
-            Clicked="OnLoginButton_Clicked" />-->
+            Clicked="OnLogoutButton_Clicked" />
+
+        <Image 
+            WidthRequest="300"
+            x:Name="UserPicture"
+            Margin="20"/>
+
+        <Label 
+            Text="dev info"
+            x:Name="TestLabel"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" />
     </StackLayout>
 
 </ContentPage>

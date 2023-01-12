@@ -1,4 +1,5 @@
-﻿using static TinderButForBartering.Data;
+﻿using Plugin.Firebase.Auth;
+using static TinderButForBartering.Data;
 
 namespace TinderButForBartering;
 
@@ -17,6 +18,9 @@ public partial class App : Application
 	{
 		base.OnStart();
 
-		await MainPage.Navigation.PushModalAsync(new LoginPage());
+		if (CrossFirebaseAuth.Current.CurrentUser == null)
+		{
+			await MainPage.Navigation.PushModalAsync(new LoginPage());
+		}
 	}
 }

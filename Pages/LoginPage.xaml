@@ -11,12 +11,6 @@
                     HorizontalOptions="Center"
                     VerticalOptions="Center">
 
-            <Button Text="Login with email"
-                    HorizontalOptions="Center"
-                    VerticalOptions="Center"
-                    Clicked="LoginEmailButton_Clicked"
-                    x:Name="LoginEmailButton"/>
-
             <Button Text="Login with Facebook"
                     HorizontalOptions="Center"
                     VerticalOptions="Center"
@@ -28,8 +22,47 @@
                     VerticalOptions="Center"
                     Clicked="LoginGoogleButton_Clicked"
                     x:Name="LoginGoogleButton"/>
+
+            <Entry Placeholder="Navn"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    x:Name="NameEntry"/>
+
+            <Entry Placeholder="Email"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    x:Name="SignupEmailEntry"/>
+
+            <Entry Placeholder="Password"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    x:Name="SignupPasswordEntry"
+                    IsPassword="True"/>
+
+            <Button Text="Tilmeld med email"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    Clicked="SignupEmailButton_Clicked"
+                    x:Name="SignupEmailButton"/>
+
+            <Entry Placeholder="Email"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    x:Name="LoginEmailEntry"/>
+
+            <Entry Placeholder="Password"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    x:Name="LoginPasswordEntry"
+                    IsPassword="True"/>
+
+            <Button Text="Login med email"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    Clicked="LoginEmailButton_Clicked"
+                    x:Name="LoginEmailButton"/>
         </FlexLayout>
-        <!--Explore the activity indicator below-->
+        
         <ActivityIndicator x:Name="BusyIndicator"
                            IsRunning="True"
                            IsVisible="false"/>

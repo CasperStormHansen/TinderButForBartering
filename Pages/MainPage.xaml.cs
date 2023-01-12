@@ -1,4 +1,6 @@
-﻿namespace TinderButForBartering;
+﻿using Plugin.Firebase.Auth;
+
+namespace TinderButForBartering;
 
 public partial class MainPage : ContentPage
 {
@@ -7,7 +9,37 @@ public partial class MainPage : ContentPage
 		InitializeComponent();
 	}
 
-	private async void OnMyGoodsButton_Clicked(object sender, EventArgs e)
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+
+        if (CrossFirebaseAuth.Current.CurrentUser != null)
+        {
+            //TestLabel.Text = CrossFirebaseAuth.Current.CurrentUser.ToString() + CrossFirebaseAuth.Current.CurrentUser.DisplayName; 
+            //UserPicture.Source = CrossFirebaseAuth.Current.CurrentUser.PhotoUrl;
+        }
+        else
+        {
+            //UserPicture.Source = null;
+        }
+    }
+
+    protected override void OnNavigatedTo(NavigatedToEventArgs args)
+    {
+        base.OnNavigatedTo(args);
+
+        if (CrossFirebaseAuth.Current.CurrentUser != null)
+        {
+            TestLabel.Text = CrossFirebaseAuth.Current.CurrentUser.ToString() + CrossFirebaseAuth.Current.CurrentUser.DisplayName;
+            UserPicture.Source = CrossFirebaseAuth.Current.CurrentUser.PhotoUrl;
+        }
+        else
+        {
+            UserPicture.Source = null;
+        }
+    }
+
+    private async void OnMyGoodsButton_Clicked(object sender, EventArgs e)
 	{
 		await Navigation.PushAsync(new MyGoodsPage());
 	}
@@ -21,9 +53,10 @@ public partial class MainPage : ContentPage
         await Navigation.PushAsync(new MyMatchesPage());
     }
 
-    //private async void OnLoginButton_Clicked(object sender, EventArgs e)
-    //{
-    //    await Navigation.PushAsync(new LoginPage());
-    //}
+    private async void OnLogoutButton_Clicked(object sender, EventArgs e)
+    {
+        await CrossFirebaseAuth.Current.SignOutAsync(); // error handling, busy indicator, inactivate buttons ...
+        await Navigation.PushModalAsync(new LoginPage());
+    }
 }
 
