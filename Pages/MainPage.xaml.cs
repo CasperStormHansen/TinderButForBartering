@@ -55,8 +55,40 @@ public partial class MainPage : ContentPage
 
     private async void OnLogoutButton_Clicked(object sender, EventArgs e)
     {
-        await CrossFirebaseAuth.Current.SignOutAsync(); // error handling, busy indicator, inactivate buttons ...
-        await Navigation.PushModalAsync(new LoginPage());
+        LogoutButton.IsEnabled = false;
+        BusyIndicator.IsVisible = true;
+
+        bool succes = await Auth.SignOutAsync();
+
+        if (succes)
+        {
+            await Navigation.PushModalAsync(new LoginPage());
+        }
+        else
+        {
+            await App.Current.MainPage.DisplayAlert("Error", "Something went wrong. Please try again.", "OK");
+        }
+        LogoutButton.IsEnabled = true;
+        BusyIndicator.IsVisible = false;
+    }
+
+    private async void OnDeleteAccountButton_Clicked(object sender, EventArgs e)
+    {
+        DeleteAccountButton.IsEnabled = false;
+        BusyIndicator.IsVisible = true;
+
+        bool succes = await Auth.DeleteAccountAsync();
+
+        if (succes)
+        {
+            await Navigation.PushModalAsync(new LoginPage());
+        }
+        else
+        {
+            await App.Current.MainPage.DisplayAlert("Error", "Something went wrong. Please try again.", "OK");
+        }
+        DeleteAccountButton.IsEnabled = true;
+        BusyIndicator.IsVisible = false;
     }
 }
 

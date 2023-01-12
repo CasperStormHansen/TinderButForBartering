@@ -61,6 +61,12 @@
                     VerticalOptions="Center"
                     Clicked="LoginEmailButton_Clicked"
                     x:Name="LoginEmailButton"/>
+            
+            <Button Text="Glemt password"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    Clicked="ForgottenPasswordButton_Clicked"
+                    x:Name="ForgottenPasswordButton"/>
         </FlexLayout>
         
         <ActivityIndicator x:Name="BusyIndicator"

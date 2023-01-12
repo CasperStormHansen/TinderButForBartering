@@ -1,7 +1,4 @@
-﻿using Plugin.Firebase.Auth;
-using Plugin.Firebase.Common;
-
-namespace TinderButForBartering;
+﻿namespace TinderButForBartering;
 
 public partial class LoginPage : ContentPage
 {
@@ -15,7 +12,7 @@ public partial class LoginPage : ContentPage
         LoginEmailButton.IsEnabled = false;
         BusyIndicator.IsVisible = true;
 
-        bool succes = await SignUpWithEmailAndPasswordAsync(NameEntry.Text, SignupEmailEntry.Text, SignupPasswordEntry.Text);
+        bool succes = await Auth.SignUpWithEmailAndPasswordAsync(NameEntry.Text.Trim(), SignupEmailEntry.Text.Trim(), SignupPasswordEntry.Text.Trim());
 
         BusyIndicator.IsVisible = false;
 
@@ -36,7 +33,7 @@ public partial class LoginPage : ContentPage
         LoginEmailButton.IsEnabled = false;
         BusyIndicator.IsVisible = true;
 
-        bool succes = await SignInWithEmailAndPasswordAsync(LoginEmailEntry.Text, LoginPasswordEntry.Text);
+        bool succes = await Auth.SignInWithEmailAndPasswordAsync(LoginEmailEntry.Text.Trim(), LoginPasswordEntry.Text.Trim());
 
         BusyIndicator.IsVisible = false;
 
@@ -52,12 +49,31 @@ public partial class LoginPage : ContentPage
         }
     }
 
+    private async void ForgottenPasswordButton_Clicked(object sender, EventArgs e)
+    {
+        ForgottenPasswordButton.IsEnabled = false;
+        BusyIndicator.IsVisible = true;
+
+        bool succes = await Auth.PasswordResetAsync(LoginEmailEntry.Text.Trim());
+
+        if (succes)
+        {
+            await App.Current.MainPage.DisplayAlert("Email sendt", "Følg venligst linket i den sendte email.", "OK");
+        }
+        else
+        {
+            await App.Current.MainPage.DisplayAlert("Error", "Something went wrong.", "OK");
+        }
+        ForgottenPasswordButton.IsEnabled = true;
+        BusyIndicator.IsVisible = false;
+    }
+
     private async void LoginFacebookButton_Clicked(object sender, EventArgs e)
     {
         LoginFacebookButton.IsEnabled = false;
         BusyIndicator.IsVisible = true;
 
-        bool succes = await SignInWithFacebookAsync();
+        bool succes = await Auth.SignInWithFacebookAsync();
 
         BusyIndicator.IsVisible = false;
 
@@ -78,7 +94,7 @@ public partial class LoginPage : ContentPage
         LoginGoogleButton.IsEnabled = false;
         BusyIndicator.IsVisible = true;
 
-        bool succes = await SignInWithGoogleAsync();
+        bool succes = await Auth.SignInWithGoogleAsync();
 
         BusyIndicator.IsVisible = false;
 
@@ -91,68 +107,6 @@ public partial class LoginPage : ContentPage
             await App.Current.MainPage.DisplayAlert("Error", "Something went wrong logging you in. Please try again.", "OK");
             LoginGoogleButton.IsEnabled = true;
             BusyIndicator.IsVisible = false;
-        }
-    }
-
-    private static async Task<bool> SignInWithGoogleAsync()
-    {
-        try
-        {
-            IFirebaseUser user = await CrossFirebaseAuth.Current.SignInWithGoogleAsync();
-            await App.Current.MainPage.DisplayAlert("User signed in", $"{user.DisplayName}, {user.Uid}, {user.Email}, {user.ToString()}, {user.IsEmailVerified}", "OK");
-            return true;
-        }
-        catch (FirebaseAuthException ex)
-        {
-            await App.Current.MainPage.DisplayAlert("Error", ex.ToString() + ex.Reason, "OK");
-            return false;
-        }
-    }
-
-    private static async Task<bool> SignInWithFacebookAsync()
-    {
-        try
-        {
-            IFirebaseUser user = await CrossFirebaseAuth.Current.SignInWithFacebookAsync();
-            await App.Current.MainPage.DisplayAlert("User signed in", $"{user.DisplayName}, {user.Uid}, {user.Email}, {user.ToString()}, {user.IsEmailVerified}", "OK");
-            return true;
-        }
-        catch (FirebaseAuthException ex)
-        {
-            await App.Current.MainPage.DisplayAlert("Error", ex.ToString() + ex.Reason, "OK");
-            return false;
-        }
-    }
-
-    private static async Task<bool> SignUpWithEmailAndPasswordAsync(string name, string email, string password)
-    {
-        try
-        {
-            await CrossFirebaseAuth.Current.CreateUserAsync(email, password);
-            IFirebaseUser user = CrossFirebaseAuth.Current.CurrentUser;
-            await user.UpdateProfileAsync(displayName: name);
-            await App.Current.MainPage.DisplayAlert("User signed in", $"{user.DisplayName}, {user.Uid}, {user.Email}, {user.ToString()}, {user.IsEmailVerified}", "OK");
-            return true;
-        }
-        catch (FirebaseAuthException ex)
-        {
-            await App.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
-            return false;
-        }
-    }
-
-    private static async Task<bool> SignInWithEmailAndPasswordAsync(string email, string password)
-    {
-        try
-        {
-            IFirebaseUser user = await CrossFirebaseAuth.Current.SignInWithEmailAndPasswordAsync(email, password, createsUserAutomatically: false);
-            await App.Current.MainPage.DisplayAlert("User signed in", $"{user.DisplayName}, {user.Uid}, {user.Email}, {user.ToString()}, {user.IsEmailVerified}", "OK");
-            return true;
-        }
-        catch (FirebaseAuthException ex)
-        {
-            await App.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
-            return false;
         }
     }
 }

@@ -31,7 +31,14 @@
         <Button
             Text="Logout"
             BackgroundColor="Blue"
+            x:Name="LogoutButton"
             Clicked="OnLogoutButton_Clicked" />
+
+        <Button
+            Text="Slet konto"
+            BackgroundColor="Blue"
+            x:Name="DeleteAccountButton"
+            Clicked="OnDeleteAccountButton_Clicked" />
 
         <Image 
             WidthRequest="300"
@@ -43,6 +50,11 @@
             x:Name="TestLabel"
             VerticalOptions="Center" 
             HorizontalOptions="Center" />
+
+        <!--Right position?-->
+        <ActivityIndicator x:Name="BusyIndicator"
+                           IsRunning="True"
+                           IsVisible="false"/>
     </StackLayout>
 
 </ContentPage>
