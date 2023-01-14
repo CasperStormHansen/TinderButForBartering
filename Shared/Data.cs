@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Plugin.Firebase.Auth;
 using System.Collections.ObjectModel;
 
 namespace TinderButForBartering;
@@ -6,9 +8,50 @@ namespace TinderButForBartering;
 class Data
 {
     /// <summary>
-    /// A collection of the user's own products.
+    /// The current user. Is null if no one is logged in.
+    /// </summary>
+#nullable enable
+    public static User? CurrentUser { get; set; }
+#nullable disable
+
+    /// <summary>
+    /// The user's own products.
     /// </summary>
     public static ObservableCollection<Product> OwnProducts { get; private set; } = new();
+
+    /// <summary>
+    /// The products in the swipe stack.
+    /// </summary>
+    public static ObservableCollection<Product> SwipingProducts { get; private set; } = new();
+
+    /// <summary>
+    /// Attempts to get information needed at login (incl. app start when user is still logged in) via the backend
+    /// class, deserilializes it, and stores it in this class's properties.
+    /// </summary>
+    /// 
+    /// <returns>
+    /// A tuple. The first element is a boolian that indicates if the operation was successful. If not, the second
+    /// element contains an error message.
+    /// </returns>
+    public static async Task<(bool, string)> OnLogin(IFirebaseUser firebaseUser)
+    {
+        CurrentUser = new User(firebaseUser);
+
+        (bool success, string infoStringOrError) = await Backend.OnLogin(CurrentUser);
+        await App.Current.MainPage.DisplayAlert("infoStringOrError == ", infoStringOrError, "OK"); // to be deleted; for development only
+
+        if (success)
+        {
+            OnLoginData onLoginData = JsonConvert.DeserializeObject<OnLoginData>(infoStringOrError);
+
+            CurrentUser = onLoginData.item1;
+            foreach (Product product in onLoginData.item2) OwnProducts.Add(product);
+            foreach (Product product in onLoginData.item3) SwipingProducts.Add(product);
+
+            return (true, "");
+        }
+        return (false, infoStringOrError);
+    }
 
     /// <summary>
     /// Attempts to get information about the user's own products via the backend class, deserilializes it, and
@@ -21,15 +64,13 @@ class Data
     /// </returns>
     public static async Task<(bool, string)> GetOwnProducts()
     {
-        (bool wasSuccessful, string productsStringOrErrorInfo) = await Backend.GetProducts();
+        (bool success, string productsStringOrErrorInfo) = await Backend.GetProducts();
 
-        if (wasSuccessful)
+        if (success)
         {
             List<Product> productsList = JsonConvert.DeserializeObject<List<Product>>(productsStringOrErrorInfo);
-            foreach (Product product in productsList)
-            {
-                OwnProducts.Add(product);
-            }
+            foreach (Product product in productsList) OwnProducts.Add(product);
+
             return (true, "");
         }
         return (false, productsStringOrErrorInfo);
@@ -46,12 +87,13 @@ class Data
     /// </returns>
     public static async Task<(bool, string)> AddNewOwnProduct(ProductWithoutId productWithoutId)
     {
-        (bool wasSuccessful, string productStringOrErrorInfo) = await Backend.PostProduct(productWithoutId);
+        (bool success, string productStringOrErrorInfo) = await Backend.PostProduct(productWithoutId);
 
-        if (wasSuccessful)
+        if (success)
         {
             Product product = JsonConvert.DeserializeObject<Product>(productStringOrErrorInfo);
             OwnProducts.Add(product);
+
             return (true, "");
         }
         return (false, productStringOrErrorInfo);
@@ -69,14 +111,15 @@ class Data
     /// </returns>
     public static async Task<(bool, string)> ChangeOwnProduct(Product product)
     {
-        (bool wasSuccessful, string errorInfo) = await Backend.ChangeProduct(product);
+        (bool success, string errorInfo) = await Backend.ChangeProduct(product);
 
-        if (wasSuccessful)
+        if (success)
         {
             Product productToBeReplaced = OwnProducts.FirstOrDefault(p => p.Id == product.Id);
             int index = OwnProducts.IndexOf(productToBeReplaced);
             OwnProducts.RemoveAt(index);
             OwnProducts.Insert(index, product);
+
             return (true, "");
         }
         return (false, errorInfo);
@@ -93,13 +136,34 @@ class Data
     /// </returns>
     public static async Task<(bool, string)> DeleteOwnProduct(Product product)
     {
-        (bool wasSuccessful, string errorInfo) = await Backend.DeleteProduct(product);
+        (bool success, string errorInfo) = await Backend.DeleteProduct(product);
 
-        if (wasSuccessful) 
+        if (success) 
         {
             OwnProducts.Remove(product);
+
             return (true, "");
         }
         return (false, errorInfo);
     }
+
+    /// <summary>
+    /// Deletes the local data about the user and products.
+    /// </summary>
+    public static void DeleteLocalData()
+    {
+        CurrentUser = null;
+        OwnProducts.Clear();
+        SwipingProducts.Clear();
+    }
+}
+
+/// <summary>
+/// Helper class only used internally in the OnLogin method for deserialization.
+/// </summary>
+class OnLoginData
+{
+    public User item1 { get; set; }
+    public List<Product> item2 { get; set; }
+    public List<Product> item3 { get; set; }
 }

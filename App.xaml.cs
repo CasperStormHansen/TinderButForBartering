@@ -1,5 +1,4 @@
 ﻿using Plugin.Firebase.Auth;
-using static TinderButForBartering.Data;
 
 namespace TinderButForBartering;
 
@@ -10,8 +9,6 @@ public partial class App : Application
 		InitializeComponent();
 
 		MainPage = new NavigationPage(new MainPage());
-
-        _ = GetOwnProducts(); // what should be done if this operation fails?
     }
 
 	protected override async void OnStart()
@@ -21,6 +18,10 @@ public partial class App : Application
 		if (CrossFirebaseAuth.Current.CurrentUser == null)
 		{
 			await MainPage.Navigation.PushModalAsync(new LoginPage());
+		}
+		else
+		{
+			await Data.OnLogin(CrossFirebaseAuth.Current.CurrentUser); // add error handling
 		}
 	}
 }

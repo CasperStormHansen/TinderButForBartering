@@ -24,7 +24,7 @@ public partial class MainPage : ContentPage
         }
     }
 
-    protected override void OnNavigatedTo(NavigatedToEventArgs args)
+    protected override void OnNavigatedTo(NavigatedToEventArgs args) // to de deleted
     {
         base.OnNavigatedTo(args);
 

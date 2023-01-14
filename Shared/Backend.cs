@@ -6,9 +6,11 @@ public class Backend
 {
     #if ANDROID
         static readonly string BaseUrl = "http://10.0.2.2:5045/";
-    #else
+#else
         static readonly string BaseUrl = "https://localhost:7239/";
-    #endif
+#endif
+
+    static readonly string OnLoginUrl = BaseUrl + "onlogin/";
 
     static readonly string ProductsUrl = BaseUrl + "products/";
 
@@ -20,6 +22,24 @@ public class Backend
     public static string GetIdUrl(int Id)
     {
         return $"{ProductsUrl}images/{Id}.jpg";
+    }
+
+    public static async Task<(bool, string)> OnLogin(User user)
+    {
+        try
+        {
+            HttpResponseMessage response = await client.PostAsJsonAsync(OnLoginUrl, user);
+            if (response.IsSuccessStatusCode)
+            {
+                string jsonString = await response.Content.ReadAsStringAsync();
+                return (true, jsonString);
+            }
+            return (false, response.StatusCode.ToString()); // is this string useful?
+        }
+        catch (Exception ex)
+        {
+            return (false, ex.Message); // should it be more than the message?
+        }
     }
 
     /// <summary>
