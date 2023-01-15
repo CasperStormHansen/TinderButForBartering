@@ -42,9 +42,9 @@ public class Auth
         {
             await CrossFirebaseAuth.Current.CreateUserAsync(email, password);
             IFirebaseUser user = CrossFirebaseAuth.Current.CurrentUser;
-            await user.UpdateProfileAsync(displayName: name);
+            await user.UpdateProfileAsync(displayName: name); // If this ...
             await App.Current.MainPage.DisplayAlert("User signed in", $"{user.DisplayName}, {user.Uid}, {user.Email}, {user.ToString()}, {user.IsEmailVerified}", "OK");
-            await Data.OnLogin(user);
+            await Data.OnLogin(user); // ... or this fails, the user should be deleted again on Firebase - for consistency
             return true;
         }
         catch (Exception ex)
