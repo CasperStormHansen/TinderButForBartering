@@ -1,5 +1,6 @@
 ﻿using Plugin.Firebase.Auth;
 using Newtonsoft.Json;
+using System.Collections;
 
 namespace TinderButForBartering
 {
@@ -9,6 +10,7 @@ namespace TinderButForBartering
         public string Name { get; set; }
 #nullable enable
         public string? PictureUrl { get; set; }
+        public byte[]? Wishlist { get; set; } // array of the indexies of the categories the user is interested in
 
         [JsonConstructor]
         public User(string id, string name, string? pictureUrl)

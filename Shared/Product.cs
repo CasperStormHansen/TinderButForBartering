@@ -5,6 +5,7 @@ namespace TinderButForBartering
     public class ProductWithoutId
     {
         public string OwnerId { get; set; }
+        public byte Category { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public bool RequiresSomethingInReturn { get; set; }
@@ -15,6 +16,7 @@ namespace TinderButForBartering
         public ProductWithoutId(string title, string description, bool requiresSomethingInReturn, byte[] primaryPictureData)
         {
             OwnerId = Data.CurrentUser.Id;
+            Category = 0; // to be altered
             Title = title;
             Description = description;
             RequiresSomethingInReturn = requiresSomethingInReturn;
