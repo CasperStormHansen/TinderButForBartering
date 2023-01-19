@@ -4,29 +4,24 @@ namespace TinderButForBartering;
 
 public partial class MyWishesPage : ContentPage
 {
-	public ObservableCollection<Wish> Wishes { get; private set; } = new();
+	public ObservableCollection<Wish> WishesForBinding { get; set; } = new();
 
     public MyWishesPage()
 	{
 		InitializeComponent();
 
-		for (int i = 0; i < Data.Categories.Count; i++) // int -> byte?
-		{
-			Wishes.Add(new Wish(Data.CurrentUser.Wishlist, i, Data.Categories[i]));
-		}
+		for (byte i = 0; i < Data.Categories.Length; i++) WishesForBinding.Add(new Wish(i));
 
-		MyWishesView.ItemsSource = Wishes;
-		//MyWishesView.ItemsSource = Data.Categories;
+		MyWishesView.ItemsSource = WishesForBinding;
     }
 
     async void OnSave_Clicked(object sender, EventArgs e)
     {
-        //byte[] newWishlist = Wishes.Select(w => w.On ? (byte)1 : (byte)0).ToArray();
-        byte[] newWishlist = Wishes
-            .Select(w => w.On)
-            .Select((v, i) => new { v, i })
-            .Where(x => x.v)
-            .Select(x => (byte)x.i)
+        byte[] newWishlist = WishesForBinding
+            .Select(wish => wish.On)
+            .Select((wishOn, index) => new { wishOn, index })
+            .Where(item => item.wishOn)
+            .Select(item => (byte)item.index)
             .ToArray();
 
         if (newWishlist.SequenceEqual(Data.CurrentUser.Wishlist))
@@ -36,14 +31,12 @@ public partial class MyWishesPage : ContentPage
         }
 
         BusyIndicator.On();
-        Data.CurrentUser.Wishlist = newWishlist; // should that happen here? What if backend cannot be reached?
-        bool success = await Data.OnWishesUpdate(Data.CurrentUser);
+        bool success = await Data.OnWishesUpdate(newWishlist);
         BusyIndicator.Off();
 
         if (success)
         {
             await Navigation.PopAsync();
-            return;
         }
     }
 
@@ -56,11 +49,11 @@ public partial class MyWishesPage : ContentPage
 public class Wish
 {
 	public bool On { get; set; }
-	public string Cat { get; set; }
+	public string Category { get; set; }
 
-	public Wish(byte[] wishlist, int index, string cat)
+	public Wish(byte i)
 	{
-		On = (wishlist.Contains((byte)index));
-		Cat = cat;
+		On = (Data.CurrentUser.Wishlist.Contains(i));
+		Category = Data.Categories[i];
 	}
 }

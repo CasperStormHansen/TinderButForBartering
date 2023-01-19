@@ -17,17 +17,17 @@ class Data
     /// <summary>
     /// The user's own products.
     /// </summary>
-    public static ObservableCollection<Product> OwnProducts { get; private set; } = new();
+    public static ObservableCollection<Product> OwnProducts { get; set; } = new();
 
     /// <summary>
     /// The products in the swipe stack.
     /// </summary>
-    public static ObservableCollection<Product> SwipingProducts { get; private set; } = new();
+    public static ObservableCollection<Product> SwipingProducts { get; set; } = new();
 
     /// <summary>
     /// The product categories.
     /// </summary>
-    public static ObservableCollection<string> Categories { get; private set; } = new();
+    public static string[] Categories { get; set; }
 
     /// <summary>
     /// Attempts to get information needed at login (incl. app start when user is still logged in) via the backend
@@ -52,16 +52,17 @@ class Data
             CurrentUser = onLoginData.item1;
             foreach (Product product in onLoginData.item2) OwnProducts.Add(product);
             foreach (Product product in onLoginData.item3) SwipingProducts.Add(product);
-            foreach (string category in onLoginData.item4) Categories.Add(category);
+            Categories = onLoginData.item4;
 
             return (true, "");
         }
         return (false, infoStringOrError);
     }
 
-    public static async Task<bool> OnWishesUpdate(User user)
+    public static async Task<bool> OnWishesUpdate(byte[] wishlist)
     {
-        (bool success, string infoStringOrError) = await Backend.OnWishesUpdate(user);
+        CurrentUser.Wishlist = wishlist;
+        (bool success, string infoStringOrError) = await Backend.OnWishesUpdate(CurrentUser);
         await App.Current.MainPage.DisplayAlert("infoStringOrError == ", infoStringOrError, "OK"); // to be deleted; for development only
 
         if (success)
@@ -186,7 +187,7 @@ class Data
 class OnLoginData
 {
     public User item1 { get; set; }
-    public List<Product> item2 { get; set; }
-    public List<Product> item3 { get; set; }
-    public List<string> item4 { get; set; }
+    public Product[] item2 { get; set; }
+    public Product[] item3 { get; set; }
+    public string[] item4 { get; set; }
 }

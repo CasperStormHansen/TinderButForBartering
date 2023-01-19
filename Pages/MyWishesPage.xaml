@@ -21,7 +21,7 @@
 
                             <Label
                                 HorizontalOptions="Center"
-                                Text="{Binding Cat}"
+                                Text="{Binding Category}"
                                 VerticalOptions="Center"
                                 Margin="20"/>
                         </StackLayout>
