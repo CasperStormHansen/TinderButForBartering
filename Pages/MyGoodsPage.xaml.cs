@@ -6,13 +6,7 @@ public partial class MyGoodsPage : ContentPage
     {
         InitializeComponent();
         MyProductsView.ItemsSource = Data.OwnProducts;
-        //_ = GetOwnProducts();
     }
-
-    //protected override async void OnAppearing()
-    //{
-    //    base.OnAppearing();
-    //}
 
     private async void OnUserProductDetails_Clicked(object sender, EventArgs e)
     {

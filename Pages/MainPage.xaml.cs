@@ -1,6 +1,4 @@
-﻿using Plugin.Firebase.Auth;
-
-namespace TinderButForBartering;
+﻿namespace TinderButForBartering;
 
 public partial class MainPage : ContentPage
 {
@@ -8,36 +6,6 @@ public partial class MainPage : ContentPage
 	{
 		InitializeComponent();
 	}
-
-    protected override void OnAppearing()
-    {
-        base.OnAppearing();
-
-        if (CrossFirebaseAuth.Current.CurrentUser != null)
-        {
-            //TestLabel.Text = CrossFirebaseAuth.Current.CurrentUser.ToString() + CrossFirebaseAuth.Current.CurrentUser.DisplayName; 
-            //UserPicture.Source = CrossFirebaseAuth.Current.CurrentUser.PhotoUrl;
-        }
-        else
-        {
-            //UserPicture.Source = null;
-        }
-    }
-
-    protected override void OnNavigatedTo(NavigatedToEventArgs args) // to de deleted
-    {
-        base.OnNavigatedTo(args);
-
-        if (CrossFirebaseAuth.Current.CurrentUser != null)
-        {
-            TestLabel.Text = CrossFirebaseAuth.Current.CurrentUser.ToString() + CrossFirebaseAuth.Current.CurrentUser.DisplayName;
-            UserPicture.Source = CrossFirebaseAuth.Current.CurrentUser.PhotoUrl;
-        }
-        else
-        {
-            UserPicture.Source = null;
-        }
-    }
 
     private async void OnMyGoodsButton_Clicked(object sender, EventArgs e)
 	{
@@ -58,16 +26,13 @@ public partial class MainPage : ContentPage
         LogoutButton.IsEnabled = false;
         BusyIndicator.IsVisible = true;
 
-        bool succes = await Auth.SignOutAsync();
+        bool success = await Auth.SignOutAsync();
 
-        if (succes)
+        if (success)
         {
             await Navigation.PushModalAsync(new LoginPage());
         }
-        else
-        {
-            await App.Current.MainPage.DisplayAlert("Error", "Something went wrong. Please try again.", "OK");
-        }
+
         LogoutButton.IsEnabled = true;
         BusyIndicator.IsVisible = false;
     }
@@ -77,18 +42,14 @@ public partial class MainPage : ContentPage
         DeleteAccountButton.IsEnabled = false;
         BusyIndicator.IsVisible = true;
 
-        bool succes = await Auth.DeleteAccountAsync();
+        bool success = await Auth.DeleteAccountAsync();
 
-        if (succes)
+        if (success)
         {
             await Navigation.PushModalAsync(new LoginPage());
         }
-        else
-        {
-            await App.Current.MainPage.DisplayAlert("Error", "Something went wrong. Please try again.", "OK");
-        }
+       
         DeleteAccountButton.IsEnabled = true;
         BusyIndicator.IsVisible = false;
     }
 }
-

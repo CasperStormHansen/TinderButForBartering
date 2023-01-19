@@ -26,25 +26,22 @@ public partial class UserProductDetailsPage : ContentPage
 
         Product = product;
 
-        Title.Text = Product.Title;
+        ProductTitle.Text = Product.Title;
         Description.Text = Product.Description;
         Switch.IsToggled = Product.RequiresSomethingInReturn;
         PrimaryPicture.Source = Product.Url;
-        //PrimaryPictureData = Product.PrimaryPictureData;
-        //PrimaryPictureStream = new(PrimaryPictureData);
-        //PrimaryPicture.Source = ImageSource.FromStream(() => PrimaryPictureStream);
     }
 
     async void OnAddProduct_Clicked(object sender, EventArgs e)
     {
-        if (string.IsNullOrWhiteSpace(Title.Text) || PrimaryPictureData == null)
+        if (string.IsNullOrWhiteSpace(ProductTitle.Text) || PrimaryPictureData == null)
         {
             await Application.Current.MainPage.DisplayAlert("Det er nødvendigt med en titel og mindst et billede", "", "OK");
             return;
         }
 
         BusyIndicator.On();
-        ProductWithoutId productWithoutId = new (Title.Text, Description.Text?? "", Switch.IsToggled, PrimaryPictureData);
+        ProductWithoutId productWithoutId = new (ProductTitle.Text, Description.Text?? "", Switch.IsToggled, PrimaryPictureData);
         (bool wasSuccessful, string errorInfo) = await Data.AddNewOwnProduct(productWithoutId);
         BusyIndicator.Off();
 
@@ -60,7 +57,7 @@ public partial class UserProductDetailsPage : ContentPage
     async void OnChangeProduct_Clicked(object sender, EventArgs e)
     {
         BusyIndicator.On();
-        Product changedProduct = new(Title.Text, Description.Text?? "", Switch.IsToggled, PrimaryPictureData, Product.Id);
+        Product changedProduct = new(ProductTitle.Text, Description.Text?? "", Switch.IsToggled, PrimaryPictureData, Product.Id);
         (bool wasSuccessful, string errorInfo) = await Data.ChangeOwnProduct(changedProduct);
         BusyIndicator.Off();
 
@@ -77,11 +74,11 @@ public partial class UserProductDetailsPage : ContentPage
     {
         bool changeHasBeenMade = 
             (Product == null 
-                && (!string.IsNullOrWhiteSpace(Title.Text) || !string.IsNullOrWhiteSpace(Description.Text) || PrimaryPictureData != null)
+                && (!string.IsNullOrWhiteSpace(ProductTitle.Text) || !string.IsNullOrWhiteSpace(Description.Text) || PrimaryPictureData != null)
             )
             || 
             (Product != null
-                && (Title.Text != Product.Title || Description.Text != Product.Description || Switch.IsToggled != Product.RequiresSomethingInReturn || PrimaryPictureData != null)
+                && (ProductTitle.Text != Product.Title || Description.Text != Product.Description || Switch.IsToggled != Product.RequiresSomethingInReturn || PrimaryPictureData != null)
             );
         if (changeHasBeenMade)
         {

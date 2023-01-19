@@ -14,7 +14,7 @@
             SemanticProperties.Hint="Varens overskrift"
             WidthRequest="300"
             Margin="20"
-            x:Name="Title"/>
+            x:Name="ProductTitle"/>
 
             <Editor
             HorizontalOptions="Center"

@@ -4,27 +4,23 @@ namespace TinderButForBartering;
 
 public class Backend
 {
-    #if ANDROID
-        static readonly string BaseUrl = "http://10.0.2.2:5045/";
+    public static readonly HttpClient client = new ();
+
+#if ANDROID
+    static readonly string BaseUrl = "http://10.0.2.2:5045/";
 #else
-        static readonly string BaseUrl = "https://localhost:7239/";
+    static readonly string BaseUrl = "https://localhost:7239/";
 #endif
 
     static readonly string OnLoginUrl = BaseUrl + "onlogin/";
-
     static readonly string OnWishesUpdateUrl = BaseUrl + "onwishesupdate/";
-
     static readonly string ProductsUrl = BaseUrl + "products/";
-
-    public static readonly HttpClient client = new ();
 
     /// <summary>
     /// Returns the URL of the image of the product with the ID given in the parameter.
     /// </summary>
-    public static string GetIdUrl(int Id)
-    {
-        return $"{ProductsUrl}images/{Id}.jpg";
-    }
+    public static string GetImageUrl(int Id)
+        => $"{ProductsUrl}images/{Id}.jpg";
 
     public static async Task<(bool, string)> OnLogin(User user)
     {
