@@ -2,12 +2,46 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TinderButForBartering.MyWishesPage"
-             Title="My wishes"
+             Title="Mine ønsker"
              BackgroundColor="White">
-    <StackLayout>
-        <Label 
-            Text="List of categories with radio buttons"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </StackLayout>
+
+    <ScrollView>
+        <StackLayout>
+            <CollectionView
+                x:Name="MyWishesView">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout
+                            Orientation="Horizontal">
+                            <Switch
+                                HorizontalOptions="Center"
+                                IsToggled="{Binding On}"
+                                Margin="20,0,0,0" 
+                                x:Name="Switch"/>
+
+                            <Label
+                                HorizontalOptions="Center"
+                                Text="{Binding Cat}"
+                                VerticalOptions="Center"
+                                Margin="20"/>
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            
+            <Button
+            HorizontalOptions="Center"
+            WidthRequest="300"
+            Text="Gem ønsker"
+            BackgroundColor="Green"
+            Clicked="OnSave_Clicked"/>
+
+            <Button
+            HorizontalOptions="Center"
+            WidthRequest="300"
+            Text="Fortryd"
+            BackgroundColor="Orange"
+            Clicked="OnCancel_Clicked"/>
+        </StackLayout>
+    </ScrollView>
 </ContentPage>

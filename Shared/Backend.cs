@@ -12,6 +12,8 @@ public class Backend
 
     static readonly string OnLoginUrl = BaseUrl + "onlogin/";
 
+    static readonly string OnWishesUpdateUrl = BaseUrl + "onwishesupdate/";
+
     static readonly string ProductsUrl = BaseUrl + "products/";
 
     public static readonly HttpClient client = new ();
@@ -29,6 +31,24 @@ public class Backend
         try
         {
             HttpResponseMessage response = await client.PostAsJsonAsync(OnLoginUrl, user);
+            if (response.IsSuccessStatusCode)
+            {
+                string jsonString = await response.Content.ReadAsStringAsync();
+                return (true, jsonString);
+            }
+            return (false, response.StatusCode.ToString()); // is this string useful?
+        }
+        catch (Exception ex)
+        {
+            return (false, ex.Message); // should it be more than the message?
+        }
+    }
+
+    public static async Task<(bool, string)> OnWishesUpdate(User user) // much repeated code
+    {
+        try
+        {
+            HttpResponseMessage response = await client.PostAsJsonAsync(OnWishesUpdateUrl, user);
             if (response.IsSuccessStatusCode)
             {
                 string jsonString = await response.Content.ReadAsStringAsync();

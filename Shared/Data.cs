@@ -25,6 +25,11 @@ class Data
     public static ObservableCollection<Product> SwipingProducts { get; private set; } = new();
 
     /// <summary>
+    /// The product categories.
+    /// </summary>
+    public static ObservableCollection<string> Categories { get; private set; } = new();
+
+    /// <summary>
     /// Attempts to get information needed at login (incl. app start when user is still logged in) via the backend
     /// class, deserilializes it, and stores it in this class's properties.
     /// </summary>
@@ -47,10 +52,27 @@ class Data
             CurrentUser = onLoginData.item1;
             foreach (Product product in onLoginData.item2) OwnProducts.Add(product);
             foreach (Product product in onLoginData.item3) SwipingProducts.Add(product);
+            foreach (string category in onLoginData.item4) Categories.Add(category);
 
             return (true, "");
         }
         return (false, infoStringOrError);
+    }
+
+    public static async Task<bool> OnWishesUpdate(User user)
+    {
+        (bool success, string infoStringOrError) = await Backend.OnWishesUpdate(user);
+        await App.Current.MainPage.DisplayAlert("infoStringOrError == ", infoStringOrError, "OK"); // to be deleted; for development only
+
+        if (success)
+        {
+            Product[] sp = JsonConvert.DeserializeObject<Product[]>(infoStringOrError);
+            SwipingProducts.Clear();
+            foreach (Product product in sp) SwipingProducts.Add(product);
+            
+            return true;
+        }
+        return false;
     }
 
     /// <summary>
@@ -166,4 +188,5 @@ class OnLoginData
     public User item1 { get; set; }
     public List<Product> item2 { get; set; }
     public List<Product> item3 { get; set; }
+    public List<string> item4 { get; set; }
 }
