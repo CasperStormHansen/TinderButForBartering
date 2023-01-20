@@ -13,10 +13,10 @@ namespace TinderButForBartering
         public byte[]? PrimaryPictureData { get; set; }
         #nullable disable
 
-        public ProductWithoutId(string title, string description, bool requiresSomethingInReturn, byte[] primaryPictureData)
+        public ProductWithoutId(string title, byte category, string description, bool requiresSomethingInReturn, byte[] primaryPictureData)
         {
             OwnerId = Data.CurrentUser.Id;
-            Category = 0; // to be altered
+            Category = category;
             Title = title;
             Description = description;
             RequiresSomethingInReturn = requiresSomethingInReturn;
@@ -31,7 +31,7 @@ namespace TinderButForBartering
         [JsonIgnore]
         public string Url => Backend.GetImageUrl(Id); // name this better!
 
-        public Product(string title, string description, bool requiresSomethingInReturn, byte[] primaryPictureData, int id) : base(title, description, requiresSomethingInReturn, primaryPictureData)
+        public Product(string title, byte category, string description, bool requiresSomethingInReturn, byte[] primaryPictureData, int id) : base(title, category, description, requiresSomethingInReturn, primaryPictureData)
         {
             Id = id;
         }

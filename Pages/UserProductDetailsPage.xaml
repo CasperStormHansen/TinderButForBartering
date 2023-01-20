@@ -16,6 +16,10 @@
             Margin="20"
             x:Name="ProductTitle"/>
 
+            <Picker 
+            x:Name="CategoryPicker"
+            Title="Vælg en kategori"/>
+
             <Editor
             HorizontalOptions="Center"
             Placeholder="Beskrivelse" 

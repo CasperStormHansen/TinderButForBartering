@@ -15,6 +15,8 @@ public partial class UserProductDetailsPage : ContentPage
 
         ChangeProductButton.IsVisible = false;
         DeleteProductButton.IsVisible = false;
+
+        CategoryPicker.ItemsSource = Data.Categories;
     }
 
     // When loaded as "modify product page"
@@ -30,18 +32,21 @@ public partial class UserProductDetailsPage : ContentPage
         Description.Text = Product.Description;
         Switch.IsToggled = Product.RequiresSomethingInReturn;
         PrimaryPicture.Source = Product.Url;
+
+        CategoryPicker.ItemsSource = Data.Categories;
+        CategoryPicker.SelectedIndex = Product.Category;
     }
 
     async void OnAddProduct_Clicked(object sender, EventArgs e)
     {
-        if (string.IsNullOrWhiteSpace(ProductTitle.Text) || PrimaryPictureData == null)
+        if (string.IsNullOrWhiteSpace(ProductTitle.Text) || CategoryPicker.SelectedIndex == -1 || PrimaryPictureData == null)
         {
-            await Application.Current.MainPage.DisplayAlert("Det er nødvendigt med en titel og mindst et billede", "", "OK");
+            await Application.Current.MainPage.DisplayAlert("Det er nødvendigt med en titel, en kategori og mindst et billede", "", "OK");
             return;
         }
 
         BusyIndicator.On();
-        ProductWithoutId productWithoutId = new (ProductTitle.Text, Description.Text?? "", Switch.IsToggled, PrimaryPictureData);
+        ProductWithoutId productWithoutId = new (ProductTitle.Text, (byte)CategoryPicker.SelectedIndex, Description.Text?? "", Switch.IsToggled, PrimaryPictureData);
         (bool wasSuccessful, string errorInfo) = await Data.AddNewOwnProduct(productWithoutId);
         BusyIndicator.Off();
 
@@ -57,7 +62,7 @@ public partial class UserProductDetailsPage : ContentPage
     async void OnChangeProduct_Clicked(object sender, EventArgs e)
     {
         BusyIndicator.On();
-        Product changedProduct = new(ProductTitle.Text, Description.Text?? "", Switch.IsToggled, PrimaryPictureData, Product.Id);
+        Product changedProduct = new(ProductTitle.Text, (byte)CategoryPicker.SelectedIndex, Description.Text?? "", Switch.IsToggled, PrimaryPictureData, Product.Id);
         (bool wasSuccessful, string errorInfo) = await Data.ChangeOwnProduct(changedProduct);
         BusyIndicator.Off();
 
@@ -78,7 +83,7 @@ public partial class UserProductDetailsPage : ContentPage
             )
             || 
             (Product != null
-                && (ProductTitle.Text != Product.Title || Description.Text != Product.Description || Switch.IsToggled != Product.RequiresSomethingInReturn || PrimaryPictureData != null)
+                && (ProductTitle.Text != Product.Title || (byte)CategoryPicker.SelectedIndex != Product.Category || Description.Text != Product.Description || Switch.IsToggled != Product.RequiresSomethingInReturn || PrimaryPictureData != null)
             );
         if (changeHasBeenMade)
         {
