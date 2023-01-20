@@ -19,6 +19,7 @@ public partial class LoginPage : ContentPage
         if (succes)
         {
             await Navigation.PopModalAsync();
+            Data.MainPage.OnAnyAppearance();
         }
         else
         {
@@ -40,6 +41,7 @@ public partial class LoginPage : ContentPage
         if (succes)
         {
             await Navigation.PopModalAsync();
+            Data.MainPage.OnAnyAppearance();
         }
         else
         {
@@ -80,6 +82,7 @@ public partial class LoginPage : ContentPage
         if (succes)
         {
             await Navigation.PopModalAsync();
+            Data.MainPage.OnAnyAppearance();
         }
         else
         {
@@ -101,6 +104,7 @@ public partial class LoginPage : ContentPage
         if (succes)
         {
             await Navigation.PopModalAsync();
+            Data.MainPage.OnAnyAppearance();
         }
         else
         {

@@ -10,7 +10,6 @@ public class Auth
         {
             IFirebaseUser user = await CrossFirebaseAuth.Current.SignInWithGoogleAsync();
             await App.Current.MainPage.DisplayAlert("User signed in", $"{user.DisplayName}, {user.Uid}, {user.Email}, {user.ToString()}, {user.IsEmailVerified}", "OK");
-            await Data.OnLogin(user);
             return true;
         }
         catch (Exception ex)
@@ -26,7 +25,6 @@ public class Auth
         {
             IFirebaseUser user = await CrossFirebaseAuth.Current.SignInWithFacebookAsync();
             await App.Current.MainPage.DisplayAlert("User signed in", $"{user.DisplayName}, {user.Uid}, {user.Email}, {user.ToString()}, {user.IsEmailVerified}", "OK");
-            await Data.OnLogin(user);
             return true;
         }
         catch (Exception ex)
@@ -42,9 +40,8 @@ public class Auth
         {
             await CrossFirebaseAuth.Current.CreateUserAsync(email, password);
             IFirebaseUser user = CrossFirebaseAuth.Current.CurrentUser;
-            await user.UpdateProfileAsync(displayName: name); // If this ...
+            await user.UpdateProfileAsync(displayName: name);
             await App.Current.MainPage.DisplayAlert("User signed in", $"{user.DisplayName}, {user.Uid}, {user.Email}, {user.ToString()}, {user.IsEmailVerified}", "OK");
-            await Data.OnLogin(user); // ... or this fails, the user should be deleted again on Firebase - for consistency
             return true;
         }
         catch (Exception ex)
@@ -60,7 +57,6 @@ public class Auth
         {
             IFirebaseUser user = await CrossFirebaseAuth.Current.SignInWithEmailAndPasswordAsync(email, password, createsUserAutomatically: false);
             await App.Current.MainPage.DisplayAlert("User signed in", $"{user.DisplayName}, {user.Uid}, {user.Email}, {user.ToString()}, {user.IsEmailVerified}", "OK");
-            await Data.OnLogin(user);
             return true;
         }
         catch (Exception ex)
@@ -91,7 +87,6 @@ public class Auth
         try
         {
             await CrossFirebaseAuth.Current.SignOutAsync();
-            Data.DeleteLocalData();
             return true;
         }
         catch (Exception ex)
@@ -106,7 +101,6 @@ public class Auth
         try
         {
             await CrossFirebaseAuth.Current.CurrentUser.DeleteAsync();
-            Data.DeleteLocalData();
             return true;
         }
         catch (Exception ex)

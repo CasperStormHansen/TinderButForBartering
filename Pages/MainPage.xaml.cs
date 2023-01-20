@@ -1,11 +1,44 @@
-﻿namespace TinderButForBartering;
+﻿using Microsoft.Maui.Controls;
+using Plugin.Firebase.Auth;
+
+namespace TinderButForBartering;
 
 public partial class MainPage : ContentPage
 {
 	public MainPage()
 	{
 		InitializeComponent();
-	}
+        Data.MainPage = this;
+    }
+
+    protected override void OnNavigatedTo(NavigatedToEventArgs args)
+    {
+        base.OnNavigatedTo(args);
+
+        OnAnyAppearance();
+    }
+
+    public async void OnAnyAppearance()
+    {
+        if (CrossFirebaseAuth.Current.CurrentUser != null && !MyGoodsButton.IsEnabled)
+        {
+            BusyIndicator.IsVisible = true;
+            bool success = false;
+            while (!success)
+            {
+                (success, string errorMesssage) = await Data.OnLogin(CrossFirebaseAuth.Current.CurrentUser);
+                if (!success)
+                {
+                    await App.Current.MainPage.DisplayAlert("Der kunne ikke opnås kontakt til serveren", errorMesssage, "Prøv igen");
+                }
+            }
+            BusyIndicator.IsVisible = false;
+
+            MyGoodsButton.IsEnabled = true;
+            MyWishesButton.IsEnabled = true;
+            MyMatchesButton.IsEnabled = true;
+        }
+    }
 
     private async void OnMyGoodsButton_Clicked(object sender, EventArgs e)
 	{
@@ -23,6 +56,10 @@ public partial class MainPage : ContentPage
 
     private async void OnLogoutButton_Clicked(object sender, EventArgs e)
     {
+        MyGoodsButton.IsEnabled = false;
+        MyWishesButton.IsEnabled = false;
+        MyMatchesButton.IsEnabled = false;
+
         LogoutButton.IsEnabled = false;
         BusyIndicator.IsVisible = true;
 
@@ -30,6 +67,7 @@ public partial class MainPage : ContentPage
 
         if (success)
         {
+            Data.DeleteLocalData();
             await Navigation.PushModalAsync(new LoginPage());
         }
 
@@ -39,6 +77,10 @@ public partial class MainPage : ContentPage
 
     private async void OnDeleteAccountButton_Clicked(object sender, EventArgs e)
     {
+        MyGoodsButton.IsEnabled = false;
+        MyWishesButton.IsEnabled = false;
+        MyMatchesButton.IsEnabled = false;
+        
         DeleteAccountButton.IsEnabled = false;
         BusyIndicator.IsVisible = true;
 
@@ -46,6 +88,7 @@ public partial class MainPage : ContentPage
 
         if (success)
         {
+            Data.DeleteLocalData();
             await Navigation.PushModalAsync(new LoginPage());
         }
        

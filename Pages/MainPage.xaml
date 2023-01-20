@@ -9,18 +9,24 @@
         HorizontalOptions="Center">
         
         <Button
-            Text="My goods"
+            Text="Mine varer"
             BackgroundColor="Blue"
+            IsEnabled="False"
+            x:Name="MyGoodsButton"
             Clicked="OnMyGoodsButton_Clicked" />
 
         <Button
-            Text="My wishes"
+            Text="Mine ønsker"
             BackgroundColor="Blue"
+            IsEnabled="False"
+            x:Name="MyWishesButton"
             Clicked="OnMyWishesButton_Clicked" />
 
         <Button
-            Text="My matches"
+            Text="Mine matches"
             BackgroundColor="Blue"
+            IsEnabled="False"
+            x:Name="MyMatchesButton"
             Clicked="OnMyMatchesButton_Clicked" />
 
         <Label 

@@ -19,9 +19,9 @@ public partial class App : Application
 		{
 			await MainPage.Navigation.PushModalAsync(new LoginPage());
 		}
-		else
-		{
-			await Data.OnLogin(CrossFirebaseAuth.Current.CurrentUser); // add error handling
-		}
+		//else
+		//{
+			//await Data.OnLogin(CrossFirebaseAuth.Current.CurrentUser); // add error handling
+		//}
 	}
 }

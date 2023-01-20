@@ -8,6 +8,11 @@ namespace TinderButForBartering;
 class Data
 {
     /// <summary>
+    /// Will hold a reference to the app's mainpage after it has been initialized.
+    /// </summary>
+    public static MainPage? MainPage { get; set; }
+
+    /// <summary>
     /// The current user. Is null if no one is logged in.
     /// </summary>
 #nullable enable
