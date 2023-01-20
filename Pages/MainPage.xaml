@@ -51,12 +51,6 @@
             x:Name="UserPicture"
             Margin="20"/>
 
-        <Label 
-            Text="dev info"
-            x:Name="TestLabel"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-
         <!--Right position?-->
         <ActivityIndicator x:Name="BusyIndicator"
                            IsRunning="True"

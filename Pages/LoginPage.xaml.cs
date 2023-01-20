@@ -12,18 +12,18 @@ public partial class LoginPage : ContentPage
         LoginEmailButton.IsEnabled = false;
         BusyIndicator.IsVisible = true;
 
-        bool succes = await Auth.SignUpWithEmailAndPasswordAsync(NameEntry.Text.Trim(), SignupEmailEntry.Text.Trim(), SignupPasswordEntry.Text.Trim());
+        (bool success, string errorMessage) = await Auth.SignUpWithEmailAndPasswordAsync(NameEntry.Text.Trim(), SignupEmailEntry.Text.Trim(), SignupPasswordEntry.Text.Trim());
 
         BusyIndicator.IsVisible = false;
 
-        if (succes)
+        if (success)
         {
             await Navigation.PopModalAsync();
             Data.MainPage.OnAnyAppearance();
         }
         else
         {
-            await App.Current.MainPage.DisplayAlert("Error", "Something went wrong signing you up. Please try again.", "OK");
+            await App.Current.MainPage.DisplayAlert("Fejl", errorMessage, "OK");
             LoginEmailButton.IsEnabled = true;
             BusyIndicator.IsVisible = false;
         }
@@ -34,18 +34,18 @@ public partial class LoginPage : ContentPage
         LoginEmailButton.IsEnabled = false;
         BusyIndicator.IsVisible = true;
 
-        bool succes = await Auth.SignInWithEmailAndPasswordAsync(LoginEmailEntry.Text.Trim(), LoginPasswordEntry.Text.Trim());
+        (bool success, string errorMessage) = await Auth.SignInWithEmailAndPasswordAsync(LoginEmailEntry.Text.Trim(), LoginPasswordEntry.Text.Trim());
 
         BusyIndicator.IsVisible = false;
 
-        if (succes)
+        if (success)
         {
             await Navigation.PopModalAsync();
             Data.MainPage.OnAnyAppearance();
         }
         else
         {
-            await App.Current.MainPage.DisplayAlert("Error", "Something went wrong logging you in. Please try again.", "OK");
+            await App.Current.MainPage.DisplayAlert("Fejl", errorMessage, "OK");
             LoginEmailButton.IsEnabled = true;
             BusyIndicator.IsVisible = false;
         }
@@ -56,15 +56,15 @@ public partial class LoginPage : ContentPage
         ForgottenPasswordButton.IsEnabled = false;
         BusyIndicator.IsVisible = true;
 
-        bool succes = await Auth.PasswordResetAsync(LoginEmailEntry.Text.Trim());
+        (bool success, string errorMessage) = await Auth.PasswordResetAsync(LoginEmailEntry.Text.Trim());
 
-        if (succes)
+        if (success)
         {
             await App.Current.MainPage.DisplayAlert("Email sendt", "Følg venligst linket i den sendte email.", "OK");
         }
         else
         {
-            await App.Current.MainPage.DisplayAlert("Error", "Something went wrong.", "OK");
+            await App.Current.MainPage.DisplayAlert("Fejl", errorMessage, "OK");
         }
         ForgottenPasswordButton.IsEnabled = true;
         BusyIndicator.IsVisible = false;
@@ -75,18 +75,18 @@ public partial class LoginPage : ContentPage
         LoginFacebookButton.IsEnabled = false;
         BusyIndicator.IsVisible = true;
 
-        bool succes = await Auth.SignInWithFacebookAsync();
+        (bool success, string errorMessage) = await Auth.SignInWithFacebookAsync();
 
         BusyIndicator.IsVisible = false;
 
-        if (succes)
+        if (success)
         {
             await Navigation.PopModalAsync();
             Data.MainPage.OnAnyAppearance();
         }
         else
         {
-            await App.Current.MainPage.DisplayAlert("Error", "Something went wrong logging you in. Please try again.", "OK");
+            await App.Current.MainPage.DisplayAlert("Fejl", errorMessage, "OK");
             LoginFacebookButton.IsEnabled = true;
             BusyIndicator.IsVisible = false;
         }
@@ -97,18 +97,18 @@ public partial class LoginPage : ContentPage
         LoginGoogleButton.IsEnabled = false;
         BusyIndicator.IsVisible = true;
 
-        bool succes = await Auth.SignInWithGoogleAsync();
+        (bool success, string errorMessage) = await Auth.SignInWithGoogleAsync();
 
         BusyIndicator.IsVisible = false;
 
-        if (succes)
+        if (success)
         {
             await Navigation.PopModalAsync();
             Data.MainPage.OnAnyAppearance();
         }
         else
         {
-            await App.Current.MainPage.DisplayAlert("Error", "Something went wrong logging you in. Please try again.", "OK");
+            await App.Current.MainPage.DisplayAlert("Fejl", errorMessage, "OK");
             LoginGoogleButton.IsEnabled = true;
             BusyIndicator.IsVisible = false;
         }

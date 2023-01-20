@@ -31,12 +31,16 @@ public partial class MyWishesPage : ContentPage
         }
 
         BusyIndicator.On();
-        bool success = await Data.OnWishesUpdate(newWishlist);
+        (bool success, string errorMessage) = await Data.OnWishesUpdate(newWishlist);
         BusyIndicator.Off();
 
         if (success)
         {
             await Navigation.PopAsync();
+        }
+        else
+        {
+            await App.Current.MainPage.DisplayAlert("Der kunne ikke opnås kontakt til serveren", errorMessage, "Prøv igen");
         }
     }
 

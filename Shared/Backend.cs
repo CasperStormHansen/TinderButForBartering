@@ -22,66 +22,47 @@ public class Backend
     public static string GetImageUrl(int Id)
         => $"{ProductsUrl}images/{Id}.jpg";
 
+    /// <summary>
+    /// Sends a user to the backend and gets all the inital data needed by the app back.
+    /// </summary>
+    /// 
+    /// <returns>
+    /// A tuple. The first element is a boolean, which is true iff the operation was successful. 
+    /// If so, the second element contains the data as a JSON string. If not, the second element
+    /// contains an error message.
+    /// </returns>
     public static async Task<(bool, string)> OnLogin(User user)
     {
         try
         {
             HttpResponseMessage response = await client.PostAsJsonAsync(OnLoginUrl, user);
-            if (response.IsSuccessStatusCode)
-            {
-                string jsonString = await response.Content.ReadAsStringAsync();
-                return (true, jsonString);
-            }
-            return (false, response.StatusCode.ToString()); // is this string useful?
+            return await ConvertReponse(response);
         }
         catch (Exception ex)
         {
-            return (false, ex.Message); // should it be more than the message?
-        }
-    }
-
-    public static async Task<(bool, string)> OnWishesUpdate(User user) // much repeated code
-    {
-        try
-        {
-            HttpResponseMessage response = await client.PostAsJsonAsync(OnWishesUpdateUrl, user);
-            if (response.IsSuccessStatusCode)
-            {
-                string jsonString = await response.Content.ReadAsStringAsync();
-                return (true, jsonString);
-            }
-            return (false, response.StatusCode.ToString()); // is this string useful?
-        }
-        catch (Exception ex)
-        {
-            return (false, ex.Message); // should it be more than the message?
+            return (false, ex.Message);
         }
     }
 
     /// <summary>
-    /// Gets information about the user's own products from the backend.
+    /// Sends a user with updated wishes to the backend and gets updated swiping products back.
     /// </summary>
     /// 
     /// <returns>
     /// A tuple. The first element is a boolean, which is true iff the operation was successful. 
-    /// If so, the second element contains the product information as a JSON string. If not, the 
-    /// second element contains an error message.
+    /// If so, the second element contains the products as a JSON string. If not, the second element
+    /// contains an error message.
     /// </returns>
-    public static async Task<(bool, string)> GetProducts()
+    public static async Task<(bool, string)> OnWishesUpdate(User user)
     {
         try
         {
-            HttpResponseMessage response = await client.GetAsync(ProductsUrl);
-            if (response.IsSuccessStatusCode)
-            {
-                string jsonString = await response.Content.ReadAsStringAsync();
-                return (true, jsonString);
-            }
-            return (false, response.StatusCode.ToString()); // is this string useful?
+            HttpResponseMessage response = await client.PostAsJsonAsync(OnWishesUpdateUrl, user);
+            return await ConvertReponse(response);
         }
         catch (Exception ex)
         {
-            return (false, ex.Message); // should it be more than the message?
+            return (false, ex.Message);
         }
     }
 
@@ -100,16 +81,11 @@ public class Backend
         try
         {
             HttpResponseMessage response = await client.PostAsJsonAsync(ProductsUrl, productWithoutId);
-            if (response.IsSuccessStatusCode)
-            {
-                string jsonString = await response.Content.ReadAsStringAsync();
-                return (true, jsonString);
-            }
-            return (false, response.StatusCode.ToString()); // is this string useful?
+            return await ConvertReponse(response);
         }
         catch (Exception ex)
         {
-            return (false, ex.Message); // should it be more than the message?
+            return (false, ex.Message);
         }
     }
 
@@ -128,16 +104,11 @@ public class Backend
         {
             string url = ProductsUrl + product.Id + "/";
             HttpResponseMessage response = await client.PutAsJsonAsync(url, product);
-            if (response.IsSuccessStatusCode)
-            {
-                string jsonString = await response.Content.ReadAsStringAsync();
-                return (true, jsonString);
-            }
-            return (false, response.StatusCode.ToString()); // is this string useful?
+            return await ConvertReponse(response);
         }
         catch (Exception ex)
         {
-            return (false, ex.Message); // should it be more than the message?
+            return (false, ex.Message);
         }
     }
 
@@ -156,16 +127,21 @@ public class Backend
         {
             string url = ProductsUrl + product.Id + "/";
             HttpResponseMessage response = await client.DeleteAsync(url);
-            if (response.IsSuccessStatusCode)
-            {
-                string jsonString = await response.Content.ReadAsStringAsync();
-                return (true, jsonString);
-            }
-            return (false, response.StatusCode.ToString()); // is this string useful?
+            return await ConvertReponse(response);
         }
         catch (Exception ex)
         {
-            return (false, ex.Message); // should it be more than the message?
+            return (false, ex.Message);
         }
+    }
+
+    private static async Task<(bool, string)> ConvertReponse(HttpResponseMessage response)
+    {
+        if (response.IsSuccessStatusCode)
+        {
+            string jsonString = await response.Content.ReadAsStringAsync();
+            return (true, jsonString);
+        }
+        return (false, response.StatusCode.ToString());
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Plugin.Firebase.Auth;
 using System.Collections.ObjectModel;
 
@@ -7,6 +6,7 @@ namespace TinderButForBartering;
 
 class Data
 {
+#nullable enable
     /// <summary>
     /// Will hold a reference to the app's mainpage after it has been initialized.
     /// </summary>
@@ -15,7 +15,6 @@ class Data
     /// <summary>
     /// The current user. Is null if no one is logged in.
     /// </summary>
-#nullable enable
     public static User? CurrentUser { get; set; }
 #nullable disable
 
@@ -48,7 +47,6 @@ class Data
         CurrentUser = new User(firebaseUser);
 
         (bool success, string infoStringOrError) = await Backend.OnLogin(CurrentUser);
-        await App.Current.MainPage.DisplayAlert("infoStringOrError == ", infoStringOrError, "OK"); // to be deleted; for development only
 
         if (success)
         {
@@ -64,45 +62,53 @@ class Data
         return (false, infoStringOrError);
     }
 
-    public static async Task<bool> OnWishesUpdate(byte[] wishlist)
-    {
-        CurrentUser.Wishlist = wishlist;
-        (bool success, string infoStringOrError) = await Backend.OnWishesUpdate(CurrentUser);
-        await App.Current.MainPage.DisplayAlert("infoStringOrError == ", infoStringOrError, "OK"); // to be deleted; for development only
-
-        if (success)
-        {
-            Product[] sp = JsonConvert.DeserializeObject<Product[]>(infoStringOrError);
-            SwipingProducts.Clear();
-            foreach (Product product in sp) SwipingProducts.Add(product);
-            
-            return true;
-        }
-        return false;
-    }
-
     /// <summary>
-    /// Attempts to get information about the user's own products via the backend class, deserilializes it, and
-    /// stores it in OwnProducts.
+    /// Attempts to send updated wishlist to backend and get an updated list of products for swiping in return, which 
+    /// is then deserilialized and stored it in this class's SwipingProducts property.
     /// </summary>
     /// 
     /// <returns>
     /// A tuple. The first element is a boolian that indicates if the operation was successful. If not, the second
     /// element contains an error message.
     /// </returns>
-    public static async Task<(bool, string)> GetOwnProducts()
+    public static async Task<(bool, string)> OnWishesUpdate(byte[] wishlist)
     {
-        (bool success, string productsStringOrErrorInfo) = await Backend.GetProducts();
-
+        CurrentUser.Wishlist = wishlist;
+        (bool success, string infoStringOrError) = await Backend.OnWishesUpdate(CurrentUser);
+        
         if (success)
         {
-            List<Product> productsList = JsonConvert.DeserializeObject<List<Product>>(productsStringOrErrorInfo);
-            foreach (Product product in productsList) OwnProducts.Add(product);
-
+            Product[] sp = JsonConvert.DeserializeObject<Product[]>(infoStringOrError);
+            SwipingProducts.Clear();
+            foreach (Product product in sp) SwipingProducts.Add(product);
+            
             return (true, "");
         }
-        return (false, productsStringOrErrorInfo);
+        return (false, infoStringOrError);
     }
+
+    ///// <summary>
+    ///// Attempts to get information about the user's own products via the backend class, deserilializes it, and
+    ///// stores it in OwnProducts.
+    ///// </summary>
+    ///// 
+    ///// <returns>
+    ///// A tuple. The first element is a boolian that indicates if the operation was successful. If not, the second
+    ///// element contains an error message.
+    ///// </returns>
+    //public static async Task<(bool, string)> GetOwnProducts()
+    //{
+    //    (bool success, string productsStringOrErrorInfo) = await Backend.GetProducts();
+
+    //    if (success)
+    //    {
+    //        List<Product> productsList = JsonConvert.DeserializeObject<List<Product>>(productsStringOrErrorInfo);
+    //        foreach (Product product in productsList) OwnProducts.Add(product);
+
+    //        return (true, "");
+    //    }
+    //    return (false, productsStringOrErrorInfo);
+    //}
 
     /// <summary>
     /// Attempts to send information about a new user-owned product via the backend class and also stores it in
@@ -183,6 +189,7 @@ class Data
         CurrentUser = null;
         OwnProducts.Clear();
         SwipingProducts.Clear();
+        Categories = null;
     }
 }
 

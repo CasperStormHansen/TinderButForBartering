@@ -1,5 +1,4 @@
-﻿using Microsoft.Maui.Controls;
-using Plugin.Firebase.Auth;
+﻿using Plugin.Firebase.Auth;
 
 namespace TinderButForBartering;
 
@@ -26,10 +25,10 @@ public partial class MainPage : ContentPage
             bool success = false;
             while (!success)
             {
-                (success, string errorMesssage) = await Data.OnLogin(CrossFirebaseAuth.Current.CurrentUser);
+                (success, string errorMessage) = await Data.OnLogin(CrossFirebaseAuth.Current.CurrentUser);
                 if (!success)
                 {
-                    await App.Current.MainPage.DisplayAlert("Der kunne ikke opnås kontakt til serveren", errorMesssage, "Prøv igen");
+                    await App.Current.MainPage.DisplayAlert("Der kunne ikke opnås kontakt til serveren", errorMessage, "Prøv igen");
                 }
             }
             BusyIndicator.IsVisible = false;
@@ -63,12 +62,16 @@ public partial class MainPage : ContentPage
         LogoutButton.IsEnabled = false;
         BusyIndicator.IsVisible = true;
 
-        bool success = await Auth.SignOutAsync();
+        (bool success, string errorMessage) = await Auth.SignOutAsync();
 
         if (success)
         {
             Data.DeleteLocalData();
             await Navigation.PushModalAsync(new LoginPage());
+        }
+        else
+        {
+            await App.Current.MainPage.DisplayAlert("Fejl", errorMessage, "OK");
         }
 
         LogoutButton.IsEnabled = true;
@@ -84,14 +87,18 @@ public partial class MainPage : ContentPage
         DeleteAccountButton.IsEnabled = false;
         BusyIndicator.IsVisible = true;
 
-        bool success = await Auth.DeleteAccountAsync();
+        (bool success, string errorMessage) = await Auth.DeleteAccountAsync();
 
         if (success)
         {
             Data.DeleteLocalData();
             await Navigation.PushModalAsync(new LoginPage());
         }
-       
+        else
+        {
+            await App.Current.MainPage.DisplayAlert("Fejl", errorMessage, "OK");
+        }
+
         DeleteAccountButton.IsEnabled = true;
         BusyIndicator.IsVisible = false;
     }
