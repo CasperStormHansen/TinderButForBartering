@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TinderButForBartering.SwipingProductDetailsPage"
+             Title="Varedetaljer">
+
+    <ScrollView>
+        <VerticalStackLayout 
+        Padding="20">
+
+            <Label
+            HorizontalOptions="Center"
+            x:Name="ProductTitle"
+            Margin="20"/>
+
+            <Label
+            HorizontalOptions="Center"
+            x:Name="Category"
+            Margin="20"/>
+
+            <Image 
+            WidthRequest="300"
+            x:Name="PrimaryPicture"
+            Margin="20"/>
+
+            <Label
+            HorizontalOptions="Center"
+            x:Name="Description"
+            Margin="20"/>
+
+            <Button
+            HorizontalOptions="Center"
+            WidthRequest="300" 
+            Text="Tilbage"
+            BackgroundColor="Blue"
+            Clicked="OnBackButton_Clicked"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

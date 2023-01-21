@@ -68,6 +68,7 @@ public partial class MainPage : ContentPage
         if (Data.SwipingProducts.TryPeek(out Product product))
         {
             SwipingPicture.Source = product.Url;
+            DetailsButton.IsEnabled = true;
             YesButton.IsEnabled = true;
             NoButton.IsEnabled = true;
             WillPayButton.IsEnabled = true;
@@ -75,27 +76,33 @@ public partial class MainPage : ContentPage
         else
         {
             SwipingPicture.Source = "nomoreswipingproducts.jpg";
+            DetailsButton.IsEnabled = false;
             YesButton.IsEnabled = false;
             NoButton.IsEnabled = false;
             WillPayButton.IsEnabled = false;
         }
     }
 
+    private async void OnDetailsButton_Clicked(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new SwipingProductDetailsPage());
+    }
+
     private async void OnNoButton_Clicked(object sender, EventArgs e)
     {
-        Data.SwipingProducts.Dequeue(); // move to Data class
+        Data.SwipingProducts.Dequeue(); // move to Data class. This should NOT be awaited!
         ShowNextProduct();
     }
 
     private async void OnYesButton_Clicked(object sender, EventArgs e)
     {
-        Data.SwipingProducts.Dequeue(); // move to Data class
+        Data.SwipingProducts.Dequeue(); // move to Data class. This should NOT be awaited!
         ShowNextProduct();
     }
 
     private async void OnWillPayButton_Clicked(object sender, EventArgs e)
     {
-        Data.SwipingProducts.Dequeue(); // move to Data class
+        Data.SwipingProducts.Dequeue(); // move to Data class. This should NOT be awaited!
         ShowNextProduct();
     }
 

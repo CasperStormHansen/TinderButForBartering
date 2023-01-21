@@ -35,6 +35,12 @@
             Margin="20"/>
 
         <Button
+            Text="Detaljer"
+            BackgroundColor="Blue"
+            x:Name="DetailsButton"
+            Clicked="OnDetailsButton_Clicked" />
+        
+        <Button
             Text="Nej"
             BackgroundColor="Red"
             x:Name="NoButton"
