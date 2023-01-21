@@ -18,7 +18,7 @@
 
             <Picker 
             x:Name="CategoryPicker"
-            Title="Vælg en kategori"/>
+            Title="Kategori"/>
 
             <Editor
             HorizontalOptions="Center"

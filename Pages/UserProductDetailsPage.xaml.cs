@@ -41,7 +41,7 @@ public partial class UserProductDetailsPage : ContentPage
     {
         if (string.IsNullOrWhiteSpace(ProductTitle.Text) || CategoryPicker.SelectedIndex == -1 || PrimaryPictureData == null)
         {
-            await Application.Current.MainPage.DisplayAlert("Det er nødvendigt med en titel, en kategori og mindst et billede", "", "OK");
+            await Application.Current.MainPage.DisplayAlert("Det er nødvendigt med en titel, en kategori og mindst ét billede", "", "OK");
             return;
         }
 

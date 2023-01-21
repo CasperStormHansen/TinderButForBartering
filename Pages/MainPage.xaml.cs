@@ -26,7 +26,11 @@ public partial class MainPage : ContentPage
             while (!success)
             {
                 (success, string errorMessage) = await Data.OnLogin(CrossFirebaseAuth.Current.CurrentUser);
-                if (!success)
+                if (success)
+                {
+                    ShowNextProduct();
+                }
+                else
                 {
                     await App.Current.MainPage.DisplayAlert("Der kunne ikke opnås kontakt til serveren", errorMessage, "Prøv igen");
                 }
@@ -36,6 +40,11 @@ public partial class MainPage : ContentPage
             MyGoodsButton.IsEnabled = true;
             MyWishesButton.IsEnabled = true;
             MyMatchesButton.IsEnabled = true;
+        }
+
+        if (CrossFirebaseAuth.Current.CurrentUser != null && MyGoodsButton.IsEnabled)
+        {
+            ShowNextProduct();
         }
     }
 
@@ -48,9 +57,46 @@ public partial class MainPage : ContentPage
     {
         await Navigation.PushAsync(new MyWishesPage());
     }
+    
     private async void OnMyMatchesButton_Clicked(object sender, EventArgs e)
     {
         await Navigation.PushAsync(new MyMatchesPage());
+    }
+
+    private void ShowNextProduct()
+    {
+        if (Data.SwipingProducts.TryPeek(out Product product))
+        {
+            SwipingPicture.Source = product.Url;
+            YesButton.IsEnabled = true;
+            NoButton.IsEnabled = true;
+            WillPayButton.IsEnabled = true;
+        }
+        else
+        {
+            SwipingPicture.Source = "nomoreswipingproducts.jpg";
+            YesButton.IsEnabled = false;
+            NoButton.IsEnabled = false;
+            WillPayButton.IsEnabled = false;
+        }
+    }
+
+    private async void OnNoButton_Clicked(object sender, EventArgs e)
+    {
+        Data.SwipingProducts.Dequeue(); // move to Data class
+        ShowNextProduct();
+    }
+
+    private async void OnYesButton_Clicked(object sender, EventArgs e)
+    {
+        Data.SwipingProducts.Dequeue(); // move to Data class
+        ShowNextProduct();
+    }
+
+    private async void OnWillPayButton_Clicked(object sender, EventArgs e)
+    {
+        Data.SwipingProducts.Dequeue(); // move to Data class
+        ShowNextProduct();
     }
 
     private async void OnLogoutButton_Clicked(object sender, EventArgs e)

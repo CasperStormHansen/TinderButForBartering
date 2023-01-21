@@ -26,7 +26,7 @@ class Data
     /// <summary>
     /// The products in the swipe stack.
     /// </summary>
-    public static ObservableCollection<Product> SwipingProducts { get; set; } = new();
+    public static Queue<Product> SwipingProducts { get; set; } = new();
 
     /// <summary>
     /// The product categories.
@@ -54,7 +54,7 @@ class Data
 
             CurrentUser = onLoginData.item1;
             foreach (Product product in onLoginData.item2) OwnProducts.Add(product);
-            foreach (Product product in onLoginData.item3) SwipingProducts.Add(product);
+            foreach (Product product in onLoginData.item3) SwipingProducts.Enqueue(product);
             Categories = onLoginData.item4;
 
             return (true, "");
@@ -80,7 +80,7 @@ class Data
         {
             Product[] sp = JsonConvert.DeserializeObject<Product[]>(infoStringOrError);
             SwipingProducts.Clear();
-            foreach (Product product in sp) SwipingProducts.Add(product);
+            foreach (Product product in sp) SwipingProducts.Enqueue(product);
             
             return (true, "");
         }
