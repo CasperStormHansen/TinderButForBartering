@@ -14,13 +14,16 @@ public class Backend
 
     static readonly string OnLoginUrl = BaseUrl + "onlogin/";
     static readonly string OnWishesUpdateUrl = BaseUrl + "onwishesupdate/";
-    static readonly string ProductsUrl = BaseUrl + "products/";
+    static readonly string NewProductUrl = BaseUrl + "newproduct/";
+    static readonly string ChangeProductPartialUrl = BaseUrl + "changeproduct/";
+    static readonly string DeleteProductPartialUrl = BaseUrl + "deleteproduct/";
+    static readonly string ImagePartialUrl = BaseUrl + "images/";
 
     /// <summary>
     /// Returns the URL of the image of the product with the ID given in the parameter.
     /// </summary>
     public static string GetImageUrl(int Id)
-        => $"{ProductsUrl}images/{Id}.jpg";
+        => $"{ImagePartialUrl}{Id}.jpg";
 
     /// <summary>
     /// Sends a user to the backend and gets all the inital data needed by the app back.
@@ -80,7 +83,7 @@ public class Backend
     {
         try
         {
-            HttpResponseMessage response = await client.PostAsJsonAsync(ProductsUrl, productWithoutId);
+            HttpResponseMessage response = await client.PostAsJsonAsync(NewProductUrl, productWithoutId);
             return await ConvertReponse(response);
         }
         catch (Exception ex)
@@ -102,7 +105,7 @@ public class Backend
     {
         try
         {
-            string url = ProductsUrl + product.Id + "/";
+            string url = ChangeProductPartialUrl + product.Id + "/";
             HttpResponseMessage response = await client.PutAsJsonAsync(url, product);
             return await ConvertReponse(response);
         }
@@ -125,7 +128,7 @@ public class Backend
     {
         try
         {
-            string url = ProductsUrl + product.Id + "/";
+            string url = DeleteProductPartialUrl + product.Id + "/";
             HttpResponseMessage response = await client.DeleteAsync(url);
             return await ConvertReponse(response);
         }
