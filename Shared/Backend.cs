@@ -18,6 +18,9 @@ public class Backend
     static readonly string ChangeProductPartialUrl = BaseUrl + "changeproduct/";
     static readonly string DeleteProductPartialUrl = BaseUrl + "deleteproduct/";
     static readonly string ImagePartialUrl = BaseUrl + "images/";
+    static readonly string NoToProductUrl = BaseUrl + "notoproduct/";
+    static readonly string YesToProductUrl = BaseUrl + "yestoproduct/";
+    static readonly string WillPayForProductUrl = BaseUrl + "willpayforproduct/";
 
     /// <summary>
     /// Returns the URL of the image of the product with the ID given in the parameter.
@@ -135,6 +138,39 @@ public class Backend
         catch (Exception ex)
         {
             return (false, ex.Message);
+        }
+    }
+
+    public static async Task NoToProduct(UserProductAttitude userProductAttitude)
+    {
+        try
+        {
+            await client.PostAsJsonAsync(NoToProductUrl, userProductAttitude);
+        }
+        catch (Exception)
+        {
+        }
+    }
+
+    public static async Task YesToProduct(UserProductAttitude userProductAttitude)
+    {
+        try
+        {
+            await client.PostAsJsonAsync(YesToProductUrl, userProductAttitude);
+        }
+        catch (Exception)
+        {
+        }
+    }
+
+    public static async Task WillPayForProduct(UserProductAttitude userProductAttitude)
+    {
+        try
+        {
+            await client.PostAsJsonAsync(WillPayForProductUrl, userProductAttitude);
+        }
+        catch (Exception)
+        {
         }
     }
 

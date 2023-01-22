@@ -90,19 +90,19 @@ public partial class MainPage : ContentPage
 
     private async void OnNoButton_Clicked(object sender, EventArgs e)
     {
-        Data.SwipingProducts.Dequeue(); // move to Data class. This should NOT be awaited!
+        Data.NoToProduct();
         ShowNextProduct();
     }
 
     private async void OnYesButton_Clicked(object sender, EventArgs e)
     {
-        Data.SwipingProducts.Dequeue(); // move to Data class. This should NOT be awaited!
+        Data.YesToProduct();
         ShowNextProduct();
     }
 
     private async void OnWillPayButton_Clicked(object sender, EventArgs e)
     {
-        Data.SwipingProducts.Dequeue(); // move to Data class. This should NOT be awaited!
+        Data.WillPayForProduct();
         ShowNextProduct();
     }
 

@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
 using Plugin.Firebase.Auth;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace TinderButForBartering;
 
@@ -181,6 +183,27 @@ class Data
         return (false, errorInfo);
     }
 
+    public static async Task NoToProduct()
+    {
+        Product product = SwipingProducts.Dequeue();
+        UserProductAttitude userProductAttitude = new(CurrentUser, product);
+        Backend.NoToProduct(userProductAttitude);
+    }
+
+    public static async Task YesToProduct()
+    {
+        Product product = SwipingProducts.Dequeue();
+        UserProductAttitude userProductAttitude = new(CurrentUser, product);
+        Backend.YesToProduct(userProductAttitude);
+    }
+
+    public static async Task WillPayForProduct()
+    {
+        Product product = SwipingProducts.Dequeue();
+        UserProductAttitude userProductAttitude = new(CurrentUser, product);
+        Backend.WillPayForProduct(userProductAttitude);
+    }
+
     /// <summary>
     /// Deletes the local data about the user and products.
     /// </summary>
@@ -202,4 +225,19 @@ class OnLoginData
     public Product[] item2 { get; set; }
     public Product[] item3 { get; set; }
     public string[] item4 { get; set; }
+}
+
+/// <summary>
+/// Helper class only used to send swipe info to backend.
+/// </summary>
+public class UserProductAttitude
+{
+    public string UserId { get; set; }
+    public int ProductId { get; set; }
+
+    public UserProductAttitude(User user, Product product)
+    {
+        UserId = user.Id;
+        ProductId = product.Id;
+    }
 }
