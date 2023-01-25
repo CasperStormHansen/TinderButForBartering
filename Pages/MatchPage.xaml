@@ -8,5 +8,23 @@
             Text="Shows name of matched user and pictures of goods that are matched, and allows chat"
             VerticalOptions="Center" 
             HorizontalOptions="Center" />
+
+        <Label
+            Text="Initial text"
+            x:Name="chatMessages"
+            FontSize="18"
+            HorizontalOptions="Center" />
+
+        <Entry
+            x:Name="myChatMessage"
+            Placeholder="Type your message"
+            FontSize="18"
+            HorizontalOptions="Center" />
+
+        <Button
+            x:Name="sendButton"
+            Text="Send"
+            Clicked="OnSendButton_Clicked"
+            HorizontalOptions="Center" />
     </VerticalStackLayout>
 </ContentPage>
