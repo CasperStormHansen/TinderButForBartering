@@ -4,25 +4,60 @@
              x:Class="TinderButForBartering.MyMatchesPage"
              Title="My matches"
              BackgroundColor="White">
-    <StackLayout>
-        <Label 
-            Text="List of matched users with pictures of matched goods"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
 
-        <Button
-            Text="Example match 1"
-            BackgroundColor="Blue"
-            Clicked="OnMatch_Clicked" />
+    <ScrollView>
+        <StackLayout>
+            <Label 
+                Text="List of matched users with pictures of matched goods"
+                VerticalOptions="Center" 
+                HorizontalOptions="Center" />
 
-        <Button
-            Text="Example match 2"
-            BackgroundColor="Blue"
-            Clicked="OnMatch_Clicked" />
+            <Button
+                Text="Delete this button"
+                BackgroundColor="Blue"
+                Clicked="OnMatch_Clicked" />
 
-        <Button
-            Text="Example match 3"
-            BackgroundColor="Blue"
-            Clicked="OnMatch_Clicked" />
-    </StackLayout>
+            <!--<CollectionView
+                x:Name="MyMatchesView">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout>
+                            <Button
+                                Text="{Binding Name}"
+                                BackgroundColor="Blue"
+                                Clicked="OnMatch_Clicked" />
+                            <Label
+                                Text="test" 
+                                VerticalOptions="Center" 
+                                HorizontalOptions="Center" />
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>-->
+            <CollectionView x:Name="MyMatchesView">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout>
+                            <Label Text="{Binding Name}" />
+                            <CollectionView x:Name="ProductsView" ItemsSource="{Binding ForeignProducts}">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackLayout>
+                                            <Label Text="{Binding Title}" />
+                                            <Image 
+                                                WidthRequest="200" 
+                                                HeightRequest="200" 
+                                                Margin="10" 
+                                                Aspect="AspectFit" 
+                                                Source="{Binding Url}" />
+                                        </StackLayout>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </StackLayout>
+    </ScrollView>
 </ContentPage>

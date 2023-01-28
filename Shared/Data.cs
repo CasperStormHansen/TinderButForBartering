@@ -36,6 +36,11 @@ class Data
     public static string[] Categories { get; set; }
 
     /// <summary>
+    /// The matches with other user (including data about products and chat messages).
+    /// </summary>
+    public static ObservableCollection<Match> Matches { get; set; } = new();
+
+    /// <summary>
     /// Attempts to get information needed at login (incl. app start when user is still logged in) via the backend
     /// class, deserilializes it, and stores it in this class's properties.
     /// </summary>
@@ -58,6 +63,7 @@ class Data
             foreach (Product product in onLoginData.item2) OwnProducts.Add(product);
             foreach (Product product in onLoginData.item3) SwipingProducts.Enqueue(product);
             Categories = onLoginData.item4;
+            foreach (Match match in onLoginData.item5) Matches.Add(match);
 
             return (true, "");
         }
@@ -225,6 +231,7 @@ class OnLoginData
     public Product[] item2 { get; set; }
     public Product[] item3 { get; set; }
     public string[] item4 { get; set; }
+    public Match[] item5 { get; set; }
 }
 
 /// <summary>
