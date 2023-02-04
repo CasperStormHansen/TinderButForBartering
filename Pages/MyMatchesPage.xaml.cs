@@ -11,6 +11,8 @@ public partial class MyMatchesPage : ContentPage
 
     private async void OnMatch_Clicked(object sender, EventArgs e) // to be modified
     {
-        await Navigation.PushAsync(new MatchPage());
+        Button button = sender as Button;
+        Match match = button.BindingContext as Match;
+        await Navigation.PushAsync(new MatchPage(match));
     }
 }

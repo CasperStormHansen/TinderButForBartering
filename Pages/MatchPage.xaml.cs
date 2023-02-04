@@ -6,9 +6,11 @@ public partial class MatchPage : ContentPage
 {
 	private readonly HubConnection _connection;
 
-	public MatchPage()
+	public MatchPage(Match match)
 	{
 		InitializeComponent();
+
+		Title = "Chat med " + match.Name;
 
         _connection = new HubConnectionBuilder()
 			.WithUrl("http://10.0.2.2:5045/chat")

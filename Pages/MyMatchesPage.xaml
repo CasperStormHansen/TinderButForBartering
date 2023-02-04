@@ -7,7 +7,7 @@
 
     <ScrollView>
         <StackLayout>
-            <Label 
+            <!--<Label 
                 Text="List of matched users with pictures of matched goods"
                 VerticalOptions="Center" 
                 HorizontalOptions="Center" />
@@ -15,7 +15,7 @@
             <Button
                 Text="Delete this button"
                 BackgroundColor="Blue"
-                Clicked="OnMatch_Clicked" />
+                Clicked="OnMatch_Clicked" />-->
 
             <!--<CollectionView
                 x:Name="MyMatchesView">
@@ -54,6 +54,10 @@
                                     </DataTemplate>
                                 </CollectionView.ItemTemplate>
                             </CollectionView>
+                            <Button
+                                Text="Chat"
+                                BackgroundColor="Blue"
+                                Clicked="OnMatch_Clicked" />
                         </StackLayout>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
