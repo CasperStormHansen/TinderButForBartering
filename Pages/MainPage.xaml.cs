@@ -90,19 +90,19 @@ public partial class MainPage : ContentPage
 
     private async void OnNoButton_Clicked(object sender, EventArgs e)
     {
-        Data.NoToProduct();
+        await Data.NoToProduct();
         ShowNextProduct();
     }
 
     private async void OnYesButton_Clicked(object sender, EventArgs e)
     {
-        Data.YesToProduct();
+        await Data.YesToProduct();
         ShowNextProduct();
     }
 
     private async void OnWillPayButton_Clicked(object sender, EventArgs e)
     {
-        Data.WillPayForProduct();
+        await Data.WillPayForProduct();
         ShowNextProduct();
     }
 

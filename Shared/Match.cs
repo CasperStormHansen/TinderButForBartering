@@ -1,5 +1,6 @@
 ﻿namespace TinderButForBartering;
 
+#nullable enable
 public class Match
 {
     public int MatchId { get; set; }
@@ -18,6 +19,7 @@ public class Match
         Messages = messages;
     }
 }
+#nullable disable
 
 public class Message
 {
