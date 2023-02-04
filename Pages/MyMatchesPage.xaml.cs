@@ -22,6 +22,6 @@ public partial class MyMatchesPage : ContentPage
     {
         ImageButton button = sender as ImageButton;
         Product product = button.BindingContext as Product;
-        await Navigation.PushAsync(new ForeignProductsDetailsPage(product));
+        await Navigation.PushAsync(new ForeignProductsDetailsPage(product, false));
     }
 }

@@ -48,6 +48,56 @@ public partial class MainPage : ContentPage
         }
     }
 
+    private async void OnHamburgerIcon_Clicked(object sender, EventArgs e)
+    {
+        var result = await App.Current.MainPage.DisplayActionSheet("Menu", "Tilbage", " ", "Log ud", "Slet konto");
+
+        if (result == "Log ud")
+        {
+            MyGoodsButton.IsEnabled = false;
+            MyWishesButton.IsEnabled = false;
+            MyMatchesButton.IsEnabled = false;
+;
+            BusyIndicator.IsVisible = true;
+
+            (bool success, string errorMessage) = await Auth.SignOutAsync();
+
+            if (success)
+            {
+                Data.DeleteLocalData();
+                await Navigation.PushModalAsync(new LoginPage());
+            }
+            else
+            {
+                await App.Current.MainPage.DisplayAlert("Fejl", errorMessage, "OK");
+            }
+
+            BusyIndicator.IsVisible = false;
+        }
+        else if (result == "Slet konto")
+        {
+            MyGoodsButton.IsEnabled = false;
+            MyWishesButton.IsEnabled = false;
+            MyMatchesButton.IsEnabled = false;
+
+            BusyIndicator.IsVisible = true;
+
+            (bool success, string errorMessage) = await Auth.DeleteAccountAsync();
+
+            if (success)
+            {
+                Data.DeleteLocalData();
+                await Navigation.PushModalAsync(new LoginPage());
+            }
+            else
+            {
+                await App.Current.MainPage.DisplayAlert("Fejl", errorMessage, "OK");
+            }
+
+            BusyIndicator.IsVisible = false;
+        }
+    }
+
     private async void OnMyGoodsButton_Clicked(object sender, EventArgs e)
 	{
 		await Navigation.PushAsync(new MyGoodsPage());
@@ -85,7 +135,7 @@ public partial class MainPage : ContentPage
 
     private async void OnDetailsButton_Clicked(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new SwipingProductDetailsPage());
+        await Navigation.PushAsync(new ForeignProductsDetailsPage(Data.SwipingProducts.Peek(), true));
     }
 
     private async void OnNoButton_Clicked(object sender, EventArgs e)
@@ -104,55 +154,5 @@ public partial class MainPage : ContentPage
     {
         await Data.WillPayForProduct();
         ShowNextProduct();
-    }
-
-    private async void OnLogoutButton_Clicked(object sender, EventArgs e)
-    {
-        MyGoodsButton.IsEnabled = false;
-        MyWishesButton.IsEnabled = false;
-        MyMatchesButton.IsEnabled = false;
-
-        LogoutButton.IsEnabled = false;
-        BusyIndicator.IsVisible = true;
-
-        (bool success, string errorMessage) = await Auth.SignOutAsync();
-
-        if (success)
-        {
-            Data.DeleteLocalData();
-            await Navigation.PushModalAsync(new LoginPage());
-        }
-        else
-        {
-            await App.Current.MainPage.DisplayAlert("Fejl", errorMessage, "OK");
-        }
-
-        LogoutButton.IsEnabled = true;
-        BusyIndicator.IsVisible = false;
-    }
-
-    private async void OnDeleteAccountButton_Clicked(object sender, EventArgs e)
-    {
-        MyGoodsButton.IsEnabled = false;
-        MyWishesButton.IsEnabled = false;
-        MyMatchesButton.IsEnabled = false;
-        
-        DeleteAccountButton.IsEnabled = false;
-        BusyIndicator.IsVisible = true;
-
-        (bool success, string errorMessage) = await Auth.DeleteAccountAsync();
-
-        if (success)
-        {
-            Data.DeleteLocalData();
-            await Navigation.PushModalAsync(new LoginPage());
-        }
-        else
-        {
-            await App.Current.MainPage.DisplayAlert("Fejl", errorMessage, "OK");
-        }
-
-        DeleteAccountButton.IsEnabled = true;
-        BusyIndicator.IsVisible = false;
     }
 }
