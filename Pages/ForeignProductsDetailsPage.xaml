@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TinderButForBartering.Pages.ForeignProductsDetailsPage"
+             Title="Varedetaljer">
+    <ScrollView>
+        <VerticalStackLayout 
+        Padding="20">
+
+            <Label
+            HorizontalOptions="Center"
+            SemanticProperties.Hint="Varens overskrift"
+            WidthRequest="300"
+            Margin="20"
+            x:Name="ProductTitle"/>
+
+            <Label 
+            WidthRequest="300"
+            Margin="20"
+            x:Name="Category"/>
+
+            <Label
+            HorizontalOptions="Center"
+            SemanticProperties.Hint="Beskrivelse af varen"
+            WidthRequest="300"
+            MinimumHeightRequest="150"
+            Margin="20"
+            x:Name="Description"/>
+
+            <Image 
+            WidthRequest="300"
+            Source="https://localhost:7239/products/images/revolt-164_6wVEHfI-unsplash.jpg"
+            x:Name="PrimaryPicture"
+            Margin="20"/>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
