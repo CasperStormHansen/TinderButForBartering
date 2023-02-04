@@ -3,14 +3,34 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TinderButForBartering.MatchPage"
              Title="Chat med">
+    
     <VerticalStackLayout>
-        <Label 
-            Text="Shows name of matched user and pictures of goods that are matched, and allows chat"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+        <CollectionView x:Name="ProductsView">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <StackLayout>
+                        <Label Text="{Binding Title}" />
+                        <Grid>
+                            <Image 
+                                 WidthRequest="200" 
+                                 HeightRequest="200" 
+                                 Margin="10" 
+                                 Aspect="AspectFit" 
+                                 Source="{Binding Url}" />
+                            <ImageButton 
+                                 WidthRequest="200" 
+                                 HeightRequest="200" 
+                                 Margin="10" 
+                                 BackgroundColor="Transparent" 
+                                 Clicked="OnProduct_Clicked" />
+                        </Grid>
+                    </StackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
 
         <Label
-            Text="Initial text"
+            Text="Chat"
             x:Name="chatMessages"
             FontSize="18"
             HorizontalOptions="Center" />

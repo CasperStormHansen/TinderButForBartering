@@ -1,4 +1,4 @@
-using TinderButForBartering.Pages;
+using TinderButForBartering;
 
 namespace TinderButForBartering;
 

@@ -12,6 +12,8 @@ public partial class MatchPage : ContentPage
 
 		Title = "Chat med " + match.Name;
 
+		ProductsView.ItemsSource = match.ForeignProducts;
+
         _connection = new HubConnectionBuilder()
 			.WithUrl("http://10.0.2.2:5045/chat")
 			.Build();
@@ -30,7 +32,14 @@ public partial class MatchPage : ContentPage
 		});
 	}
 
-	private async void OnSendButton_Clicked(object sender, EventArgs e)
+    private async void OnProduct_Clicked(object sender, EventArgs e)
+    {
+        ImageButton button = sender as ImageButton;
+        Product product = button.BindingContext as Product;
+        await Navigation.PushAsync(new ForeignProductsDetailsPage(product));
+    }
+
+    private async void OnSendButton_Clicked(object sender, EventArgs e)
 	{
 		await _connection.InvokeCoreAsync("SendMessage", args: new[]
 		{ myChatMessage.Text });

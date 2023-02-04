@@ -1,4 +1,4 @@
-namespace TinderButForBartering.Pages;
+namespace TinderButForBartering;
 
 public partial class ForeignProductsDetailsPage : ContentPage
 {
