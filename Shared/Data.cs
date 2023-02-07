@@ -3,6 +3,7 @@ using Plugin.Firebase.Auth;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Xml.Linq;
 
 namespace TinderButForBartering;
 
@@ -51,23 +52,21 @@ class Data
     /// </returns>
     public static async Task<(bool, string)> OnLogin(IFirebaseUser firebaseUser)
     {
-        CurrentUser = new User(firebaseUser);
+        CurrentUser = new User(firebaseUser.Uid, firebaseUser.DisplayName, firebaseUser.PhotoUrl, null);
 
-        (bool success, string infoStringOrError) = await Backend.OnLogin(CurrentUser);
+        (bool success, string errorMessage, OnLoginData onLoginData) = await Backend.OnLogin(CurrentUser);
 
         if (success)
         {
-            OnLoginData onLoginData = JsonConvert.DeserializeObject<OnLoginData>(infoStringOrError);
-
-            CurrentUser = onLoginData.item1;
-            foreach (Product product in onLoginData.item2) OwnProducts.Add(product);
-            foreach (Product product in onLoginData.item3) SwipingProducts.Enqueue(product);
-            Categories = onLoginData.item4;
-            foreach (Match match in onLoginData.item5) Matches.Add(match);
+            CurrentUser = onLoginData.Item1;
+            foreach (Product product in onLoginData.Item2) OwnProducts.Add(product);
+            foreach (Product product in onLoginData.Item3) SwipingProducts.Enqueue(product);
+            Categories = onLoginData.Item4;
+            foreach (Match match in onLoginData.Item5) Matches.Add(match);
 
             return (true, "");
         }
-        return (false, infoStringOrError);
+        return (false, errorMessage);
     }
 
     /// <summary>
@@ -229,13 +228,23 @@ class Data
 /// <summary>
 /// Helper class only used internally in the OnLogin method for deserialization.
 /// </summary>
-class OnLoginData
+public class OnLoginData
 {
-    public User item1 { get; set; }
-    public Product[] item2 { get; set; }
-    public Product[] item3 { get; set; }
-    public string[] item4 { get; set; }
-    public Match[] item5 { get; set; }
+    public User Item1 { get; set; }
+    public Product[] Item2 { get; set; }
+    public Product[] Item3 { get; set; }
+    public string[] Item4 { get; set; }
+    public Match[] Item5 { get; set; }
+
+    [JsonConstructor]
+    public OnLoginData(User item1, Product[] item2, Product[] item3, string[] item4, Match[] item5)
+    {
+        Item1 = item1;
+        Item2 = item2;
+        Item3 = item3;
+        Item4 = item4;
+        Item5 = item5;
+    }
 }
 
 /// <summary>

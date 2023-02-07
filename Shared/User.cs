@@ -11,20 +11,14 @@ public class User
 #nullable enable
     public string? PictureUrl { get; set; }
     public byte[]? Wishlist { get; set; } // array of the indexies of the categories the user is interested in
+#nullable disable
 
     [JsonConstructor]
-    public User(string id, string name, string? pictureUrl)
-#nullable disable
+    public User(string id, string name, string? pictureUrl, byte[]? wishlist)
     {
         Id = id;
         Name = name;
         PictureUrl = pictureUrl;
-    }
-
-    public User(IFirebaseUser firebaseUser)
-    {
-        Id = firebaseUser.Uid;
-        Name = firebaseUser.DisplayName;
-        PictureUrl = firebaseUser.PhotoUrl;
+        Wishlist = wishlist;
     }
 }

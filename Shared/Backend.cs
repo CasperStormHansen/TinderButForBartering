@@ -1,9 +1,34 @@
-﻿using System.Net.Http.Json;
+﻿using Microsoft.AspNetCore.SignalR.Client;
+using System.Net.Http.Json;
+using Newtonsoft.Json;
 
 namespace TinderButForBartering;
 
 public class Backend
 {
+    public static HubConnection ComHubConnection; // change to private
+
+    public static async Task<(bool, string, OnLoginData)> OnLogin(User user)
+    {
+        try 
+        {
+            ComHubConnection = new HubConnectionBuilder()
+                .WithUrl("http://10.0.2.2:5045/comhub")
+                .Build();
+
+            await ComHubConnection.StartAsync();
+
+            OnLoginData onLoginData = await ComHubConnection.InvokeCoreAsync<OnLoginData>("OnLogin", new[] { user });
+            return (true, "", onLoginData);
+        }
+        catch (Exception ex)
+        {
+            return (false, ex.Message, null);
+        }
+    }
+
+    // Above: SignalR; below: traditional http, to be changed
+
     public static readonly HttpClient client = new ();
 
 #if ANDROID
@@ -37,18 +62,18 @@ public class Backend
     /// If so, the second element contains the data as a JSON string. If not, the second element
     /// contains an error message.
     /// </returns>
-    public static async Task<(bool, string)> OnLogin(User user)
-    {
-        try
-        {
-            HttpResponseMessage response = await client.PostAsJsonAsync(OnLoginUrl, user);
-            return await ConvertReponse(response);
-        }
-        catch (Exception ex)
-        {
-            return (false, ex.Message);
-        }
-    }
+    //public static async Task<(bool, string)> OnLogin(User user)
+    //{
+    //    try
+    //    {
+    //        HttpResponseMessage response = await client.PostAsJsonAsync(OnLoginUrl, user);
+    //        return await ConvertReponse(response);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return (false, ex.Message);
+    //    }
+    //}
 
     /// <summary>
     /// Sends a user with updated wishes to the backend and gets updated swiping products back.
