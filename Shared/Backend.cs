@@ -1,22 +1,56 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
-using System.Net.Http.Json;
-using Newtonsoft.Json;
 
 namespace TinderButForBartering;
 
 public class Backend
 {
-    public static HubConnection ComHubConnection; // change to private
+#if ANDROID
+    static readonly string BaseUrl = "http://10.0.2.2:5045/";
+#else
+    static readonly string BaseUrl = "https://localhost:7239/";
+#endif
 
-    public static async Task<(bool, string, OnLoginData)> OnLogin(User user)
+    static readonly string ComHubUrl = BaseUrl + "comhub";
+
+    public static HubConnection ComHubConnection { get; set; } // change to private
+
+    private static async Task Connect()
     {
-        try 
-        {
-            ComHubConnection = new HubConnectionBuilder()
-                .WithUrl("http://10.0.2.2:5045/comhub")
+        ComHubConnection = new HubConnectionBuilder()
+                .WithUrl(ComHubUrl)
                 .Build();
 
+        await ComHubConnection.StartAsync();
+        // TODO: error handling
+    }
+
+    private static async Task EnsureConnection()
+    {
+        if (ComHubConnection.State == HubConnectionState.Disconnected) // TODO: seems to disconnect quickly. Why is that?
+        {
+            //ComHubConnection = new HubConnectionBuilder()
+            //    .WithUrl(ComHubUrl)
+            //    .Build();
+
             await ComHubConnection.StartAsync();
+            // TODO: error handling
+        }
+    }
+
+    /// <summary>
+    /// Sends a user to the backend and gets all the inital data needed by the app back.
+    /// </summary>
+    /// 
+    /// <returns>
+    /// A tuple. The first element is a boolean, which is true iff the operation was successful. 
+    /// If so, the third element contains the data. If not, the second element contains an error 
+    /// message.
+    /// </returns>
+    public static async Task<(bool, string, OnLoginData)> OnLogin(User user)
+    {
+        try
+        {
+            await Connect(); // TODO: Close on logout
 
             OnLoginData onLoginData = await ComHubConnection.InvokeCoreAsync<OnLoginData>("OnLogin", new[] { user });
             return (true, "", onLoginData);
@@ -27,73 +61,27 @@ public class Backend
         }
     }
 
-    // Above: SignalR; below: traditional http, to be changed
-
-    public static readonly HttpClient client = new ();
-
-#if ANDROID
-    static readonly string BaseUrl = "http://10.0.2.2:5045/";
-#else
-    static readonly string BaseUrl = "https://localhost:7239/";
-#endif
-
-    static readonly string OnLoginUrl = BaseUrl + "onlogin/";
-    static readonly string OnWishesUpdateUrl = BaseUrl + "onwishesupdate/";
-    static readonly string NewProductUrl = BaseUrl + "newproduct/";
-    static readonly string ChangeProductPartialUrl = BaseUrl + "changeproduct/";
-    static readonly string DeleteProductPartialUrl = BaseUrl + "deleteproduct/";
-    static readonly string ImagePartialUrl = BaseUrl + "images/";
-    static readonly string NoToProductUrl = BaseUrl + "notoproduct/";
-    static readonly string YesToProductUrl = BaseUrl + "yestoproduct/";
-    static readonly string WillPayForProductUrl = BaseUrl + "willpayforproduct/";
-
-    /// <summary>
-    /// Returns the URL of the image of the product with the ID given in the parameter.
-    /// </summary>
-    public static string GetImageUrl(int Id)
-        => $"{ImagePartialUrl}{Id}.jpg";
-
-    /// <summary>
-    /// Sends a user to the backend and gets all the inital data needed by the app back.
-    /// </summary>
-    /// 
-    /// <returns>
-    /// A tuple. The first element is a boolean, which is true iff the operation was successful. 
-    /// If so, the second element contains the data as a JSON string. If not, the second element
-    /// contains an error message.
-    /// </returns>
-    //public static async Task<(bool, string)> OnLogin(User user)
-    //{
-    //    try
-    //    {
-    //        HttpResponseMessage response = await client.PostAsJsonAsync(OnLoginUrl, user);
-    //        return await ConvertReponse(response);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return (false, ex.Message);
-    //    }
-    //}
-
     /// <summary>
     /// Sends a user with updated wishes to the backend and gets updated swiping products back.
     /// </summary>
     /// 
     /// <returns>
     /// A tuple. The first element is a boolean, which is true iff the operation was successful. 
-    /// If so, the second element contains the products as a JSON string. If not, the second element
-    /// contains an error message.
+    /// If so, the third element contains the products. If not, the second element contains an 
+    /// error message.
     /// </returns>
-    public static async Task<(bool, string)> OnWishesUpdate(User user)
+    public static async Task<(bool, string, Product[])> OnWishesUpdate(User user)
     {
+        await EnsureConnection();
+
         try
         {
-            HttpResponseMessage response = await client.PostAsJsonAsync(OnWishesUpdateUrl, user);
-            return await ConvertReponse(response);
+            Product[] swipingProductsArray = await ComHubConnection.InvokeCoreAsync<Product[]>("OnWishesUpdate", new[] { user });
+            return (true, "", swipingProductsArray);
         }
         catch (Exception ex)
         {
-            return (false, ex.Message);
+            return (false, ex.Message, null);
         }
     }
 
@@ -104,19 +92,21 @@ public class Backend
     /// 
     /// <returns>
     /// A tuple. The first element is a boolean, which is true iff the operation was successful. 
-    /// If so, the second element contains the product information as saved to the database as a
-    /// JSON string (without image data). If not, the second element contains an error message.
+    /// If so, the third element contains the product information as saved to the database 
+    /// (without image data). If not, the second element contains an error message.
     /// </returns>
-    public static async Task<(bool, string)> PostProduct(ProductWithoutId productWithoutId)
+    public static async Task<(bool, string, Product)> NewProduct(ProductWithoutId productWithoutId)
     {
+        await EnsureConnection();
+
         try
         {
-            HttpResponseMessage response = await client.PostAsJsonAsync(NewProductUrl, productWithoutId);
-            return await ConvertReponse(response);
+            Product product = await ComHubConnection.InvokeCoreAsync<Product>("NewProduct", new[] { productWithoutId });
+            return (true, "", product);
         }
         catch (Exception ex)
         {
-            return (false, ex.Message);
+            return (false, ex.Message, null);
         }
     }
 
@@ -127,15 +117,23 @@ public class Backend
     /// 
     /// <returns>
     /// A tuple. The first element is a boolean, which is true iff the operation was successful. 
-    /// If so, the second element is empty. If not, the second element contains an error message.
+    /// If not, the second element contains an error message.
     /// </returns>
     public static async Task<(bool, string)> ChangeProduct(Product product)
     {
         try
         {
-            string url = ChangeProductPartialUrl + product.Id + "/";
-            HttpResponseMessage response = await client.PutAsJsonAsync(url, product);
-            return await ConvertReponse(response);
+            await EnsureConnection();
+
+            bool success = await ComHubConnection.InvokeCoreAsync<bool>("ChangeProduct", new[] { product });
+            if (success)
+            {
+                return (true, "");
+            }
+            else
+            {
+                return (false, ""); // TODO: can this be improved?
+            }
         }
         catch (Exception ex)
         {
@@ -150,15 +148,23 @@ public class Backend
     /// 
     /// <returns>
     /// A tuple. The first element is a boolean, which is true iff the operation was successful. 
-    /// If so, the second element is empty. If not, the second element contains an error message.
+    /// If not, the second element contains an error message.
     /// </returns>
     public static async Task<(bool, string)> DeleteProduct(Product product)
     {
         try
         {
-            string url = DeleteProductPartialUrl + product.Id + "/";
-            HttpResponseMessage response = await client.DeleteAsync(url);
-            return await ConvertReponse(response);
+            await EnsureConnection();
+
+            bool success = await ComHubConnection.InvokeCoreAsync<bool>("DeleteProduct", new object[] { product.Id });
+            if (success)
+            {
+                return (true, "");
+            }
+            else
+            {
+                return (false, ""); // TODO: can this be improved?
+            }
         }
         catch (Exception ex)
         {
@@ -170,7 +176,7 @@ public class Backend
     {
         try
         {
-            await client.PostAsJsonAsync(NoToProductUrl, userProductAttitude);
+            await ComHubConnection.InvokeCoreAsync("NoToProduct", new[] { userProductAttitude });
         }
         catch (Exception)
         {
@@ -181,7 +187,7 @@ public class Backend
     {
         try
         {
-            await client.PostAsJsonAsync(YesToProductUrl, userProductAttitude);
+            await ComHubConnection.InvokeCoreAsync("YesToProduct", new[] { userProductAttitude });
         }
         catch (Exception)
         {
@@ -192,20 +198,20 @@ public class Backend
     {
         try
         {
-            await client.PostAsJsonAsync(WillPayForProductUrl, userProductAttitude);
+            await ComHubConnection.InvokeCoreAsync("WillPayForProduct", new[] { userProductAttitude });
         }
         catch (Exception)
         {
         }
     }
 
-    private static async Task<(bool, string)> ConvertReponse(HttpResponseMessage response)
-    {
-        if (response.IsSuccessStatusCode)
-        {
-            string jsonString = await response.Content.ReadAsStringAsync();
-            return (true, jsonString);
-        }
-        return (false, response.StatusCode.ToString());
-    }
+    public static readonly HttpClient client = new(); // Is this needed to get pictures? I think not.
+
+    static readonly string ImagePartialUrl = BaseUrl + "images/";
+    
+    /// <summary>
+    /// Returns the URL of the image of the product with the ID given in the parameter.
+    /// </summary>
+    public static string GetImageUrl(int Id)
+        => $"{ImagePartialUrl}{Id}.jpg";
 }

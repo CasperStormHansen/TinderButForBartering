@@ -1,9 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Plugin.Firebase.Auth;
 using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Xml.Linq;
 
 namespace TinderButForBartering;
 
@@ -81,41 +78,17 @@ class Data
     public static async Task<(bool, string)> OnWishesUpdate(byte[] wishlist)
     {
         CurrentUser.Wishlist = wishlist;
-        (bool success, string infoStringOrError) = await Backend.OnWishesUpdate(CurrentUser);
+        (bool success, string errorMessage, Product[] swipingProductsArray) = await Backend.OnWishesUpdate(CurrentUser);
         
         if (success)
         {
-            Product[] sp = JsonConvert.DeserializeObject<Product[]>(infoStringOrError);
             SwipingProducts.Clear();
-            foreach (Product product in sp) SwipingProducts.Enqueue(product);
+            foreach (Product product in swipingProductsArray) SwipingProducts.Enqueue(product);
             
             return (true, "");
         }
-        return (false, infoStringOrError);
+        return (false, errorMessage);
     }
-
-    ///// <summary>
-    ///// Attempts to get information about the user's own products via the backend class, deserilializes it, and
-    ///// stores it in OwnProducts.
-    ///// </summary>
-    ///// 
-    ///// <returns>
-    ///// A tuple. The first element is a boolian that indicates if the operation was successful. If not, the second
-    ///// element contains an error message.
-    ///// </returns>
-    //public static async Task<(bool, string)> GetOwnProducts()
-    //{
-    //    (bool success, string productsStringOrErrorInfo) = await Backend.GetProducts();
-
-    //    if (success)
-    //    {
-    //        List<Product> productsList = JsonConvert.DeserializeObject<List<Product>>(productsStringOrErrorInfo);
-    //        foreach (Product product in productsList) OwnProducts.Add(product);
-
-    //        return (true, "");
-    //    }
-    //    return (false, productsStringOrErrorInfo);
-    //}
 
     /// <summary>
     /// Attempts to send information about a new user-owned product via the backend class and also stores it in
@@ -128,16 +101,15 @@ class Data
     /// </returns>
     public static async Task<(bool, string)> AddNewOwnProduct(ProductWithoutId productWithoutId)
     {
-        (bool success, string productStringOrErrorInfo) = await Backend.PostProduct(productWithoutId);
+        (bool success, string errorInfo, Product product) = await Backend.NewProduct(productWithoutId);
 
         if (success)
         {
-            Product product = JsonConvert.DeserializeObject<Product>(productStringOrErrorInfo);
             OwnProducts.Add(product);
 
             return (true, "");
         }
-        return (false, productStringOrErrorInfo);
+        return (false, errorInfo);
 
     }
 
@@ -226,7 +198,7 @@ class Data
 }
 
 /// <summary>
-/// Helper class only used internally in the OnLogin method for deserialization.
+/// Helper class only used in the OnLogin methods for deserialization.
 /// </summary>
 public class OnLoginData
 {
