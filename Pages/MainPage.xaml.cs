@@ -64,7 +64,7 @@ public partial class MainPage : ContentPage
 
             if (success)
             {
-                Data.DeleteLocalData();
+                Data.Logout();
                 await Navigation.PushModalAsync(new LoginPage());
             }
             else
@@ -86,7 +86,7 @@ public partial class MainPage : ContentPage
 
             if (success)
             {
-                Data.DeleteLocalData();
+                Data.Logout();
                 await Navigation.PushModalAsync(new LoginPage());
             }
             else

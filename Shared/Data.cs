@@ -188,12 +188,14 @@ class Data
     /// <summary>
     /// Deletes the local data about the user and products.
     /// </summary>
-    public static void DeleteLocalData()
+    public static async void Logout()
     {
         CurrentUser = null;
         OwnProducts.Clear();
         SwipingProducts.Clear();
         Categories = null;
+
+        await Backend.OnLogout();
     }
 }
 

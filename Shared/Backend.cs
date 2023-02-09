@@ -20,21 +20,42 @@ public class Backend
                 .WithUrl(ComHubUrl)
                 .Build();
 
-        await ComHubConnection.StartAsync();
-        // TODO: error handling
+        try
+        {
+            await ComHubConnection.StartAsync();
+            ComHubConnection.Closed += OnUnintendedConnectionLoss;
+        }
+        catch
+        {
+            await OnUnintendedConnectionLoss(null);
+        }
     }
 
-    private static async Task EnsureConnection()
+    public static async Task<bool> Reconnect()
     {
-        if (ComHubConnection.State == HubConnectionState.Disconnected) // TODO: seems to disconnect quickly. Why is that?
+        try
         {
-            //ComHubConnection = new HubConnectionBuilder()
-            //    .WithUrl(ComHubUrl)
-            //    .Build();
-
             await ComHubConnection.StartAsync();
-            // TODO: error handling
+            await ComHubConnection.InvokeCoreAsync<OnLoginData>("RegisterUserIdOfConnection", new[] { Data.CurrentUser.Id });
+            ComHubConnection.Closed += OnUnintendedConnectionLoss;
+            return true;
         }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private static async Task OnUnintendedConnectionLoss(Exception exception) // TODO: What if the app is not in the frontend?
+    {
+        ComHubConnection.Closed -= OnUnintendedConnectionLoss;
+        await App.Current.MainPage.Navigation.PushModalAsync(new ConnectionLostPage());
+    }
+
+    private static async Task CloseConnectionIntentionally()
+    {
+        ComHubConnection.Closed -= OnUnintendedConnectionLoss;
+        await ComHubConnection.StopAsync();
     }
 
     /// <summary>
@@ -50,7 +71,7 @@ public class Backend
     {
         try
         {
-            await Connect(); // TODO: Close on logout
+            await Connect();
 
             OnLoginData onLoginData = await ComHubConnection.InvokeCoreAsync<OnLoginData>("OnLogin", new[] { user });
             return (true, "", onLoginData);
@@ -72,8 +93,6 @@ public class Backend
     /// </returns>
     public static async Task<(bool, string, Product[])> OnWishesUpdate(User user)
     {
-        await EnsureConnection();
-
         try
         {
             Product[] swipingProductsArray = await ComHubConnection.InvokeCoreAsync<Product[]>("OnWishesUpdate", new[] { user });
@@ -97,8 +116,6 @@ public class Backend
     /// </returns>
     public static async Task<(bool, string, Product)> NewProduct(ProductWithoutId productWithoutId)
     {
-        await EnsureConnection();
-
         try
         {
             Product product = await ComHubConnection.InvokeCoreAsync<Product>("NewProduct", new[] { productWithoutId });
@@ -123,8 +140,6 @@ public class Backend
     {
         try
         {
-            await EnsureConnection();
-
             bool success = await ComHubConnection.InvokeCoreAsync<bool>("ChangeProduct", new[] { product });
             if (success)
             {
@@ -154,8 +169,6 @@ public class Backend
     {
         try
         {
-            await EnsureConnection();
-
             bool success = await ComHubConnection.InvokeCoreAsync<bool>("DeleteProduct", new object[] { product.Id });
             if (success)
             {
@@ -203,6 +216,11 @@ public class Backend
         catch (Exception)
         {
         }
+    }
+
+    public static async Task OnLogout()
+    {
+        await CloseConnectionIntentionally();
     }
 
     public static readonly HttpClient client = new(); // Is this needed to get pictures? I think not.
