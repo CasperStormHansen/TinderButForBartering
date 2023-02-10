@@ -1,7 +1,5 @@
-﻿using Newtonsoft.Json;
-using Plugin.Firebase.Auth;
+﻿using Plugin.Firebase.Auth;
 using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace TinderButForBartering;
 
@@ -56,11 +54,11 @@ class Data
 
         if (success)
         {
-            CurrentUser = onLoginData.Item1;
-            foreach (Product product in onLoginData.Item2) OwnProducts.Add(product);
-            foreach (Product product in onLoginData.Item3) SwipingProducts.Enqueue(product);
-            Categories = onLoginData.Item4;
-            foreach (Match match in onLoginData.Item5) Matches.Add(match);
+            CurrentUser = onLoginData.User;
+            foreach (Product product in onLoginData.OwnProducts) OwnProducts.Add(product);
+            foreach (Product product in onLoginData.SwipingProducts) SwipingProducts.Enqueue(product);
+            Categories = onLoginData.Categories;
+            foreach (Match match in onLoginData.Matches) Matches.Add(match);
 
             return (true, "");
         }
@@ -169,7 +167,7 @@ class Data
 
         if (success)
         {
-            match.Messages = match.Messages.Append(returnedMessage).OrderBy(m => m.DateTime).ToArray();
+            match.Messages.Add(returnedMessage);
             return (true, "");
         }
         return (false, errorInfo);
@@ -178,7 +176,7 @@ class Data
     public static void ReceiveMessage(Message message)
     {
         Match match = Matches.FirstOrDefault(m => m.MatchId == message.MatchId);
-        match.Messages = match.Messages.Append(message).OrderBy(m => m.DateTime).ToArray();
+        match.Messages.Add(message);
     }
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
@@ -217,42 +215,5 @@ class Data
         Categories = null;
 
         await Backend.OnLogout();
-    }
-}
-
-/// <summary>
-/// Helper class only used in the OnLogin methods for deserialization.
-/// </summary>
-public class OnLoginData
-{
-    public User Item1 { get; set; }
-    public Product[] Item2 { get; set; }
-    public Product[] Item3 { get; set; }
-    public string[] Item4 { get; set; }
-    public Match[] Item5 { get; set; }
-
-    [JsonConstructor]
-    public OnLoginData(User item1, Product[] item2, Product[] item3, string[] item4, Match[] item5)
-    {
-        Item1 = item1;
-        Item2 = item2;
-        Item3 = item3;
-        Item4 = item4;
-        Item5 = item5;
-    }
-}
-
-/// <summary>
-/// Helper class only used to send swipe info to backend.
-/// </summary>
-public class UserProductAttitude
-{
-    public string UserId { get; set; }
-    public int ProductId { get; set; }
-
-    public UserProductAttitude(User user, Product product)
-    {
-        UserId = user.Id;
-        ProductId = product.Id;
     }
 }

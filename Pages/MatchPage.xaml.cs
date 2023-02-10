@@ -38,8 +38,8 @@ public partial class MatchPage : ContentPage
 
             if (success)
             {
-                ChatView.ItemsSource = null;
-                ChatView.ItemsSource = Match.Messages; // does this refresh?
+                //ChatView.ItemsSource = null;
+                //ChatView.ItemsSource = Match.Messages; // does this refresh?
             }
             else
             {

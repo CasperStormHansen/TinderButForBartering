@@ -12,7 +12,7 @@ public class Backend
 
     static readonly string ComHubUrl = BaseUrl + "comhub";
 
-    public static HubConnection ComHubConnection { get; set; } // change to private
+    private static HubConnection ComHubConnection { get; set; } // change to private
 
     /// <summary>
     /// Attempts to create SignalR connection with backend. Only to be called from OnLogin, which
@@ -24,10 +24,7 @@ public class Backend
             .WithUrl(ComHubUrl)
             .Build();
 
-        ComHubConnection.On<Message>("ReceiveMessage", (message) => // TODO: remove lamda
-        {
-            Data.ReceiveMessage(message);
-        });
+        ComHubConnection.On<Message>("ReceiveMessage", Data.ReceiveMessage);
 
         await ComHubConnection.StartAsync();
 
@@ -258,7 +255,7 @@ public class Backend
         await CloseConnectionIntentionally();
     }
 
-    public static readonly HttpClient client = new(); // Is this needed to get pictures? I think not.
+    //public static readonly HttpClient client = new(); // Is this needed to get pictures? I think not.
 
     static readonly string ImagePartialUrl = BaseUrl + "images/";
     
