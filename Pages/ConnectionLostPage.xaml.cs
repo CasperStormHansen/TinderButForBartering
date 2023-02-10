@@ -5,21 +5,27 @@ public partial class ConnectionLostPage : ContentPage
 	public ConnectionLostPage()
 	{
 		InitializeComponent();
+	}
+
+    protected override void OnNavigatedTo(NavigatedToEventArgs args)
+    {
+        base.OnNavigatedTo(args);
+
         Connectivity.ConnectivityChanged += ConnectivityChanged;
         AttemptToReconnect();
     }
 
-	private async Task AttemptToReconnect()
+    private async Task AttemptToReconnect()
 	{
         ReestablishButton.IsVisible = false;
 		ReestablishingInfo.IsVisible = true;
 
-        bool success = await Backend.Reconnect();
+        bool success = await Backend.Reconnect(); // This takes more than a minute to timeout. 7 secs would be better.
 
 		if (success)
 		{
             Connectivity.ConnectivityChanged -= ConnectivityChanged; 
-			await Navigation.PopAsync();
+			await Navigation.PopModalAsync();
         }
 		else
 		{

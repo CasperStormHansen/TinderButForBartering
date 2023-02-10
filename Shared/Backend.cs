@@ -36,7 +36,7 @@ public class Backend
         try
         {
             await ComHubConnection.StartAsync();
-            await ComHubConnection.InvokeCoreAsync<OnLoginData>("RegisterUserIdOfConnection", new[] { Data.CurrentUser.Id });
+            await ComHubConnection.InvokeCoreAsync("RegisterUserIdOfConnection", new[] { Data.CurrentUser.Id }); // does not work
             ComHubConnection.Closed += OnUnintendedConnectionLoss;
             return true;
         }
@@ -49,7 +49,10 @@ public class Backend
     private static async Task OnUnintendedConnectionLoss(Exception exception) // TODO: What if the app is not in the frontend?
     {
         ComHubConnection.Closed -= OnUnintendedConnectionLoss;
-        await App.Current.MainPage.Navigation.PushModalAsync(new ConnectionLostPage());
+        App.Current.MainPage.Dispatcher.Dispatch(async () =>
+        {
+            await App.Current.MainPage.Navigation.PushModalAsync(new ConnectionLostPage());
+        });
     }
 
     private static async Task CloseConnectionIntentionally()
