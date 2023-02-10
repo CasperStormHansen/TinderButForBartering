@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 
 namespace TinderButForBartering;
 
-#nullable enable
 public class ProductWithoutId
 {
     public string OwnerId { get; set; }
@@ -12,9 +11,9 @@ public class ProductWithoutId
     public string Title { get; set; }
     public string Description { get; set; }
     public bool RequiresSomethingInReturn { get; set; }
-    
+#nullable enable
     public byte[]? PrimaryPictureData { get; set; }
-    
+#nullable disable
 
     public ProductWithoutId(string title, byte category, string description, bool requiresSomethingInReturn, byte[] primaryPictureData)
     {
@@ -40,6 +39,7 @@ public class Product : ProductWithoutId
     }
 }
 
+#nullable enable
 public class User
 {
     public string Id { get; set; }
@@ -56,12 +56,15 @@ public class User
         Wishlist = wishlist;
     }
 }
+#nullable disable
 
 public class Match
 {
     public int MatchId { get; set; }
     public string Name { get; set; }
+#nullable enable
     public string? PictureUrl { get; set; }
+#nullable disable
     public int[] OwnProductIds { get; set; }
     public Product[] ForeignProducts { get; set; }
     [JsonConverter(typeof(ObservableCollectionConverter<Message>))]
@@ -115,4 +118,3 @@ public class UserProductAttitude
         ProductId = product.Id;
     }
 }
-#nullable disable
