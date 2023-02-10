@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Plugin.Firebase.Auth;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace TinderButForBartering;
 
@@ -158,6 +159,26 @@ class Data
             return (true, "");
         }
         return (false, errorInfo);
+    }
+
+    public static async Task<(bool, string)> SendMessage(Match match, string messageContent)
+    {
+        Message message = new(match.MatchId, true, messageContent, null);
+
+        (bool success, string errorInfo, Message returnedMessage) = await Backend.SendMessage(message, CurrentUser.Id);
+
+        if (success)
+        {
+            match.Messages = match.Messages.Append(returnedMessage).OrderBy(m => m.DateTime).ToArray();
+            return (true, "");
+        }
+        return (false, errorInfo);
+    }
+
+    public static void ReceiveMessage(Message message)
+    {
+        Match match = Matches.FirstOrDefault(m => m.MatchId == message.MatchId);
+        match.Messages = match.Messages.Append(message).OrderBy(m => m.DateTime).ToArray();
     }
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed

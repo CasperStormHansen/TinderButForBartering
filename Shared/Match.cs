@@ -1,4 +1,6 @@
-﻿namespace TinderButForBartering;
+﻿using Newtonsoft.Json;
+
+namespace TinderButForBartering;
 
 #nullable enable
 public class Match
@@ -23,11 +25,15 @@ public class Match
 
 public class Message
 {
+    public int MatchId { get; set; }
     public bool Own { get; set; }
     public string Content { get; set; }
-    public DateTime DateTime { get; set; }
-    public Message(bool own, string content, DateTime dateTime)
+    public DateTime? DateTime { get; set; }
+
+    [JsonConstructor]
+    public Message(int matchId, bool own, string content, DateTime? dateTime)
     {
+        MatchId = matchId;
         Own = own;
         Content = content;
         DateTime = dateTime;

@@ -24,6 +24,11 @@ public class Backend
             .WithUrl(ComHubUrl)
             .Build();
 
+        ComHubConnection.On<Message>("ReceiveMessage", (message) => // TODO: remove lamda
+        {
+            Data.ReceiveMessage(message);
+        });
+
         await ComHubConnection.StartAsync();
 
         ComHubConnection.Closed += OnUnintendedConnectionLoss;
@@ -199,6 +204,19 @@ public class Backend
         catch (Exception ex)
         {
             return (false, ex.Message);
+        }
+    }
+
+    public static async Task<(bool, string, Message)> SendMessage(Message message, string userId)
+    {
+        try
+        {
+            Message returnedMessage = await ComHubConnection.InvokeCoreAsync<Message>("SendMessage", new object[] { message, userId });
+            return (true, "", returnedMessage);
+        }
+        catch (Exception ex)
+        {
+            return (false, ex.Message, null);
         }
     }
 

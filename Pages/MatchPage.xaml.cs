@@ -4,27 +4,19 @@ namespace TinderButForBartering;
 
 public partial class MatchPage : ContentPage
 {
-	public MatchPage(Match match)
+    private Match Match { get; set; }
+
+    public MatchPage(Match match)
 	{
 		InitializeComponent();
 
-		Title = "Chat med " + match.Name;
+        Match = match;
 
-		ProductsView.ItemsSource = match.ForeignProducts;
+		Title = "Chat med " + Match.Name;
 
-        Backend.ComHubConnection.On<string>("MessageReceived", (message) =>
-		{
-            chatMessages.Dispatcher.Dispatch(() => {
-                chatMessages.Text += $"{Environment.NewLine}{message}";
-            });
-        });
-
-		Task.Run(() =>
-		{
-			Dispatcher.Dispatch(async () =>
-			await Backend.ComHubConnection.StartAsync());
-		});
-	}
+		ProductsView.ItemsSource = Match.ForeignProducts;
+        ChatView.ItemsSource = Match.Messages;
+    }
 
     private async void OnProduct_Clicked(object sender, EventArgs e)
     {
@@ -33,11 +25,28 @@ public partial class MatchPage : ContentPage
         await Navigation.PushAsync(new ForeignProductsDetailsPage(product, false));
     }
 
-    private async void OnSendButton_Clicked(object sender, EventArgs e)
+    private async void OnSendButton_Clicked(object sender, EventArgs e) // TODO
 	{
-		await Backend.ComHubConnection.InvokeCoreAsync("SendMessage", args: new[]
-		{ myChatMessage.Text });
+        string messageContent = myChatMessage.Text;
+		myChatMessage.Text = string.Empty;
+        sendButton.IsEnabled = false;
 
-		myChatMessage.Text = String.Empty;
-	}
+        bool success = false;
+        while (!success)
+        {
+            (success, string errorMessage) = await Data.SendMessage(Match, messageContent);
+
+            if (success)
+            {
+                ChatView.ItemsSource = null;
+                ChatView.ItemsSource = Match.Messages; // does this refresh?
+            }
+            else
+            {
+                await DisplayAlert("Beskeden kunne ikke sendes", errorMessage, "OK");
+            }
+        }
+
+        sendButton.IsEnabled = true;
+    }
 }

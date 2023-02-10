@@ -29,11 +29,18 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-        <Label
-            Text="Chat"
-            x:Name="chatMessages"
-            FontSize="18"
-            HorizontalOptions="Center" />
+        <CollectionView x:Name="ChatView">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <StackLayout>
+                        <Label 
+                            Text="{Binding Content}"
+                            FontSize="18"
+                            HorizontalOptions="Center" />
+                    </StackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
 
         <Entry
             x:Name="myChatMessage"
