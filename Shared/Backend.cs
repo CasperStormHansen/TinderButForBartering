@@ -14,29 +14,34 @@ public class Backend
 
     public static HubConnection ComHubConnection { get; set; } // change to private
 
+    /// <summary>
+    /// Attempts to create SignalR connection with backend. Only to be called from OnLogin, which
+    /// handles registration and errors.
+    /// </summary>
     private static async Task Connect()
     {
         ComHubConnection = new HubConnectionBuilder()
-                .WithUrl(ComHubUrl)
-                .Build();
+            .WithUrl(ComHubUrl)
+            .Build();
 
-        try
-        {
-            await ComHubConnection.StartAsync();
-            ComHubConnection.Closed += OnUnintendedConnectionLoss;
-        }
-        catch
-        {
-            await OnUnintendedConnectionLoss(null);
-        }
+        await ComHubConnection.StartAsync();
+
+        ComHubConnection.Closed += OnUnintendedConnectionLoss;
     }
 
+    /// <summary>
+    /// Attempts to reconnect to backend. To be used in case of unintended loss of connection, not 
+    /// on logout.
+    /// </summary>
+    /// <returns>
+    /// A boolian success indicator.
+    /// </returns>
     public static async Task<bool> Reconnect()
     {
         try
         {
             await ComHubConnection.StartAsync();
-            await ComHubConnection.InvokeCoreAsync("RegisterUserIdOfConnection", new[] { Data.CurrentUser.Id }); // does not work
+            await ComHubConnection.InvokeCoreAsync("RegisterUserIdOfConnection", new[] { Data.CurrentUser.Id });
             ComHubConnection.Closed += OnUnintendedConnectionLoss;
             return true;
         }
@@ -46,16 +51,25 @@ public class Backend
         }
     }
 
-    private static async Task OnUnintendedConnectionLoss(Exception exception) // TODO: What if the app is not in the frontend?
+    /// <summary>
+    /// Shoud be called in case of unintended loss of connection to the backend, i.e., not on logout. 
+    /// Will navigate to a page that informs the user of the problem, and comes with code behind that 
+    /// attempts to reconnect.
+    /// </summary>
+    private static Task OnUnintendedConnectionLoss(Exception exception) // TODO: What if the app is not in the frontend?
     {
         ComHubConnection.Closed -= OnUnintendedConnectionLoss;
-        App.Current.MainPage.Dispatcher.Dispatch(async () =>
+        Application.Current.MainPage.Dispatcher.Dispatch(async () =>
         {
-            await App.Current.MainPage.Navigation.PushModalAsync(new ConnectionLostPage());
+            await Application.Current.MainPage.Navigation.PushModalAsync(new ConnectionLostPage());
         });
+        return Task.CompletedTask;
     }
 
-    private static async Task CloseConnectionIntentionally()
+    /// <summary>
+    /// Closes the connection to the backend. Should be used on logout.
+    /// </summary>
+    private static async Task CloseConnectionIntentionally() // TODO: Should this also be used when the app goes to the background?
     {
         ComHubConnection.Closed -= OnUnintendedConnectionLoss;
         await ComHubConnection.StopAsync();

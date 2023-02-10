@@ -40,7 +40,7 @@ public partial class MyWishesPage : ContentPage
         }
         else
         {
-            await App.Current.MainPage.DisplayAlert("Der kunne ikke opnås kontakt til serveren", errorMessage, "Prøv igen");
+            await App.Current.MainPage.DisplayAlert("Der kunne ikke opnås kontakt til serveren", errorMessage, "OK");
         }
     }
 

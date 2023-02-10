@@ -8,7 +8,9 @@ public partial class UserProductDetailsPage : ContentPage
     byte[]? PrimaryPictureData { get; set; }
 #nullable disable
 
-    // When loaded as "add new product page"
+    /// <summary>
+    /// Called when loaded as "add new product page."
+    /// </summary>
     public UserProductDetailsPage()
     {
         InitializeComponent();
@@ -19,7 +21,9 @@ public partial class UserProductDetailsPage : ContentPage
         CategoryPicker.ItemsSource = Data.Categories;
     }
 
-    // When loaded as "modify product page"
+    /// <summary>
+    /// Called when loaded as "modify product page."
+    /// </summary>
     public UserProductDetailsPage(Product product)
     {
         InitializeComponent();
