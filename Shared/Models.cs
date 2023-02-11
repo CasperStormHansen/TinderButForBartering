@@ -65,8 +65,11 @@ public class Match
 #nullable enable
     public string? PictureUrl { get; set; }
 #nullable disable
-    public int[] OwnProductIds { get; set; }
-    public Product[] ForeignProducts { get; set; }
+    //public int[] OwnProductIds { get; set; }
+    [JsonConverter(typeof(ObservableCollectionConverter<int>))]
+    public ObservableCollection<int> OwnProductIds { get; set; }
+    [JsonConverter(typeof(ObservableCollectionConverter<Product>))]
+    public ObservableCollection<Product> ForeignProducts { get; set; }
     [JsonConverter(typeof(ObservableCollectionConverter<Message>))]
     public ObservableCollection<Message> Messages { get; set; }
 }

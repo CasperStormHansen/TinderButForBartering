@@ -204,6 +204,23 @@ class Data
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
+    public static void ReceiveMatch(Match match)
+    {
+        Matches.Add(match);
+    }
+
+    public static void AddForeignProductToMatch(Product product, int matchId)
+    {
+        Match match = Matches.FirstOrDefault(m => m.MatchId == matchId);
+        match?.ForeignProducts.Add(product);
+    }
+
+    public static void AddOwnProductToMatch(int productId, int matchId)
+    {
+        Match match = Matches.FirstOrDefault(m => m.MatchId == matchId);
+        match?.OwnProductIds.Add(productId);
+    }
+
     /// <summary>
     /// Deletes the local data about the user and products.
     /// </summary>
@@ -213,6 +230,7 @@ class Data
         OwnProducts.Clear();
         SwipingProducts.Clear();
         Categories = null;
+        Matches.Clear();
 
         await Backend.OnLogout();
     }

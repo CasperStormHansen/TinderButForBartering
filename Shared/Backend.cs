@@ -12,7 +12,7 @@ public class Backend
 
     static readonly string ComHubUrl = BaseUrl + "comhub";
 
-    private static HubConnection ComHubConnection { get; set; } // change to private
+    private static HubConnection ComHubConnection { get; set; }
 
     /// <summary>
     /// Attempts to create SignalR connection with backend. Only to be called from OnLogin, which
@@ -25,6 +25,9 @@ public class Backend
             .Build();
 
         ComHubConnection.On<Message>("ReceiveMessage", Data.ReceiveMessage);
+        ComHubConnection.On<Match>("ReceiveMatch", Data.ReceiveMatch);
+        ComHubConnection.On<Product, int>("AddForeignProductToMatch", Data.AddForeignProductToMatch);
+        ComHubConnection.On<int, int>("AddOwnProductToMatch", Data.AddOwnProductToMatch);
 
         await ComHubConnection.StartAsync();
 
