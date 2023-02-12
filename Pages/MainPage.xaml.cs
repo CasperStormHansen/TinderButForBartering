@@ -130,6 +130,7 @@ public partial class MainPage : ContentPage
             YesButton.IsEnabled = false;
             NoButton.IsEnabled = false;
             WillPayButton.IsEnabled = false;
+            // make this function run again on changes to SwipingProducts
         }
     }
 
@@ -140,19 +141,19 @@ public partial class MainPage : ContentPage
 
     private async void OnNoButton_Clicked(object sender, EventArgs e)
     {
-        await Data.NoToProduct();
+        await Data.OnSwipe("NoToProduct");
         ShowNextProduct();
     }
 
     private async void OnYesButton_Clicked(object sender, EventArgs e)
     {
-        await Data.YesToProduct();
+        await Data.OnSwipe("YesToProduct");
         ShowNextProduct();
     }
 
     private async void OnWillPayButton_Clicked(object sender, EventArgs e)
     {
-        await Data.WillPayForProduct();
+        await Data.OnSwipe("WillPayForProduct");
         ShowNextProduct();
     }
 }

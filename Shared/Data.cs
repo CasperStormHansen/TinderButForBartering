@@ -1,5 +1,6 @@
 ﻿using Plugin.Firebase.Auth;
 using System.Collections.ObjectModel;
+using System.Linq.Expressions;
 
 namespace TinderButForBartering;
 
@@ -36,6 +37,16 @@ class Data
     /// The matches with other user (including data about products and chat messages).
     /// </summary>
     public static ObservableCollection<Match> Matches { get; set; } = new();
+
+    /// <summary>
+    /// Determines when more swiping products will be requested from the backend.
+    /// </summary>
+    private static readonly int MinSwipingProducts = 5; // Should be half of MaxSwipingProducts on backend. Could be transfered as part of OnLoginData.
+    
+    /// <summary>
+    /// A new request for swiping products will not be initiated while this is true.
+    /// </summary>
+    private static bool RequestForSwipingProductsIsUnderWay { get; set; } = false;
 
     /// <summary>
     /// Attempts to get information needed at login (incl. app start when user is still logged in) via the backend
@@ -181,28 +192,41 @@ class Data
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-    public static async Task NoToProduct()
+    public static async Task OnSwipe(string swipeAction)
     {
         Product product = SwipingProducts.Dequeue();
-        UserProductAttitude userProductAttitude = new(CurrentUser, product);
-        Backend.NoToProduct(userProductAttitude);
-    }
-
-    public static async Task YesToProduct()
-    {
-        Product product = SwipingProducts.Dequeue();
-        UserProductAttitude userProductAttitude = new(CurrentUser, product);
-        Backend.YesToProduct(userProductAttitude);
-    }
-
-    public static async Task WillPayForProduct()
-    {
-        Product product = SwipingProducts.Dequeue();
-        UserProductAttitude userProductAttitude = new(CurrentUser, product);
-        Backend.WillPayForProduct(userProductAttitude);
+        BackgroundProcessingAfterSwipe(swipeAction, product);
     }
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+    private static async Task BackgroundProcessingAfterSwipe(string swipeAction, Product product)
+    {
+        UserProductAttitude userProductAttitude = new(CurrentUser, product);
+        OnSwipeData? onSwipeData;
+        if (SwipingProducts.Count <= MinSwipingProducts && !RequestForSwipingProductsIsUnderWay)
+        {
+            RequestForSwipingProductsIsUnderWay = true;
+            int[] remainingSwipingProductIds = SwipingProducts.Select(p => p.Id).ToArray();
+            onSwipeData = new (userProductAttitude, remainingSwipingProductIds);
+        }
+        else
+        {
+            onSwipeData = new (userProductAttitude, null);
+        }
+
+        Product[]? extraProducts = await Backend.OnSwipe(onSwipeData, swipeAction);
+
+        if (extraProducts != null)
+        {
+            foreach (Product extraProduct in extraProducts)
+            {
+                SwipingProducts.Enqueue(extraProduct);
+            }
+        }
+
+        RequestForSwipingProductsIsUnderWay = false;
+    }
 
     public static void ReceiveMatch(Match match)
     {

@@ -221,36 +221,15 @@ public class Backend
         }
     }
 
-    public static async Task NoToProduct(UserProductAttitude userProductAttitude)
+    public static async Task<Product[]?> OnSwipe(OnSwipeData onSwipeData, string swipeAction)
     {
         try
         {
-            await ComHubConnection.InvokeCoreAsync("NoToProduct", new[] { userProductAttitude });
+            return await ComHubConnection.InvokeCoreAsync<Product[]?>(swipeAction, new[] { onSwipeData });
         }
         catch (Exception)
         {
-        }
-    }
-
-    public static async Task YesToProduct(UserProductAttitude userProductAttitude)
-    {
-        try
-        {
-            await ComHubConnection.InvokeCoreAsync("YesToProduct", new[] { userProductAttitude });
-        }
-        catch (Exception)
-        {
-        }
-    }
-
-    public static async Task WillPayForProduct(UserProductAttitude userProductAttitude)
-    {
-        try
-        {
-            await ComHubConnection.InvokeCoreAsync("WillPayForProduct", new[] { userProductAttitude });
-        }
-        catch (Exception)
-        {
+            return null;
         }
     }
 
