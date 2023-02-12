@@ -221,6 +221,19 @@ class Data
         match?.OwnProductIds.Add(productId);
     }
 
+    public static void UpdateForeignProductInMatch(Product product, int matchId)
+    {
+        Match match = Matches.FirstOrDefault(m => m.MatchId == matchId);
+        for (int i = 0; i < match.ForeignProducts.Count; i++)
+        {
+            if (match.ForeignProducts[i].Id == product.Id)
+            {
+                match.ForeignProducts[i] = product;
+                break;
+            }
+        }
+    }
+
     /// <summary>
     /// Deletes the local data about the user and products.
     /// </summary>

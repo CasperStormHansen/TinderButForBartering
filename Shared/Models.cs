@@ -91,7 +91,7 @@ public class Message
     }
 }
 
-public class OnLoginData
+public class OnLoginData // Optimization: ObservableCollections instead of arrays already here
 {
     public User User { get; set; }
     public Product[] OwnProducts { get; set; }

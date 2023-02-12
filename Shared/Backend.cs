@@ -28,6 +28,7 @@ public class Backend
         ComHubConnection.On<Match>("ReceiveMatch", Data.ReceiveMatch);
         ComHubConnection.On<Product, int>("AddForeignProductToMatch", Data.AddForeignProductToMatch);
         ComHubConnection.On<int, int>("AddOwnProductToMatch", Data.AddOwnProductToMatch);
+        ComHubConnection.On<Product, int>("UpdateForeignProductInMatch", Data.UpdateForeignProductInMatch);
 
         await ComHubConnection.StartAsync();
 
