@@ -121,25 +121,31 @@ public partial class MainPage : ContentPage
         await Navigation.PushAsync(new MyMatchesPage());
     }
 
-    private void ShowNextProduct()
+    private void ShowNextProduct() // Optimization possible: call this method when and only when the front of the queue changes
     {
         if (Data.SwipingProducts.TryPeek(out Product product))
         {
-            SwipingPicture.Source = product.Url;
-            DetailsButton.IsEnabled = true;
-            YesButton.IsEnabled = true;
-            NoButton.IsEnabled = true;
-            WillPayButton.IsEnabled = true;
+            Application.Current.MainPage.Dispatcher.Dispatch(() =>
+            {
+                SwipingPicture.Source = product.Url;
+                DetailsButton.IsEnabled = true;
+                YesButton.IsEnabled = true;
+                NoButton.IsEnabled = true;
+                WillPayButton.IsEnabled = true;                
+            });
 
             Data.SwipingProducts.CollectionChanged -= OnSwipingProductsMadeNonEmpty;
         }
         else
         {
-            SwipingPicture.Source = "nomoreswipingproducts.jpg";
-            DetailsButton.IsEnabled = false;
-            YesButton.IsEnabled = false;
-            NoButton.IsEnabled = false;
-            WillPayButton.IsEnabled = false;
+            Application.Current.MainPage.Dispatcher.Dispatch(() =>
+            {
+                SwipingPicture.Source = "nomoreswipingproducts.jpg";
+                DetailsButton.IsEnabled = false;
+                YesButton.IsEnabled = false;
+                NoButton.IsEnabled = false;
+                WillPayButton.IsEnabled = false;
+            });
 
             Data.SwipingProducts.CollectionChanged += OnSwipingProductsMadeNonEmpty;
         }
@@ -174,10 +180,11 @@ public partial class MainPage : ContentPage
         ShowNextProduct();
     }
 
-    private void RefreshMethod(object obj)
+    private async void RefreshMethod(object obj)
     {
         RefreshView.IsRefreshing = true;
-        // Refresh data here
+        await Data.OnRefreshMainpage();
+        ShowNextProduct();
         RefreshView.IsRefreshing = false;
     }
 }

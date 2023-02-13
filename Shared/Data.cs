@@ -229,6 +229,31 @@ class Data
         RequestForSwipingProductsIsUnderWay = false;
     }
 
+    public static async Task OnRefreshMainpage()
+    {
+        if (RequestForSwipingProductsIsUnderWay)
+        {
+            return;
+        }
+
+        RequestForSwipingProductsIsUnderWay = true;
+
+        int[] remainingSwipingProductIds = SwipingProducts.Select(p => p.Id).ToArray();
+        OnRefreshMainpageData onRefreshMainpageData = new(CurrentUser.Id, remainingSwipingProductIds);
+
+        Product[]? extraProducts = await Backend.OnRefreshMainpage(onRefreshMainpageData);
+
+        if (extraProducts != null)
+        {
+            foreach (Product extraProduct in extraProducts)
+            {
+                SwipingProducts.Enqueue(extraProduct);
+            }
+        }
+
+        RequestForSwipingProductsIsUnderWay = false;
+    }
+
     public static void ReceiveMatch(Match match)
     {
         Matches.Add(match);

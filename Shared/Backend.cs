@@ -233,6 +233,18 @@ public class Backend
         }
     }
 
+    public static async Task<Product[]?> OnRefreshMainpage(OnRefreshMainpageData onRefreshMainpageData)
+    {
+        try
+        {
+            return await ComHubConnection.InvokeCoreAsync<Product[]?>("OnRefreshMainpage", new[] { onRefreshMainpageData });
+        }
+        catch (Exception)
+        {
+            return null;
+        }
+    }
+
     public static async Task OnLogout()
     {
         await CloseConnectionIntentionally();
