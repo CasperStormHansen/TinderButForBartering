@@ -1,4 +1,5 @@
 ﻿using Plugin.Firebase.Auth;
+using System.Collections.Specialized;
 
 namespace TinderButForBartering;
 
@@ -8,6 +9,7 @@ public partial class MainPage : ContentPage
 	{
 		InitializeComponent();
         Data.MainPage = this;
+        RefreshView.Command = new Command(RefreshMethod);
     }
 
     protected override void OnNavigatedTo(NavigatedToEventArgs args)
@@ -19,33 +21,39 @@ public partial class MainPage : ContentPage
 
     public async void OnAnyAppearance()
     {
-        if (CrossFirebaseAuth.Current.CurrentUser != null && !MyGoodsButton.IsEnabled)
+        if (CrossFirebaseAuth.Current.CurrentUser != null)
         {
-            BusyIndicator.IsVisible = true;
-            bool success = false;
-            while (!success)
+            if (MyGoodsButton.IsEnabled)
             {
-                (success, string errorMessage) = await Data.OnLogin(CrossFirebaseAuth.Current.CurrentUser);
-                if (success)
-                {
-                    ShowNextProduct();
-                }
-                else
-                {
-                    await App.Current.MainPage.DisplayAlert("Der kunne ikke opnås kontakt til serveren", errorMessage, "Prøv igen");
-                }
+                ShowNextProduct();
             }
-            BusyIndicator.IsVisible = false;
+            else
+            {
+                BusyIndicator.IsVisible = true;
+                bool success = false;
+                while (!success)
+                {
+                    (success, string errorMessage) = await Data.OnLogin(CrossFirebaseAuth.Current.CurrentUser);
+                    if (success)
+                    {
+                        ShowNextProduct();
+                    }
+                    else
+                    {
+                        await App.Current.MainPage.DisplayAlert("Der kunne ikke opnås kontakt til serveren", errorMessage, "Prøv igen");
+                    }
+                }
+                BusyIndicator.IsVisible = false;
 
-            MyGoodsButton.IsEnabled = true;
-            MyWishesButton.IsEnabled = true;
-            MyMatchesButton.IsEnabled = true;
+                MyGoodsButton.IsEnabled = true;
+                MyWishesButton.IsEnabled = true;
+                MyMatchesButton.IsEnabled = true;
+            }
         }
 
-        if (CrossFirebaseAuth.Current.CurrentUser != null && MyGoodsButton.IsEnabled)
-        {
-            ShowNextProduct();
-        }
+        // The following two lines should not be necessary, but are due to a bug
+        RefreshView.HeightRequest = Application.Current.MainPage.Height;
+        RefreshView.WidthRequest = Application.Current.MainPage.Width;
     }
 
     private async void OnHamburgerIcon_Clicked(object sender, EventArgs e)
@@ -122,6 +130,8 @@ public partial class MainPage : ContentPage
             YesButton.IsEnabled = true;
             NoButton.IsEnabled = true;
             WillPayButton.IsEnabled = true;
+
+            Data.SwipingProducts.CollectionChanged -= OnSwipingProductsMadeNonEmpty;
         }
         else
         {
@@ -130,13 +140,20 @@ public partial class MainPage : ContentPage
             YesButton.IsEnabled = false;
             NoButton.IsEnabled = false;
             WillPayButton.IsEnabled = false;
-            // make this function run again on changes to SwipingProducts
+
+            Data.SwipingProducts.CollectionChanged += OnSwipingProductsMadeNonEmpty;
         }
+    }
+
+    private void OnSwipingProductsMadeNonEmpty(object sender, NotifyCollectionChangedEventArgs e)
+    {
+        ShowNextProduct();
     }
 
     private async void OnDetailsButton_Clicked(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new ForeignProductsDetailsPage(Data.SwipingProducts.Peek(), true));
+        Data.SwipingProducts.TryPeek(out Product product);
+        await Navigation.PushAsync(new ForeignProductsDetailsPage(product, true));
     }
 
     private async void OnNoButton_Clicked(object sender, EventArgs e)
@@ -155,5 +172,12 @@ public partial class MainPage : ContentPage
     {
         await Data.OnSwipe("WillPayForProduct");
         ShowNextProduct();
+    }
+
+    private void RefreshMethod(object obj)
+    {
+        RefreshView.IsRefreshing = true;
+        // Refresh data here
+        RefreshView.IsRefreshing = false;
     }
 }

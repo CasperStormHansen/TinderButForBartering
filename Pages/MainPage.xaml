@@ -11,69 +11,75 @@
                      Clicked="OnHamburgerIcon_Clicked"/>
     </ContentPage.ToolbarItems>
 
-    <StackLayout
-        VerticalOptions="Center"
-        HorizontalOptions="Center">
-        
-        <Button
-            Text="Mine varer"
-            BackgroundColor="Blue"
-            IsEnabled="False"
-            x:Name="MyGoodsButton"
-            Clicked="OnMyGoodsButton_Clicked" />
+    <RefreshView
+        x:Name="RefreshView"
+        IsRefreshing="false">
+        <ScrollView>
+            <StackLayout
+                VerticalOptions="Center"
+                HorizontalOptions="Center">
 
-        <Button
-            Text="Mine ønsker"
-            BackgroundColor="Blue"
-            IsEnabled="False"
-            x:Name="MyWishesButton"
-            Clicked="OnMyWishesButton_Clicked" />
+                <Button
+                    Text="Mine varer"
+                    BackgroundColor="Blue"
+                    IsEnabled="False"
+                    x:Name="MyGoodsButton"
+                    Clicked="OnMyGoodsButton_Clicked" />
 
-        <Button
-            Text="Mine matches"
-            BackgroundColor="Blue"
-            IsEnabled="False"
-            x:Name="MyMatchesButton"
-            Clicked="OnMyMatchesButton_Clicked" />
+                <Button
+                    Text="Mine ønsker"
+                    BackgroundColor="Blue"
+                    IsEnabled="False"
+                    x:Name="MyWishesButton"
+                    Clicked="OnMyWishesButton_Clicked" />
 
-        <Image 
-            WidthRequest="300"
-            x:Name="SwipingPicture"
-            Margin="20"/>
+                <Button
+                    Text="Mine matches"
+                    BackgroundColor="Blue"
+                    IsEnabled="False"
+                    x:Name="MyMatchesButton"
+                    Clicked="OnMyMatchesButton_Clicked" />
 
-        <Button
-            Text="Detaljer"
-            BackgroundColor="Blue"
-            x:Name="DetailsButton"
-            Clicked="OnDetailsButton_Clicked" />
-        
-        <Button
-            Text="Nej"
-            BackgroundColor="Red"
-            x:Name="NoButton"
-            Clicked="OnNoButton_Clicked" />
+                <Image 
+                    WidthRequest="300"
+                    x:Name="SwipingPicture"
+                    Margin="20"/>
 
-        <Button
-            Text="Ja"
-            BackgroundColor="Green"
-            x:Name="YesButton"
-            Clicked="OnYesButton_Clicked" />
+                <Button
+                    Text="Detaljer"
+                    BackgroundColor="Blue"
+                    x:Name="DetailsButton"
+                    Clicked="OnDetailsButton_Clicked" />
 
-        <Button
-            Text="... og vil endda betale penge for det!"
-            BackgroundColor="Gold"
-            x:Name="WillPayButton"
-            Clicked="OnWillPayButton_Clicked" />
+                <Button
+                    Text="Nej"
+                    BackgroundColor="Red"
+                    x:Name="NoButton"
+                    Clicked="OnNoButton_Clicked" />
 
-        <Image 
-            WidthRequest="300"
-            x:Name="UserPicture"
-            Margin="20"/>
+                <Button
+                    Text="Ja"
+                    BackgroundColor="Green"
+                    x:Name="YesButton"
+                    Clicked="OnYesButton_Clicked" />
 
-        <!--Right position?-->
-        <ActivityIndicator x:Name="BusyIndicator"
-                           IsRunning="True"
-                           IsVisible="false"/>
-    </StackLayout>
+                <Button
+                    Text="... og vil endda betale penge for det!"
+                    BackgroundColor="Gold"
+                    x:Name="WillPayButton"
+                    Clicked="OnWillPayButton_Clicked" />
 
+                <Image 
+                    WidthRequest="300"
+                    x:Name="UserPicture"
+                    Margin="20"/>
+
+                <!--Right position?-->
+                <ActivityIndicator 
+                    x:Name="BusyIndicator"
+                    IsRunning="True"
+                    IsVisible="false"/>
+            </StackLayout>
+        </ScrollView>
+    </RefreshView>
 </ContentPage>

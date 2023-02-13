@@ -1,4 +1,5 @@
 ﻿using Plugin.Firebase.Auth;
+using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 
@@ -24,9 +25,9 @@ class Data
     public static ObservableCollection<Product> OwnProducts { get; set; } = new();
 
     /// <summary>
-    /// The products in the swipe stack.
+    /// The products in the swipe stack. 
     /// </summary>
-    public static Queue<Product> SwipingProducts { get; set; } = new();
+    public static ObservableConcurrentQueue<Product> SwipingProducts { get; set; } = new();
 
     /// <summary>
     /// The product categories.
@@ -194,7 +195,7 @@ class Data
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
     public static async Task OnSwipe(string swipeAction)
     {
-        Product product = SwipingProducts.Dequeue();
+        SwipingProducts.TryDequeue(out Product product);
         BackgroundProcessingAfterSwipe(swipeAction, product);
     }
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
