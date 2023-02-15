@@ -22,7 +22,7 @@ public partial class ConnectionLostPage : ContentPage
         ReestablishButton.IsVisible = false;
 		ReestablishingInfo.IsVisible = true;
 
-        bool success = await Backend.Reconnect(); // This takes more than a minute to timeout. 7 secs would be better.
+        bool success = await Data.Reconnect(); // This takes more than a minute to timeout. 7 secs would be better.
 
 		if (success)
 		{

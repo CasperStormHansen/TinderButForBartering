@@ -110,6 +110,23 @@ public class OnLoginData // Optimization: ObservableCollections instead of array
     }
 }
 
+public class OnReconnectionData
+{
+    public Match[] NewMatches { get; set; }
+    public Product[] UpdatedForeignProducts { get; set; }
+    public MatchIdAndProductId[] NewInterestsInOwnProducts { get; set; }
+    public Message[] NewMessages { get; set; }
+
+    [JsonConstructor]
+    public OnReconnectionData(Match[] newMatches, Product[] updatedForeignProducts, MatchIdAndProductId[] newInterestsInOwnProducts, Message[] newMessages)
+    {
+        NewMatches = newMatches;
+        UpdatedForeignProducts = updatedForeignProducts;
+        NewInterestsInOwnProducts = newInterestsInOwnProducts;
+        NewMessages = newMessages;
+    }
+}
+
 public class UserProductAttitude
 {
     public string UserId { get; set; }
@@ -147,5 +164,31 @@ public class OnRefreshMainpageData
     {
         UserId = userId;
         RemainingSwipingProductIds = remainingSwipingProductIds;
+    }
+}
+
+public class UserAndLastUpdate
+{
+    public string UserId { get; set; }
+    public DateTime LastUpdate { get; set; }
+
+    [JsonConstructor]
+    public UserAndLastUpdate(string userId, DateTime lastUpdate)
+    {
+        UserId = userId;
+        LastUpdate = lastUpdate; 
+    }
+}
+
+public class MatchIdAndProductId
+{
+    public int MatchId { get; set; }
+    public int ProductId { get; set; }
+
+    [JsonConstructor]
+    public MatchIdAndProductId(int matchId, int productId)
+    {
+        MatchId = matchId;
+        ProductId = productId;
     }
 }

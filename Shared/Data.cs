@@ -1,7 +1,6 @@
 ﻿using Plugin.Firebase.Auth;
 using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
-using System.Linq.Expressions;
 
 namespace TinderButForBartering;
 
@@ -50,6 +49,11 @@ class Data
     private static bool RequestForSwipingProductsIsUnderWay { get; set; } = false;
 
     /// <summary>
+    /// The last time an update was received from the backend. The value must arrive as part of that data.
+    /// </summary>
+    private static DateTime LastUpdate { get; set; }
+
+    /// <summary>
     /// Attempts to get information needed at login (incl. app start when user is still logged in) via the backend
     /// class, deserilializes it, and stores it in this class's properties.
     /// </summary>
@@ -75,6 +79,67 @@ class Data
             return (true, "");
         }
         return (false, errorMessage);
+    }
+
+    public static async Task<bool> Reconnect()
+    {
+        UserAndLastUpdate userAndLastUpdate = new(CurrentUser.Id, LastUpdate);
+
+        (bool success, OnReconnectionData onReconnectionData) = await Backend.Reconnect(userAndLastUpdate);
+
+        if (success)
+        {
+            foreach (Match match in onReconnectionData.NewMatches) Matches.Add(match);
+
+            foreach (Product newProduct in onReconnectionData.UpdatedForeignProducts)
+            {
+                foreach (Match match in Matches)
+                {
+                    bool updateMade = false;
+                    for (int i = 0; i < match.ForeignProducts.Count; i++)
+                    {
+                        if (newProduct.Id == match.ForeignProducts[i].Id)
+                        {
+                            match.ForeignProducts[i] = newProduct;
+                            updateMade = true;
+                            break;
+                        }
+                    }
+                    if (updateMade) break;
+                }
+            }
+
+            foreach (MatchIdAndProductId matchIdAndProductId in onReconnectionData.NewInterestsInOwnProducts)
+            {
+                foreach (Match match in Matches)
+                {
+                    if (match.MatchId == matchIdAndProductId.MatchId)
+                    {
+                        match.OwnProductIds.Add(matchIdAndProductId.ProductId);
+                        break;
+                    }
+                }
+            }
+
+            foreach (Message message in onReconnectionData.NewMessages)
+            {
+                foreach (Match match in Matches)
+                {
+                    if (match.MatchId == message.MatchId)
+                    {
+                        match.Messages.Add(message);
+                        match.Messages = new ObservableCollection<Message>(match.Messages.OrderBy(m => m.DateTime));
+                        break;
+                    }
+                }
+            }
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     /// <summary>
@@ -205,7 +270,7 @@ class Data
     {
         UserProductAttitude userProductAttitude = new(CurrentUser, product);
         OnSwipeData? onSwipeData;
-        if (SwipingProducts.Count <= MinSwipingProducts && !RequestForSwipingProductsIsUnderWay)
+        if (SwipingProducts.Count() <= MinSwipingProducts && !RequestForSwipingProductsIsUnderWay)
         {
             RequestForSwipingProductsIsUnderWay = true;
             int[] remainingSwipingProductIds = SwipingProducts.Select(p => p.Id).ToArray();

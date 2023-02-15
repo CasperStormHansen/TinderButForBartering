@@ -40,20 +40,21 @@ public class Backend
     /// on logout.
     /// </summary>
     /// <returns>
-    /// A boolian success indicator.
+    /// A boolian success indicator and an update on changes that have happened since the connection
+    /// was interrupted.
     /// </returns>
-    public static async Task<bool> Reconnect()
+    public static async Task<(bool, OnReconnectionData)> Reconnect(UserAndLastUpdate userAndLastUpdate)
     {
         try
         {
             await ComHubConnection.StartAsync();
-            await ComHubConnection.InvokeCoreAsync("RegisterUserIdOfConnection", new[] { Data.CurrentUser.Id });
+            OnReconnectionData onReconnectionData = await ComHubConnection.InvokeCoreAsync<OnReconnectionData>("OnReconnection", new[] { userAndLastUpdate });
             ComHubConnection.Closed += OnUnintendedConnectionLoss;
-            return true;
+            return (true, onReconnectionData);
         }
         catch
         {
-            return false;
+            return (false, null);
         }
     }
 
