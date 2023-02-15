@@ -192,3 +192,16 @@ public class MatchIdAndProductId
         ProductId = productId;
     }
 }
+
+public class TimeStamped<T>
+{
+    public T Value { get; set; }
+    public DateTime SendTime { get; set; }
+
+    [JsonConstructor]
+    public TimeStamped(T value, DateTime sendTime)
+    {
+        Value = value;
+        SendTime = sendTime;
+    }
+}

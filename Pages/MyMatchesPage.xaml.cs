@@ -8,7 +8,7 @@ public partial class MyMatchesPage : ContentPage
 	{
 		InitializeComponent();
 
-        MyMatchesView.ItemsSource = Data.Matches; // Collections in here are arrays and not observablecollections, so updates will not work correctly
+        MyMatchesView.ItemsSource = Data.Matches;
     }
 
     private async void OnMatch_Clicked(object sender, EventArgs e)

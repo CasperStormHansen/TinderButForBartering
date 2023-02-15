@@ -15,6 +15,11 @@ public class Backend
     private static HubConnection ComHubConnection { get; set; }
 
     /// <summary>
+    /// The last time an update was received from the backend. The value must arrive as part of that data.
+    /// </summary>
+    private static DateTime LastUpdate { get; set; }
+
+    /// <summary>
     /// Attempts to create SignalR connection with backend. Only to be called from OnLogin, which
     /// handles registration and errors.
     /// </summary>
@@ -24,11 +29,35 @@ public class Backend
             .WithUrl(ComHubUrl)
             .Build();
 
-        ComHubConnection.On<Message>("ReceiveMessage", Data.ReceiveMessage);
-        ComHubConnection.On<Match>("ReceiveMatch", Data.ReceiveMatch);
-        ComHubConnection.On<Product, int>("AddForeignProductToMatch", Data.AddForeignProductToMatch);
-        ComHubConnection.On<int, int>("AddOwnProductToMatch", Data.AddOwnProductToMatch);
-        ComHubConnection.On<Product, int>("UpdateForeignProductInMatch", Data.UpdateForeignProductInMatch);
+        ComHubConnection.On<DateTime, Message>("ReceiveMessage", (time, message) =>
+        {
+            LastUpdate = time;
+            Data.ReceiveMessage(message);
+        });
+
+        ComHubConnection.On<DateTime, Match>("ReceiveMatch", (time, match) =>
+        {
+            LastUpdate = time;
+            Data.ReceiveMatch(match);
+        });
+
+        ComHubConnection.On<DateTime, Product, int>("AddForeignProductToMatch", (time, product, matchId) =>
+        {
+            LastUpdate = time;
+            Data.AddForeignProductToMatch(product, matchId);
+        });
+
+        ComHubConnection.On<DateTime, int, int>("AddOwnProductToMatch", (time, productId, matchId) =>
+        {
+            LastUpdate = time;
+            Data.AddOwnProductToMatch(productId, matchId);
+        });
+
+        ComHubConnection.On<DateTime, Product, int>("UpdateForeignProductInMatch", (time, product, matchId) =>
+        {
+            LastUpdate = time;
+            Data.UpdateForeignProductInMatch(product, matchId);
+        });
 
         await ComHubConnection.StartAsync();
 
@@ -43,12 +72,14 @@ public class Backend
     /// A boolian success indicator and an update on changes that have happened since the connection
     /// was interrupted.
     /// </returns>
-    public static async Task<(bool, OnReconnectionData)> Reconnect(UserAndLastUpdate userAndLastUpdate)
+    public static async Task<(bool, OnReconnectionData)> Reconnect(string userId)
     {
+        UserAndLastUpdate userAndLastUpdate = new(userId, LastUpdate);
+
         try
         {
             await ComHubConnection.StartAsync();
-            OnReconnectionData onReconnectionData = await ComHubConnection.InvokeCoreAsync<OnReconnectionData>("OnReconnection", new[] { userAndLastUpdate });
+            OnReconnectionData onReconnectionData = await CommunicateAndDealWithTimeStamp<OnReconnectionData>("OnReconnection", new[] { userAndLastUpdate });
             ComHubConnection.Closed += OnUnintendedConnectionLoss;
             return (true, onReconnectionData);
         }
@@ -82,6 +113,15 @@ public class Backend
         await ComHubConnection.StopAsync();
     }
 
+#nullable enable
+    private static async Task<T> CommunicateAndDealWithTimeStamp<T>(string backendMethod, object?[] args)
+    {
+        TimeStamped<T> response = await ComHubConnection.InvokeCoreAsync<TimeStamped<T>>(backendMethod, args);
+        LastUpdate = response.SendTime;
+        return response.Value;
+    }
+#nullable disable
+
     /// <summary>
     /// Sends a user to the backend and gets all the inital data needed by the app back.
     /// </summary>
@@ -97,7 +137,7 @@ public class Backend
         {
             await Connect();
 
-            OnLoginData onLoginData = await ComHubConnection.InvokeCoreAsync<OnLoginData>("OnLogin", new[] { user });
+            OnLoginData onLoginData = await CommunicateAndDealWithTimeStamp<OnLoginData>("OnLogin", new[] { user });
             return (true, "", onLoginData);
         }
         catch (Exception ex)
@@ -119,7 +159,7 @@ public class Backend
     {
         try
         {
-            Product[] swipingProductsArray = await ComHubConnection.InvokeCoreAsync<Product[]>("OnWishesUpdate", new[] { user });
+            Product[] swipingProductsArray = await CommunicateAndDealWithTimeStamp<Product[]>("OnWishesUpdate", new[] { user });
             return (true, "", swipingProductsArray);
         }
         catch (Exception ex)
@@ -142,7 +182,7 @@ public class Backend
     {
         try
         {
-            Product product = await ComHubConnection.InvokeCoreAsync<Product>("NewProduct", new[] { productWithoutId });
+            Product product = await CommunicateAndDealWithTimeStamp<Product>("NewProduct", new[] { productWithoutId });
             return (true, "", product);
         }
         catch (Exception ex)
@@ -164,7 +204,7 @@ public class Backend
     {
         try
         {
-            bool success = await ComHubConnection.InvokeCoreAsync<bool>("ChangeProduct", new[] { product });
+            bool success = await CommunicateAndDealWithTimeStamp<bool>("ChangeProduct", new[] { product });
             if (success)
             {
                 return (true, "");
@@ -193,7 +233,7 @@ public class Backend
     {
         try
         {
-            bool success = await ComHubConnection.InvokeCoreAsync<bool>("DeleteProduct", new object[] { product.Id });
+            bool success = await CommunicateAndDealWithTimeStamp<bool>("DeleteProduct", new object[] { product.Id });
             if (success)
             {
                 return (true, "");
@@ -213,7 +253,7 @@ public class Backend
     {
         try
         {
-            Message returnedMessage = await ComHubConnection.InvokeCoreAsync<Message>("SendMessage", new object[] { message, userId });
+            Message returnedMessage = await CommunicateAndDealWithTimeStamp<Message>("SendMessage", new object[] { message, userId });
             return (true, "", returnedMessage);
         }
         catch (Exception ex)
@@ -222,11 +262,12 @@ public class Backend
         }
     }
 
+#nullable enable
     public static async Task<Product[]?> OnSwipe(OnSwipeData onSwipeData, string swipeAction)
     {
         try
         {
-            return await ComHubConnection.InvokeCoreAsync<Product[]?>(swipeAction, new[] { onSwipeData });
+            return await CommunicateAndDealWithTimeStamp<Product[]?>(swipeAction, new[] { onSwipeData });
         }
         catch (Exception)
         {
@@ -238,20 +279,19 @@ public class Backend
     {
         try
         {
-            return await ComHubConnection.InvokeCoreAsync<Product[]?>("OnRefreshMainpage", new[] { onRefreshMainpageData });
+            return await CommunicateAndDealWithTimeStamp<Product[]?>("OnRefreshMainpage", new[] { onRefreshMainpageData });
         }
         catch (Exception)
         {
             return null;
         }
     }
+#nullable disable
 
     public static async Task OnLogout()
     {
         await CloseConnectionIntentionally();
     }
-
-    //public static readonly HttpClient client = new(); // Is this needed to get pictures? I think not.
 
     static readonly string ImagePartialUrl = BaseUrl + "images/";
     

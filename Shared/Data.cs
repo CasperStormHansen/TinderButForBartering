@@ -49,11 +49,6 @@ class Data
     private static bool RequestForSwipingProductsIsUnderWay { get; set; } = false;
 
     /// <summary>
-    /// The last time an update was received from the backend. The value must arrive as part of that data.
-    /// </summary>
-    private static DateTime LastUpdate { get; set; }
-
-    /// <summary>
     /// Attempts to get information needed at login (incl. app start when user is still logged in) via the backend
     /// class, deserilializes it, and stores it in this class's properties.
     /// </summary>
@@ -83,9 +78,7 @@ class Data
 
     public static async Task<bool> Reconnect()
     {
-        UserAndLastUpdate userAndLastUpdate = new(CurrentUser.Id, LastUpdate);
-
-        (bool success, OnReconnectionData onReconnectionData) = await Backend.Reconnect(userAndLastUpdate);
+        (bool success, OnReconnectionData onReconnectionData) = await Backend.Reconnect(CurrentUser.Id);
 
         if (success)
         {
@@ -266,6 +259,7 @@ class Data
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
+#nullable enable
     private static async Task BackgroundProcessingAfterSwipe(string swipeAction, Product product)
     {
         UserProductAttitude userProductAttitude = new(CurrentUser, product);
@@ -304,7 +298,7 @@ class Data
         RequestForSwipingProductsIsUnderWay = true;
 
         int[] remainingSwipingProductIds = SwipingProducts.Select(p => p.Id).ToArray();
-        OnRefreshMainpageData onRefreshMainpageData = new(CurrentUser.Id, remainingSwipingProductIds);
+        OnRefreshMainpageData onRefreshMainpageData = new(CurrentUser!.Id, remainingSwipingProductIds);
 
         Product[]? extraProducts = await Backend.OnRefreshMainpage(onRefreshMainpageData);
 
@@ -318,6 +312,7 @@ class Data
 
         RequestForSwipingProductsIsUnderWay = false;
     }
+#nullable disable
 
     public static void ReceiveMatch(Match match)
     {
