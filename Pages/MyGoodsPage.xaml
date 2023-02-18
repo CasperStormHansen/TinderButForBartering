@@ -3,45 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TinderButForBartering.MyGoodsPage"
              Title="Mine varer"
-             BackgroundColor="White">
+             BackgroundColor="{StaticResource LightGreen}">
 
     <ScrollView>
-        <StackLayout>
-            <Button
-            Text="+"
-            BackgroundColor="Blue"
-            Clicked="OnNewProduct_Clicked" 
-            Margin="10"/>
-
-            <CollectionView
-                x:Name="MyProductsView">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Grid>
-                            <Image 
-                                WidthRequest="200" 
-                                HeightRequest="200" 
-                                Margin="10" 
-                                Aspect="AspectFit" 
-                                Source="{Binding Url}" />
-                            <ImageButton 
-                                WidthRequest="200" 
-                                HeightRequest="200" 
-                                Margin="10" 
-                                BackgroundColor="Transparent" 
-                                Clicked="OnUserProductDetails_Clicked" />
-                        </Grid>
-                        <!-- The Grid and its content replace this code, which doesn't work as intended
-                        <ImageButton
-                            WidthRequest="200"
-                            HeightRequest="200"
-                            Margin="10"
-                            Aspect="AspectFit"
-                            Source="{Binding Id, StringFormat='https://localhost:7239/products/images/{0}.jpg'}"
-                            Clicked="OnUserProductDetails_Clicked"/>-->
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-        </StackLayout>
+        <FlexLayout 
+            x:Name="flexLayout"
+            Wrap="Wrap"
+            JustifyContent="SpaceEvenly"
+            AlignContent="SpaceEvenly">
+        </FlexLayout>
     </ScrollView>
 </ContentPage>

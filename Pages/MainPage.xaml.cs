@@ -8,7 +8,9 @@ public partial class MainPage : ContentPage
 	public MainPage()
 	{
 		InitializeComponent();
+        
         Data.MainPage = this;
+        
         RefreshView.Command = new Command(RefreshMethod);
     }
 
@@ -54,6 +56,12 @@ public partial class MainPage : ContentPage
         // The following two lines should not be necessary, but are due to a bug
         RefreshView.HeightRequest = Application.Current.MainPage.Height;
         RefreshView.WidthRequest = Application.Current.MainPage.Width;
+
+        // It shouldn't be necessary to set this repeatetly, but it cannot be done in the constructor
+        SwipingPicture.WidthRequest = Application.Current.MainPage.Width;
+        SwipingPicture.HeightRequest = 1.3333 * SwipingPicture.WidthRequest;
+        DetailsButton.WidthRequest = Application.Current.MainPage.Width;
+        DetailsButton.HeightRequest = SwipingPicture.HeightRequest;
     }
 
     private async void OnHamburgerIcon_Clicked(object sender, EventArgs e)
@@ -128,6 +136,7 @@ public partial class MainPage : ContentPage
             Application.Current.MainPage.Dispatcher.Dispatch(() =>
             {
                 SwipingPicture.Source = product.Url;
+                SwipingTitle.Text = product.Title;
                 DetailsButton.IsEnabled = true;
                 YesButton.IsEnabled = true;
                 NoButton.IsEnabled = true;
@@ -141,6 +150,7 @@ public partial class MainPage : ContentPage
             Application.Current.MainPage.Dispatcher.Dispatch(() =>
             {
                 SwipingPicture.Source = "nomoreswipingproducts.jpg";
+                SwipingTitle.Text = "";
                 DetailsButton.IsEnabled = false;
                 YesButton.IsEnabled = false;
                 NoButton.IsEnabled = false;

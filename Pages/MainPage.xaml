@@ -1,8 +1,56 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:TinderButForBartering"
              x:Class="TinderButForBartering.MainPage" 
-             Title="Byt med det">
+             BackgroundColor="{StaticResource LightGreen}"
+             Title="Byt Med Det">
+
+    <!--<NavigationPage.TitleView>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="100"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="100"/>
+            </Grid.RowDefinitions>
+            <Frame
+                Grid.Column="0"
+                WidthRequest="50" 
+                HeightRequest="50"
+                Padding="5"
+                Margin="25"
+                CornerRadius="10"
+                VerticalOptions="Center"
+                HasShadow="True"
+                BorderColor="{StaticResource MidGreen}"
+                BackgroundColor="{StaticResource MidGreen}">
+                <Image 
+                    WidthRequest="40"
+                    HeightRequest="40"
+                    Margin="0"
+                    Source="hamburger_icon.png"
+                    HorizontalOptions="Start"/>
+            </Frame>
+            <ImageButton 
+                Grid.Column="0"
+                WidthRequest="50" 
+                HeightRequest="50"
+                Margin="25"
+                VerticalOptions="Center"
+                BackgroundColor="Transparent" 
+                Clicked="OnHamburgerIcon_Clicked" />
+            <Label
+                Grid.Column="1"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                Text="Byt Med Det"
+                FontSize="30"
+                FontAttributes="Bold"/>
+        </Grid>
+    </NavigationPage.TitleView>-->
 
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource="hamburger_icon.png" 
@@ -15,60 +63,127 @@
         x:Name="RefreshView"
         IsRefreshing="false">
         <ScrollView>
-            <StackLayout
-                VerticalOptions="Center"
-                HorizontalOptions="Center">
+            <StackLayout>
+            
+            <Grid
+                HeightRequest="50"
+                BackgroundColor="{StaticResource MidGreen}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+            </Grid.RowDefinitions>
 
                 <Button
-                    Text="Mine varer"
-                    BackgroundColor="Blue"
+                    Grid.Column="0"
+                    Text="varer"
+                    TextColor="Black"
+                    BackgroundColor="Transparent"
+                    FontSize="Medium"
                     IsEnabled="False"
                     x:Name="MyGoodsButton"
                     Clicked="OnMyGoodsButton_Clicked" />
 
                 <Button
-                    Text="Mine ønsker"
-                    BackgroundColor="Blue"
+                    Grid.Column="1"
+                    Text="ønsker"
+                    TextColor="Black"
+                    BackgroundColor="Transparent"
+                    FontSize="Medium"
                     IsEnabled="False"
                     x:Name="MyWishesButton"
                     Clicked="OnMyWishesButton_Clicked" />
 
                 <Button
-                    Text="Mine matches"
-                    BackgroundColor="Blue"
+                    Grid.Column="2"
+                    Text="matches"
+                    TextColor="Black"
+                    BackgroundColor="Transparent"
+                    FontSize="Medium"
                     IsEnabled="False"
                     x:Name="MyMatchesButton"
                     Clicked="OnMyMatchesButton_Clicked" />
+        </Grid>
 
-                <Image 
-                    WidthRequest="300"
-                    x:Name="SwipingPicture"
-                    Margin="20"/>
+                <Grid>
+                    <Image 
+                        x:Name="SwipingPicture"
+                        VerticalOptions="Start"/>
+                    <ImageButton 
+                                HeightRequest="400" 
+                                BackgroundColor="Transparent" 
+                                x:Name="DetailsButton"
+                                Clicked="OnDetailsButton_Clicked" />
+                </Grid>
 
-                <Button
-                    Text="Detaljer"
-                    BackgroundColor="Blue"
-                    x:Name="DetailsButton"
-                    Clicked="OnDetailsButton_Clicked" />
 
-                <Button
+                <Grid
+                HeightRequest="50"
+                BackgroundColor="{StaticResource LightGreen}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="90"/>
+                        <RowDefinition Height="90"/>
+                    </Grid.RowDefinitions>
+
+                    <Button
+                    Grid.Column="0"
+                    Grid.Row="0"
                     Text="Nej"
-                    BackgroundColor="Red"
+                    FontSize="Large"
+                    WidthRequest="64"
+                    HeightRequest="64"
+                    CornerRadius="32"
+                    BackgroundColor="{StaticResource DarkGreen}"
+                    TextColor="White"
                     x:Name="NoButton"
-                    Clicked="OnNoButton_Clicked" />
+                    Clicked="OnNoButton_Clicked"/>
 
-                <Button
+                    <Label
+                        Grid.Column="1"
+                        Grid.Row="0"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        FontSize="Large"
+                        LineBreakMode="WordWrap"
+                        x:Name="SwipingTitle"/>
+
+                    <Button
+                    Grid.Column="2"
+                    Grid.Row="0"
                     Text="Ja"
-                    BackgroundColor="Green"
+                    FontSize="Large"
+                    WidthRequest="64"
+                    HeightRequest="64"
+                    CornerRadius="32"
+                    BackgroundColor="{StaticResource DarkGreen}"
+                    TextColor="White"
                     x:Name="YesButton"
                     Clicked="OnYesButton_Clicked" />
 
-                <Button
-                    Text="... og vil endda betale penge for det!"
-                    BackgroundColor="Gold"
+                    <Button
+                    Grid.Column="2"
+                    Grid.Row="1"
+                    Text="... og vil endda betale penge!"
+                    LineBreakMode="WordWrap"
+                    WidthRequest="125"
+                    HeightRequest="60"
+                    BackgroundColor="{StaticResource DarkGreen}"
+                    TextColor="White"
                     x:Name="WillPayButton"
                     Clicked="OnWillPayButton_Clicked" />
+                </Grid>
 
+
+
+                <!--To be deleted-->
                 <Image 
                     WidthRequest="300"
                     x:Name="UserPicture"
