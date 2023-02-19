@@ -23,11 +23,13 @@ public partial class MainPage : ContentPage
 
     public async void OnAnyAppearance()
     {
+        SetUILengths();
+
         if (CrossFirebaseAuth.Current.CurrentUser != null)
         {
             if (MyGoodsButton.IsEnabled)
             {
-                ShowNextProduct();
+                ShowProduct();
             }
             else
             {
@@ -38,7 +40,7 @@ public partial class MainPage : ContentPage
                     (success, string errorMessage) = await Data.OnLogin(CrossFirebaseAuth.Current.CurrentUser);
                     if (success)
                     {
-                        ShowNextProduct();
+                        ShowProduct();
                     }
                     else
                     {
@@ -53,6 +55,11 @@ public partial class MainPage : ContentPage
             }
         }
 
+        SetUILengths();
+    }
+
+    private void SetUILengths()
+    {
         // The following two lines should not be necessary, but are due to a bug
         RefreshView.HeightRequest = Application.Current.MainPage.Height;
         RefreshView.WidthRequest = Application.Current.MainPage.Width;
@@ -129,13 +136,15 @@ public partial class MainPage : ContentPage
         await Navigation.PushAsync(new MyMatchesPage());
     }
 
-    private void ShowNextProduct() // Optimization possible: call this method when and only when the front of the queue changes
+    private void ShowProduct() // Optimization possible: call this method when and only when the front of the queue changes
     {
         if (Data.SwipingProducts.TryPeek(out Product product))
         {
             Application.Current.MainPage.Dispatcher.Dispatch(() =>
             {
                 SwipingPicture.Source = product.Url;
+                SwipingPicture.IsVisible = true;
+                NoMoreGoodsLabel.IsVisible = false;
                 SwipingTitle.Text = product.Title;
                 DetailsButton.IsEnabled = true;
                 YesButton.IsEnabled = true;
@@ -149,7 +158,9 @@ public partial class MainPage : ContentPage
         {
             Application.Current.MainPage.Dispatcher.Dispatch(() =>
             {
-                SwipingPicture.Source = "nomoreswipingproducts.jpg";
+                SwipingPicture.Source = null;
+                SwipingPicture.IsVisible = false;
+                NoMoreGoodsLabel.IsVisible = true;
                 SwipingTitle.Text = "";
                 DetailsButton.IsEnabled = false;
                 YesButton.IsEnabled = false;
@@ -163,7 +174,7 @@ public partial class MainPage : ContentPage
 
     private void OnSwipingProductsMadeNonEmpty(object sender, NotifyCollectionChangedEventArgs e)
     {
-        ShowNextProduct();
+        ShowProduct();
     }
 
     private async void OnDetailsButton_Clicked(object sender, EventArgs e)
@@ -175,26 +186,26 @@ public partial class MainPage : ContentPage
     private async void OnNoButton_Clicked(object sender, EventArgs e)
     {
         await Data.OnSwipe("NoToProduct");
-        ShowNextProduct();
+        ShowProduct();
     }
 
     private async void OnYesButton_Clicked(object sender, EventArgs e)
     {
         await Data.OnSwipe("YesToProduct");
-        ShowNextProduct();
+        ShowProduct();
     }
 
     private async void OnWillPayButton_Clicked(object sender, EventArgs e)
     {
         await Data.OnSwipe("WillPayForProduct");
-        ShowNextProduct();
+        ShowProduct();
     }
 
     private async void RefreshMethod(object obj)
     {
         RefreshView.IsRefreshing = true;
         await Data.OnRefreshMainpage();
-        ShowNextProduct();
+        ShowProduct();
         RefreshView.IsRefreshing = false;
     }
 }

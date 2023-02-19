@@ -23,9 +23,10 @@ public static class MauiProgram
             .UseMauiCommunityToolkit()
             .ConfigureFonts(fonts =>
 			{
-				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-			});
+                fonts.AddFont("BaiJamjuree-Regular.ttf", "DefaultFontRegular");
+                fonts.AddFont("BaiJamjuree-Medium.ttf", "DefaultFontBold");
+                fonts.AddFont("FuzzyBubbles-Regular.ttf", "TitleFont");
+            });
 
 #if DEBUG
 		builder.Logging.AddDebug();

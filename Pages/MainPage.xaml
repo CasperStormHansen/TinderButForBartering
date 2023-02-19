@@ -3,197 +3,185 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:TinderButForBartering"
              x:Class="TinderButForBartering.MainPage" 
-             BackgroundColor="{StaticResource LightGreen}"
-             Title="Byt Med Det">
+             BackgroundColor="{StaticResource LightGreen}">
 
-    <!--<NavigationPage.TitleView>
+    <!--Titlebar-->
+    <NavigationPage.TitleView>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="30"/>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="30"/>
             </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="100"/>
-            </Grid.RowDefinitions>
-            <Frame
+
+            <Image 
                 Grid.Column="0"
-                WidthRequest="50" 
-                HeightRequest="50"
-                Padding="5"
-                Margin="25"
-                CornerRadius="10"
-                VerticalOptions="Center"
-                HasShadow="True"
-                BorderColor="{StaticResource MidGreen}"
-                BackgroundColor="{StaticResource MidGreen}">
-                <Image 
-                    WidthRequest="40"
-                    HeightRequest="40"
-                    Margin="0"
-                    Source="hamburger_icon.png"
-                    HorizontalOptions="Start"/>
-            </Frame>
+                WidthRequest="30"
+                HeightRequest="30"
+                Margin="0"
+                Source="hamburger_icon.png"
+                HorizontalOptions="End"/>
             <ImageButton 
                 Grid.Column="0"
-                WidthRequest="50" 
-                HeightRequest="50"
-                Margin="25"
+                WidthRequest="30" 
+                HeightRequest="30"
                 VerticalOptions="Center"
+                HorizontalOptions="End"
                 BackgroundColor="Transparent" 
                 Clicked="OnHamburgerIcon_Clicked" />
+
             <Label
                 Grid.Column="1"
                 HorizontalOptions="Center"
                 VerticalOptions="Center"
                 Text="Byt Med Det"
-                FontSize="30"
+                FontFamily="TitleFont"
+                FontSize="24"
+                TextColor="{StaticResource AlmostWhite}"
                 FontAttributes="Bold"/>
         </Grid>
-    </NavigationPage.TitleView>-->
-
-    <ContentPage.ToolbarItems>
-        <ToolbarItem IconImageSource="hamburger_icon.png" 
-                     Order="Primary" 
-                     Priority="0" 
-                     Clicked="OnHamburgerIcon_Clicked"/>
-    </ContentPage.ToolbarItems>
+    </NavigationPage.TitleView>
 
     <RefreshView
         x:Name="RefreshView"
         IsRefreshing="false">
-        <ScrollView>
-            <StackLayout>
-            
-            <Grid
-                HeightRequest="50"
-                BackgroundColor="{StaticResource MidGreen}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="50"/>
-            </Grid.RowDefinitions>
+        <ScrollView
+            VerticalOptions="FillAndExpand">
+            <StackLayout
+                VerticalOptions="FillAndExpand">
 
-                <Button
-                    Grid.Column="0"
-                    Text="varer"
-                    TextColor="Black"
-                    BackgroundColor="Transparent"
-                    FontSize="Medium"
-                    IsEnabled="False"
-                    x:Name="MyGoodsButton"
-                    Clicked="OnMyGoodsButton_Clicked" />
-
-                <Button
-                    Grid.Column="1"
-                    Text="ønsker"
-                    TextColor="Black"
-                    BackgroundColor="Transparent"
-                    FontSize="Medium"
-                    IsEnabled="False"
-                    x:Name="MyWishesButton"
-                    Clicked="OnMyWishesButton_Clicked" />
-
-                <Button
-                    Grid.Column="2"
-                    Text="matches"
-                    TextColor="Black"
-                    BackgroundColor="Transparent"
-                    FontSize="Medium"
-                    IsEnabled="False"
-                    x:Name="MyMatchesButton"
-                    Clicked="OnMyMatchesButton_Clicked" />
-        </Grid>
-
-                <Grid>
-                    <Image 
-                        x:Name="SwipingPicture"
-                        VerticalOptions="Start"/>
-                    <ImageButton 
-                                HeightRequest="400" 
-                                BackgroundColor="Transparent" 
-                                x:Name="DetailsButton"
-                                Clicked="OnDetailsButton_Clicked" />
-                </Grid>
-
-
+                <!--Menubar-->
                 <Grid
-                HeightRequest="50"
-                BackgroundColor="{StaticResource LightGreen}">
+                    HeightRequest="50"
+                    BackgroundColor="{StaticResource MidGreen}">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="3*"/>
-                        <ColumnDefinition Width="5*"/>
-                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="90"/>
-                        <RowDefinition Height="90"/>
+                        <RowDefinition Height="50"/>
                     </Grid.RowDefinitions>
 
                     <Button
-                    Grid.Column="0"
-                    Grid.Row="0"
-                    Text="Nej"
-                    FontSize="Large"
-                    WidthRequest="64"
-                    HeightRequest="64"
-                    CornerRadius="32"
-                    BackgroundColor="{StaticResource DarkGreen}"
-                    TextColor="White"
-                    x:Name="NoButton"
-                    Clicked="OnNoButton_Clicked"/>
+                        Grid.Column="0"
+                        Text="varer"
+                        TextColor="Black"
+                        FontSize="Medium"
+                        FontFamily="DefaultFontBold"
+                        BackgroundColor="Transparent"
+                        IsEnabled="False"
+                        x:Name="MyGoodsButton"
+                        Clicked="OnMyGoodsButton_Clicked" />
+
+                    <Button
+                        Grid.Column="1"
+                        Text="ønsker"
+                        TextColor="Black"
+                        FontSize="Medium"
+                        FontFamily="DefaultFontBold"
+                        BackgroundColor="Transparent"
+                        IsEnabled="False"
+                        x:Name="MyWishesButton"
+                        Clicked="OnMyWishesButton_Clicked" />
+
+                    <Button
+                        Grid.Column="2"
+                        Text="matches"
+                        TextColor="Black"
+                        FontSize="Medium"
+                        FontFamily="DefaultFontBold"
+                        BackgroundColor="Transparent"
+                        IsEnabled="False"
+                        x:Name="MyMatchesButton"
+                        Clicked="OnMyMatchesButton_Clicked" />
+                </Grid>
+
+                <!--Picture-->
+                <Grid>
+                    <Label
+                        x:Name="NoMoreGoodsLabel"
+                        Text="Ikke flere varer"
+                        FontSize="Medium"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        IsVisible="false"/>
+                    <Image 
+                        x:Name="SwipingPicture"
+                        VerticalOptions="Start"/>
+                    <ActivityIndicator 
+                        x:Name="BusyIndicator"
+                        IsRunning="True"
+                        IsVisible="false"/>
+                    <!--Consider last two lines-->
+                    <ImageButton 
+                        BackgroundColor="Transparent" 
+                        x:Name="DetailsButton"
+                        Clicked="OnDetailsButton_Clicked" />
+                </Grid>
+
+                <!--Title and two buttons-->
+                <Grid
+                    HeightRequest="104">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="104"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="104"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="104"/>
+                    </Grid.RowDefinitions>
+
+                    <Button
+                        Grid.Column="0"
+                        Text="Nej"
+                        FontSize="Large"
+                        WidthRequest="64"
+                        HeightRequest="64"
+                        CornerRadius="32"
+                        BackgroundColor="{StaticResource DarkGreen}"
+                        TextColor="{StaticResource AlmostWhite}"
+                        x:Name="NoButton"
+                        Clicked="OnNoButton_Clicked"/>
 
                     <Label
                         Grid.Column="1"
-                        Grid.Row="0"
                         HorizontalOptions="Center"
                         VerticalOptions="Center"
                         FontSize="Large"
                         LineBreakMode="WordWrap"
+                        HorizontalTextAlignment="Center"
+                        VerticalTextAlignment="Center"
                         x:Name="SwipingTitle"/>
 
                     <Button
-                    Grid.Column="2"
-                    Grid.Row="0"
-                    Text="Ja"
-                    FontSize="Large"
-                    WidthRequest="64"
-                    HeightRequest="64"
-                    CornerRadius="32"
-                    BackgroundColor="{StaticResource DarkGreen}"
-                    TextColor="White"
-                    x:Name="YesButton"
-                    Clicked="OnYesButton_Clicked" />
+                        Grid.Column="2"
+                        Text="Byt"
+                        FontSize="Large"
+                        WidthRequest="64"
+                        HeightRequest="64"
+                        CornerRadius="32"
+                        BackgroundColor="{StaticResource DarkGreen}"
+                        TextColor="{StaticResource AlmostWhite}"
+                        x:Name="YesButton"
+                        Clicked="OnYesButton_Clicked" />
 
-                    <Button
-                    Grid.Column="2"
-                    Grid.Row="1"
-                    Text="... og vil endda betale penge!"
-                    LineBreakMode="WordWrap"
-                    WidthRequest="125"
-                    HeightRequest="60"
-                    BackgroundColor="{StaticResource DarkGreen}"
-                    TextColor="White"
-                    x:Name="WillPayButton"
-                    Clicked="OnWillPayButton_Clicked" />
                 </Grid>
 
+                <!--Last button-->
+                <Grid
+                    VerticalOptions="FillAndExpand">
 
-
-                <!--To be deleted-->
-                <Image 
-                    WidthRequest="300"
-                    x:Name="UserPicture"
-                    Margin="20"/>
-
-                <!--Right position?-->
-                <ActivityIndicator 
-                    x:Name="BusyIndicator"
-                    IsRunning="True"
-                    IsVisible="false"/>
+                    <Button
+                        Text="Byt eller køb"
+                        FontSize="Medium"
+                        WidthRequest="140"
+                        HeightRequest="50"
+                        BackgroundColor="{StaticResource DarkGreen}"
+                        TextColor="{StaticResource AlmostWhite}"
+                        x:Name="WillPayButton"
+                        Clicked="OnWillPayButton_Clicked" />
+                </Grid>
             </StackLayout>
         </ScrollView>
     </RefreshView>

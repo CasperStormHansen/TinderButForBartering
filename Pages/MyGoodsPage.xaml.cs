@@ -1,5 +1,3 @@
-using System.Drawing;
-
 namespace TinderButForBartering;
 
 public partial class MyGoodsPage : ContentPage
@@ -10,7 +8,7 @@ public partial class MyGoodsPage : ContentPage
         RenderPage();
     }
 
-    private void RenderPage()
+    public void RenderPage()
     {
         flexLayout.Children.Clear();
 
@@ -20,6 +18,7 @@ public partial class MyGoodsPage : ContentPage
 
         foreach (Product product in Data.OwnProducts) AddPicture(product, itemLength);
         AddButton(itemLength);
+        if (Data.OwnProducts.Count % 2 == 0) AddInvisibleItem(itemLength);
 
         int numberOfRows = Data.OwnProducts.Count / 2 + 1;
         double totalHeigth = numberOfRows * itemLength + (numberOfRows + 1) * marginLength;
@@ -70,7 +69,7 @@ public partial class MyGoodsPage : ContentPage
 
     private void AddButton(double itemLength)
     {
-        var button = new Button
+        Button button = new()
         {
             Text = "+",
             FontSize = 70,
@@ -85,15 +84,27 @@ public partial class MyGoodsPage : ContentPage
         flexLayout.Children.Add(button);
     }
 
+    private void AddInvisibleItem(double itemLength)
+    {
+        BoxView transparentBox = new()
+        {
+            Color = Colors.Transparent,
+            WidthRequest = itemLength,
+            HeightRequest = itemLength
+        };
+
+        flexLayout.Children.Add(transparentBox);
+    }
+
     private async void OnUserProductDetails_Clicked(object sender, EventArgs e)
     {
         ImageButton button = sender as ImageButton;
         Product product = button.BindingContext as Product;
-        await Navigation.PushAsync(new UserProductDetailsPage(product));
+        await Navigation.PushAsync(new UserProductDetailsPage(this, product));
     }
 
     private async void OnNewProduct_Clicked(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new UserProductDetailsPage());
+        await Navigation.PushAsync(new UserProductDetailsPage(this));
     }
 }

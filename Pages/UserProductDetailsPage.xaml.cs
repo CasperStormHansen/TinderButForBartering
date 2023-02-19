@@ -8,10 +8,12 @@ public partial class UserProductDetailsPage : ContentPage
     byte[]? PrimaryPictureData { get; set; }
 #nullable disable
 
+    MyGoodsPage ParentPage { get; set; }
+
     /// <summary>
     /// Called when loaded as "add new product page."
     /// </summary>
-    public UserProductDetailsPage()
+    public UserProductDetailsPage(MyGoodsPage parentPage)
     {
         InitializeComponent();
 
@@ -19,12 +21,14 @@ public partial class UserProductDetailsPage : ContentPage
         DeleteProductButton.IsVisible = false;
 
         CategoryPicker.ItemsSource = Data.Categories;
+
+        ParentPage = parentPage;
     }
 
     /// <summary>
     /// Called when loaded as "modify product page."
     /// </summary>
-    public UserProductDetailsPage(Product product)
+    public UserProductDetailsPage(MyGoodsPage parentPage, Product product)
     {
         InitializeComponent();
 
@@ -39,6 +43,8 @@ public partial class UserProductDetailsPage : ContentPage
 
         CategoryPicker.ItemsSource = Data.Categories;
         CategoryPicker.SelectedIndex = Product.Category;
+
+        ParentPage = parentPage;
     }
 
     async void OnAddProduct_Clicked(object sender, EventArgs e)
@@ -57,6 +63,7 @@ public partial class UserProductDetailsPage : ContentPage
         if (wasSuccessful)
         {
             await Navigation.PopAsync();
+            ParentPage.RenderPage();
             return;
         }
 
@@ -73,6 +80,7 @@ public partial class UserProductDetailsPage : ContentPage
         if (wasSuccessful)
         {
             await Navigation.PopAsync();
+            ParentPage.RenderPage();
             return;
         }
 
@@ -116,6 +124,7 @@ public partial class UserProductDetailsPage : ContentPage
         if (wasSuccessful)
         {
             await Navigation.PopAsync();
+            ParentPage.RenderPage();
             return;
         }
 
