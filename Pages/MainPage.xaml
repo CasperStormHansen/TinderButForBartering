@@ -38,7 +38,14 @@
                 FontFamily="TitleFont"
                 FontSize="24"
                 TextColor="{StaticResource AlmostWhite}"
-                FontAttributes="Bold"/>
+                FontAttributes="Bold">
+                <Label.Shadow>
+                    <Shadow Brush="Black"
+                                Offset="0,10"
+                                Radius="10"
+                                Opacity="0.3" />
+                </Label.Shadow>
+            </Label>
         </Grid>
     </NavigationPage.TitleView>
 
@@ -118,7 +125,7 @@
                         Clicked="OnDetailsButton_Clicked" />
                 </Grid>
 
-                <!--Title and two buttons-->
+                <!--Product title and two buttons-->
                 <Grid
                     HeightRequest="104">
                     <Grid.ColumnDefinitions>
@@ -140,7 +147,14 @@
                         BackgroundColor="{StaticResource DarkGreen}"
                         TextColor="{StaticResource AlmostWhite}"
                         x:Name="NoButton"
-                        Clicked="OnNoButton_Clicked"/>
+                        Clicked="OnNoButton_Clicked">
+                        <Button.Shadow>
+                            <Shadow Brush="Black"
+                                Offset="0,10"
+                                Radius="10"
+                                Opacity="0.3" />
+                        </Button.Shadow>
+                    </Button>
 
                     <Label
                         Grid.Column="1"
@@ -162,7 +176,14 @@
                         BackgroundColor="{StaticResource DarkGreen}"
                         TextColor="{StaticResource AlmostWhite}"
                         x:Name="YesButton"
-                        Clicked="OnYesButton_Clicked" />
+                        Clicked="OnYesButton_Clicked">
+                        <Button.Shadow>
+                            <Shadow Brush="Black"
+                                Offset="0,10"
+                                Radius="10"
+                                Opacity="0.3" />
+                        </Button.Shadow>
+                    </Button>
 
                 </Grid>
 
@@ -178,7 +199,14 @@
                         BackgroundColor="{StaticResource DarkGreen}"
                         TextColor="{StaticResource AlmostWhite}"
                         x:Name="WillPayButton"
-                        Clicked="OnWillPayButton_Clicked" />
+                        Clicked="OnWillPayButton_Clicked">
+                        <Button.Shadow>
+                            <Shadow Brush="Black"
+                                Offset="0,10"
+                                Radius="10"
+                                Opacity="0.3" />
+                        </Button.Shadow>
+                    </Button>
                 </Grid>
             </StackLayout>
         </ScrollView>
