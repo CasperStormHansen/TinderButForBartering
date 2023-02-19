@@ -111,9 +111,7 @@
                         VerticalOptions="Start"/>
                     <ActivityIndicator 
                         x:Name="BusyIndicator"
-                        IsRunning="True"
-                        IsVisible="false"/>
-                    <!--Consider last two lines-->
+                        IsRunning="False"/>
                     <ImageButton 
                         BackgroundColor="Transparent" 
                         x:Name="DetailsButton"

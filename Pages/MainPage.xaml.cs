@@ -33,7 +33,7 @@ public partial class MainPage : ContentPage
             }
             else
             {
-                BusyIndicator.IsVisible = true;
+                BusyIndicator.IsRunning = true;
                 bool success = false;
                 while (!success)
                 {
@@ -47,7 +47,7 @@ public partial class MainPage : ContentPage
                         await App.Current.MainPage.DisplayAlert("Der kunne ikke opnås kontakt til serveren", errorMessage, "Prøv igen");
                     }
                 }
-                BusyIndicator.IsVisible = false;
+                BusyIndicator.IsRunning = false;
 
                 MyGoodsButton.IsEnabled = true;
                 MyWishesButton.IsEnabled = true;
@@ -81,7 +81,7 @@ public partial class MainPage : ContentPage
             MyWishesButton.IsEnabled = false;
             MyMatchesButton.IsEnabled = false;
 ;
-            BusyIndicator.IsVisible = true;
+            BusyIndicator.IsRunning = true;
 
             (bool success, string errorMessage) = await Auth.SignOutAsync();
 
@@ -95,7 +95,7 @@ public partial class MainPage : ContentPage
                 await App.Current.MainPage.DisplayAlert("Fejl", errorMessage, "OK");
             }
 
-            BusyIndicator.IsVisible = false;
+            BusyIndicator.IsRunning = false;
         }
         else if (result == "Slet konto")
         {
@@ -103,7 +103,7 @@ public partial class MainPage : ContentPage
             MyWishesButton.IsEnabled = false;
             MyMatchesButton.IsEnabled = false;
 
-            BusyIndicator.IsVisible = true;
+            BusyIndicator.IsRunning = true;
 
             (bool success, string errorMessage) = await Auth.DeleteAccountAsync();
 
@@ -117,7 +117,7 @@ public partial class MainPage : ContentPage
                 await App.Current.MainPage.DisplayAlert("Fejl", errorMessage, "OK");
             }
 
-            BusyIndicator.IsVisible = false;
+            BusyIndicator.IsRunning = false;
         }
     }
 
