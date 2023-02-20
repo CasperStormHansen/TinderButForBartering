@@ -61,6 +61,21 @@ public partial class MyGoodsPage : ContentPage
         };
         imageButton.Clicked += OnUserProductDetails_Clicked;
 
+        Button justHereToProvideShadow = new()
+        {
+            WidthRequest = itemLength,
+            HeightRequest = itemLength,
+            CornerRadius = 13,
+            Shadow = new()
+            {
+                Brush = Brush.Black,
+                Offset = new Point(0, 10),
+                Radius = 10,
+                Opacity = 0.3f
+            }
+        };
+
+        grid.Children.Add(justHereToProvideShadow);
         grid.Children.Add(frame);
         grid.Children.Add(imageButton);
 
@@ -77,7 +92,14 @@ public partial class MyGoodsPage : ContentPage
             BackgroundColor = new Microsoft.Maui.Graphics.Color(171, 177, 97), // Ref to ressource dictionary would be better
             WidthRequest = itemLength,
             HeightRequest = itemLength,
-            CornerRadius = 13
+            CornerRadius = 13,
+            Shadow = new()
+            {
+                Brush = Brush.Black,
+                Offset = new Point(0, 10),
+                Radius = 10,
+                Opacity = 0.3f
+            }
         };
         button.Clicked += OnNewProduct_Clicked;
 

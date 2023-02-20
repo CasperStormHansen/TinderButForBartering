@@ -2,9 +2,27 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TinderButForBartering.MyGoodsPage"
-             Title="Mine varer"
              BackgroundColor="{StaticResource LightGreen}">
 
+    <!--Titlebar-->
+    <NavigationPage.TitleView>
+        <Label
+            HorizontalOptions="Start"
+            VerticalOptions="Center"
+            Text="Mine varer"
+            FontSize="24"
+            TextColor="{StaticResource AlmostWhite}"
+            FontAttributes="Bold">
+            <Label.Shadow>
+                <Shadow Brush="Black"
+                    Offset="0,10"
+                    Radius="10"
+                    Opacity="0.3" />
+            </Label.Shadow>
+        </Label>
+    </NavigationPage.TitleView>
+
+    <!--Rest of the page (populated by cs file)-->
     <ScrollView>
         <FlexLayout 
             x:Name="flexLayout"

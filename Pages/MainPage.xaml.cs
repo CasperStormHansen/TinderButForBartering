@@ -123,8 +123,10 @@ public partial class MainPage : ContentPage
 
     private async void OnMyGoodsButton_Clicked(object sender, EventArgs e)
 	{
-		await Navigation.PushAsync(new MyGoodsPage());
-	}
+        NavigationPage navigationPage = new (new MyGoodsPage());
+        navigationPage.BarTextColor = Colors.White;
+        await Navigation.PushAsync(navigationPage);
+    }
 
     private async void OnMyWishesButton_Clicked(object sender, EventArgs e)
     {
